@@ -38,7 +38,12 @@
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "principal_controller";
+//rutas principales
+//$route['actualizaEncargado/(:num)'] = "inicio_controller/actualizarEncargado/$1";
+$route['obtener_alumno_por_id/(:num)'] = "principal_controller/obtener_alumno_por_id/$1";
+$route['obtenerAlumnos'] = "principal_controller/obtenerAlumnos";
+
 $route['404_override'] = '';
 
 
