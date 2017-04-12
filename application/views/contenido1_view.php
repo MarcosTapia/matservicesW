@@ -28,11 +28,27 @@
     <div class="row-fluid">
         <div class="col-md-12">
             <div class="col-md-3">
+                <h3>** Solo para pruebas de los webservices basicos</h3>
                 <ul class="nav nav-pills nav-stacked">
                   <li><a href="obtener_alumno_por_id/1">Obtener Alumno por Id</a></li>
                   <li><a href="obtenerAlumnos">Obtener Alumnos</a></li>
+                  <li><a href="insertar_alumno">Insertar Alumno</a></li>
+                  <li><a href="borrar_alumno/1">Borrar Alumno</a></li>
+                  <li><a href="actualizar_alumno">Actualizar Alumno</a></li>
                 </ul>
-            </div>        
+            </div> 
+            <div class="col-md-3">
+                <h1>cuerpo</h1>
+
+
+<?php 
+form_open_multipart(base_url('index.php/inicio_controller/do_upload') );?>
+ 
+Select One or multiple Files<input multiple="multiple" name="userfile[]" size="20" type="file" />Allowed files: gif, png, png, pdf
+<input type="submit" value="upload" />                
+<?php form_close();?>
+                
+            </div>            
         </div>        
     </div>        
     <div class="row-fluid">

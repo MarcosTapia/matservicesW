@@ -16,6 +16,26 @@ class Sistema_model extends CI_Model{
         return $consulta->result_array();
     }
     
+    function insertarAlumno($nombre,$direccion){
+        $data = array(
+            'nombre' => $nombre,
+            'direccion' => $direccion);
+        return $this->db->insert('alumnos', $data);        
+    }
+
+    function borrarAlumno($idAlumno){
+        $this->db->where('idalumno', $idAlumno);
+        return $this->db->delete('alumnos');         
+    }
+    
+    function actualizarAlumno($idAlumno,$nombre,$direccion){
+        $data = array(
+            'nombre' => $nombre,
+            'direccion' => $direccion);
+        $this->db->where('idalumno', $idAlumno);
+        return $this->db->update('alumnos', $data);        
+    }
+    
     //Fin para web services
     
     function verificaUsuario($usuario,$clave){

@@ -6,11 +6,62 @@ class Principal_controller extends CI_Controller {
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->error = "";
+        
+        //para subir imagenes
+        $this->load->helper("URL", "DATE", "URI", "FORM");
+        $this->load->library('upload');
+        $this->load->model('mupload_model');        
     }
 
     function index(){
         $this->load->view('contenido1_view');
     }
+    
+    //para subir imagen
+    function do_upload(){
+        $this->load->library('upload');
+        $files = $_FILES;
+        $cpt = count($_FILES['userfile']['name']);
+        for($i=0; $i<$cpt; $i++){
+            $_FILES['userfile']['name']		= $files['userfile']['name'][$i];
+            $_FILES['userfile']['type']		= $files['userfile']['type'][$i];
+            $_FILES['userfile']['tmp_name']	= $files['userfile']['tmp_name'][$i];
+            $_FILES['userfile']['error']	= $files['userfile']['error'][$i];
+            $_FILES['userfile']['size']		= $files['userfile']['size'][$i];    
+
+                $this->upload->initialize($this->set_upload_options());
+                $this->upload->do_upload();
+
+                $upload_data 	= $this->upload->data();
+                        $file_name 	=   $upload_data['file_name'];
+                        $file_type 	=   $upload_data['file_type'];
+                        $file_size 	=   $upload_data['file_size'];
+
+                // Output control
+                            $data['getfiledata_file_name'] = $file_name;
+                            $data['getfiledata_file_type'] = $file_type;
+                            $data['getfiledata_file_size'] = $file_size;
+            // Insert Data for current file
+                $this->mupload_model->insertNotices($form_input_Data);
+
+            //Create a view containing just the text "Uploaded successfully"
+                    $this->load->view('upload_success', $data);
+
+        }
+    }
+    //fin para subir imagen
+    
+    private function set_upload_options(){   
+            //  upload an image options
+        $config = array();
+        $config['upload_path'] = './fileselif/';
+        $config['allowed_types'] = 'gif|jpg|png|pdf';
+        $config['max_size']      = '0';
+        $config['overwrite']     = FALSE;
+
+
+        return $config;
+    }    
     
     // Para los webservices
     function obtener_alumno_por_id($idAlumno) {
@@ -50,6 +101,73 @@ class Principal_controller extends CI_Controller {
         }        
     }
     
+    function insertarAlumno() {
+        // Decodificando formato Json
+        $body = json_decode(file_get_contents("php://input"), true);
+        //solo para pruebas        
+        //$myObj = array('nombre' => "marcos2",'direccion' => "juarez 152");
+        //$bodyTemp = json_encode($myObj);
+        //$body = json_decode($bodyTemp, true);
+        //echo $bodyTemp;
+        //echo "<br>*** : ".$body['nombre'];
+        //echo "<br>*** : ".$body['direccion'];
+        //fin solo para pruebas        
+        // Insertar Alumno
+        $retorno = $this->sistema_model->insertarAlumno($body['nombre'],
+                   $body['direccion']);
+        if ($retorno) {
+            $json_string = json_encode(array("estado" => 1,"mensaje" => "Creacion correcta"));
+                    echo $json_string;
+        } else {
+            $json_string = json_encode(array("estado" => 2,"mensaje" => "No se creo el registro"));
+                    echo $json_string;
+        }
+    }
+    
+    function borrarAlumno($idAlumno) {
+        // Decodificando formato Json
+        $body = json_decode(file_get_contents("php://input"), true);
+        //solo para pruebas        
+//        $myObj = array('idalumno' => "11");
+//        $bodyTemp = json_encode($myObj);
+//        $body = json_decode($bodyTemp, true);
+//        echo $bodyTemp;
+//        echo "<br>*** : ".$body['nombre'];
+//        echo "<br>*** : ".$body['direccion'];
+        //fin solo para pruebas        
+
+        $retorno = $this->sistema_model->borrarAlumno($body['idalumno']);
+        if ($retorno) {
+            $json_string = json_encode(array("estado" => 1,"mensaje" => "Eliminacion exitosa"));
+                    echo $json_string;
+        } else {
+            $json_string = json_encode(array("estado" => 2,"mensaje" => "No se elimino el registro"));
+                    echo $json_string;
+        }
+    } 
+
+    function actualizarAlumno() {
+        // Decodificando formato Json
+        $body = json_decode(file_get_contents("php://input"), true);
+        //solo para pruebas        
+//        $myObj = array('idalumno' => "3", 'nombre' => "antonio",'direccion' => "j1");
+//        $bodyTemp = json_encode($myObj);
+//        $body = json_decode($bodyTemp, true);
+//        echo $bodyTemp;
+//        echo "<br>*** : ".$body['nombre'];
+//        echo "<br>*** : ".$body['direccion'];
+//        fin solo para pruebas        
+        // Insertar Alumno
+        $retorno = $this->sistema_model->actualizarAlumno($body['idalumno'], $body['nombre'],
+                   $body['direccion']);
+        if ($retorno) {
+            $json_string = json_encode(array("estado" => 1,"mensaje" => "Actualizacion correcta"));
+                    echo $json_string;
+        } else {
+            $json_string = json_encode(array("estado" => 2,"mensaje" => "No se actualizo el registro"));
+                    echo $json_string;
+        }
+    }
     // Fin Para los webservices
 
     function contenido1() {        

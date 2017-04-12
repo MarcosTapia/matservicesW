@@ -43,6 +43,9 @@ $route['default_controller'] = "principal_controller";
 //$route['actualizaEncargado/(:num)'] = "inicio_controller/actualizarEncargado/$1";
 $route['obtener_alumno_por_id/(:num)'] = "principal_controller/obtener_alumno_por_id/$1";
 $route['obtenerAlumnos'] = "principal_controller/obtenerAlumnos";
+$route['insertar_alumno'] = "principal_controller/insertarAlumno";
+$route['borrar_alumno/(:num)'] = "principal_controller/borrarAlumno/$1";
+$route['actualizar_alumno'] = "principal_controller/actualizarAlumno";
 
 $route['404_override'] = '';
 
