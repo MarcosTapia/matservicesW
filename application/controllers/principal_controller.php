@@ -14,7 +14,7 @@ class Principal_controller extends CI_Controller {
     }
 
     function index(){
-        $this->load->view('contenido1_view');
+        $this->load->view('login_view');
     }
     
     //para subir imagen
