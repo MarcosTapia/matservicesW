@@ -72,8 +72,7 @@ class Usuarios_controller extends CI_Controller {
     
     function mostrarUsuarios() {
         # An HTTP GET request example
-        $url = 'http://localhost/webservicesok/obtener_alumnos.php';
-        $url = 'http://localhost/matserviceswsok/usuarios/verifica_usuario.php?usuario='.$_POST['usuario'].'&clave='.$_POST['clave'];
+        $url = 'http://localhost/matserviceswsok/usuarios/obtener_usuarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -81,14 +80,24 @@ class Usuarios_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
-        //echo $data;
-        echo $datos->{'estado'};
+        $usuarios;
+        $i=0;
+        $data;
+        $data = array('nombre_Empresa'=>'checar despues');
         if ($datos->{'estado'}==1) {
-            foreach($datos->{'alumnos'} as $fila) {
-                echo $fila->{'idalumno'}."--".$fila->{'nombre'}."--".$fila->{'direccion'}."<br>";
+            foreach($datos->{'usuarios'} as $fila) {
+                $usuarios[$i]=$fila;
+//                echo $fila->{'idUsuario'}."--".$fila->{'nombre'}."--".$fila->{'apellido_paterno'}."<br>";
             }
+            $data = array('usuarios'=>$datos->{'usuarios'},'nombre_Empresa'=>'checar despues'
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('usuarios/adminUsers_view',$data);
+            $this->load->view('layouts/pie_view',$data);
         } else {
-            echo "error";
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('principal_view',$data);
+            $this->load->view('layouts/pie_view',$data);
         }
     }
     

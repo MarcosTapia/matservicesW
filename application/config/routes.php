@@ -47,6 +47,10 @@ $route['insertar_alumno'] = "principal_controller/insertarAlumno";
 $route['borrar_alumno/(:num)'] = "principal_controller/borrarAlumno/$1";
 $route['actualizar_alumno'] = "principal_controller/actualizarAlumno";
 
+
+$route['mostrarusuarios'] = "usuarios_controller/mostrarUsuarios";
+
+
 $route['404_override'] = '';
 
 
