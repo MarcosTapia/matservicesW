@@ -56,24 +56,24 @@
 		if($usuarios) {
 			$i=1;
                         foreach($usuarios as $fila) {
-                            //echo $matricula;
-                            if ($fila['matricula'] != $matricula) {
+//                            echo $fila->{'matricula'};
+                           // if ($fila->{'matricula'} != $matricula) {
 			?>
-				  <tr id="fila-<?php echo $fila['idUsuario'] ?>">
-					  <td><?php echo $fila['matricula'] ?></td>
-					  <td><?php echo $fila['usuario'] ?></td>
-					  <td><?php echo $fila['permisos'] ?></td>
-					  <td><?php echo $fila['nombre'] ?></td>
-					  <td><?php echo $fila['apellido_paterno'] ?></td>
-					  <td><?php echo $fila['apellido_materno'] ?></td>
-					  <td><?php echo $fila['telefono_casa'] ?></td>
-					  <td><?php echo $fila['telefono_celular'] ?></td>
+                                  <tr id="fila-<?php echo $fila->{'idUsuario'} ?>">
+                                          <td><?php echo $fila->{'matricula'} ?></td>
+                                          <td><?php echo $fila->{'usuario'} ?></td>
+                                          <td><?php echo $fila->{'permisos'} ?></td>
+                                          <td><?php echo $fila->{'nombre'} ?></td>
+                                          <td><?php echo $fila->{'apellido_paterno'} ?></td>
+                                          <td><?php echo $fila->{'apellido_materno'} ?></td>
+                                          <td><?php echo $fila->{'telefono_casa'} ?></td>
+                                          <td><?php echo $fila->{'telefono_celular'} ?></td>
                                           
-					  <td><a class="btn btn-xs btn-primary" href="actualizar/<?php echo $fila['matricula'] ?>">Editar</a>
-					  <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminar/<?php echo $fila['matricula'] ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                                          <td><a class="btn btn-xs btn-primary" href="actualizar/<?php echo $fila->{'matricula'} ?>">Editar</a>
+                                          <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminar/<?php echo $fila->{'matricula'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
 				  </tr>
 				  <?php $i++; 
-                            }
+                            //}
 			}   
 		}
 		?>

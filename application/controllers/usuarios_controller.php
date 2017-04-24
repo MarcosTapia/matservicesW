@@ -51,6 +51,14 @@ class Usuarios_controller extends CI_Controller {
                 $i++;
             }
             //fin separa campos
+            
+            //crea campos de sesion
+            $this->session->set_userdata('nombre', $nombre." ".$apellido_paterno." ".$apellido_materno);
+            $this->session->set_userdata('permisos', $permisos);
+            $this->session->set_userdata('usuario', $usuario);					
+            $this->session->set_userdata('clave', $clave);					
+            //fin crea campos de sesion
+            
             $data = array('idUsuario'=>$idUsuario,'matricula'=>$matricula,
                     'usuario'=>$usuario,'clave'=>$clave,
                     'permisos'=>$permisos,'nombre'=>$nombre,
@@ -87,10 +95,10 @@ class Usuarios_controller extends CI_Controller {
         if ($datos->{'estado'}==1) {
             foreach($datos->{'usuarios'} as $fila) {
                 $usuarios[$i]=$fila;
-//                echo $fila->{'idUsuario'}."--".$fila->{'nombre'}."--".$fila->{'apellido_paterno'}."<br>";
+                //echo $fila->{'idUsuario'}."--".$fila->{'nombre'}."--".$fila->{'apellido_paterno'}."<br>";
             }
-            $data = array('usuarios'=>$datos->{'usuarios'},'nombre_Empresa'=>'checar despues'
-                );
+            $data = array('usuarios'=>$datos->{'usuarios'},'nombre_Empresa'=>'checar despues',
+                'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('usuarios/adminUsers_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -102,5 +110,17 @@ class Usuarios_controller extends CI_Controller {
     }
     
     //Fin llamada a webservices de usuarios
+    
+    // Manejo de sesiones
+    function cerrarSesion() {            
+            if ($this->sistema_model->logout()) {
+                $data = array('error'=>'1');
+                redirect($this->index(),$data);
+            }
+    }
+    
+    //Fin Manejo de sesiones
+    
+    
 }
 

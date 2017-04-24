@@ -49,6 +49,7 @@ $route['actualizar_alumno'] = "principal_controller/actualizarAlumno";
 
 
 $route['mostrarusuarios'] = "usuarios_controller/mostrarUsuarios";
+$route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 
 
 $route['404_override'] = '';

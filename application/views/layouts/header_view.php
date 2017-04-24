@@ -47,7 +47,6 @@
                         7.- Empleados
                         8.- configuracion                  
                     -->
-                    
                   <li class="active"><a href="#">Inicio</a></li>
                     <?php if ($permisos[0] == "1") { ?>
                   <li><a href="#">Inventario</a></li>
@@ -66,7 +65,7 @@
                     <?php } if ($permisos[7] == "1") { ?>
                   <li><a href="usuarios_controller/configurarSistema">Configuraci&oacute;n</a></li>
                     <?php } ?>
-                  <li><a href="#">Salir</a></li>
+                  <li><a href="cerrarSesion">Salir</a></li>
                 </ul>
               </div>
             </nav>            

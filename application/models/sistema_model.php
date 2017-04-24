@@ -5,6 +5,20 @@ class Sistema_model extends CI_Model{
         $this->load->helper('date');
     }
     
+    //**  Manejo de Sesiones
+    // Sale de una sesion 
+    function logout() {
+		$this->session->sess_destroy();
+		return TRUE;
+    }
+
+    // Determina si un usuario esta logueado 
+    function is_logged_in() {
+		return $this->session->userdata('person_id')!=false;
+    }
+    //**  Fin Manejo de Sesiones
+    
+    
     //Para webservices
     function obtieneAlumnoPorId($idAlumno){
         $consulta = $this->db->get_where('Alumnos',array('idAlumno'=>  $idAlumno));
@@ -277,20 +291,6 @@ inner join entregas as e on d.idDespachador = e.idDespachador");
 		}
 		return false;
     }
-
-    // Sale de una sesion 
-    function logout()
-    {
-		$this->session->sess_destroy();
-		return TRUE;
-    }
-
-    // Determina si un usuario esta logueado 
-    function is_logged_in()
-    {
-		return $this->session->userdata('person_id')!=false;
-    }
-	
 
 
 }

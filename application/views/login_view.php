@@ -15,8 +15,14 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script> 
+    <script>
+        function borraDatos() {
+            document.getElementById('usuario').value = "";
+            document.getElementById('clave').value = "";
+        }
+    </script>        
   </head>
-<body>
+  <body onload="borraDatos()">
 <div class="container">
     <div class="row-fluid">
         <div class="col-md-4">
@@ -39,7 +45,7 @@
                     <label for="usuario" class="control-label col-sm-2">Usuario:</label>
                     <div class="col-sm-7">
                         <input type="text" style="font-size: 11px;" 
-                               class="form-control" id="monto" 
+                               class="form-control" id="usuario" 
                                name="usuario" 
                                placeholder="Usuario">                            
                     </div>
@@ -48,7 +54,7 @@
                     <label for="clave" class="control-label col-sm-2">Clave:</label>
                     <div class="col-sm-7">
                         <input type="password" style="font-size: 11px;" 
-                               class="form-control" id="monto" 
+                               class="form-control" id="clave" 
                                name="clave" />                            
                     </div>
                 </div>
