@@ -34,64 +34,60 @@
 <div class="container">
 <div class="row">
 <div class="col-md-12">
-    <p><a class="btn btn-xs btn-success" href="nuevo">Nuevo Usuario</a>
+    <p><a class="btn btn-xs btn-success" href="nuevoUsuario">Nuevo Empleado</a>
     <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a></p>
-    <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
-	<thead>
-		<tr>
-			<th>Matricula</th>
-			<th>Usuario</th>
-			<th>Permisos</th>
-			<th>Nombre</th>
-			<th>Apellido Paterno</th>
-			<th>Apellido Materno</th>
-			<th>Tel. Casa</th>
-			<th>Celular</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php
-		if($usuarios) {
-			$i=1;
-                        foreach($usuarios as $fila) {
-//                            echo $fila->{'matricula'};
-                           // if ($fila->{'matricula'} != $matricula) {
-			?>
-                                  <tr id="fila-<?php echo $fila->{'idUsuario'} ?>">
-                                          <td><?php echo $fila->{'matricula'} ?></td>
-                                          <td><?php echo $fila->{'usuario'} ?></td>
-                                          <td><?php echo $fila->{'permisos'} ?></td>
-                                          <td><?php echo $fila->{'nombre'} ?></td>
-                                          <td><?php echo $fila->{'apellido_paterno'} ?></td>
-                                          <td><?php echo $fila->{'apellido_materno'} ?></td>
-                                          <td><?php echo $fila->{'telefono_casa'} ?></td>
-                                          <td><?php echo $fila->{'telefono_celular'} ?></td>
-                                          
-                                          <td><a class="btn btn-xs btn-primary" href="actualizar/<?php echo $fila->{'matricula'} ?>">Editar</a>
-                                          <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminar/<?php echo $fila->{'matricula'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
-				  </tr>
-				  <?php $i++; 
-                            //}
-			}   
-		}
-		?>
-	</tbody>
-	<tfoot>
-		<tr>
-			<th>Matricula</th>
-			<th>Usuario</th>
-			<th>Permisos</th>
-			<th>Nombre</th>
-			<th>Apellido Paterno</th>
-			<th>Apellido Materno</th>
-			<th>Tel. Casa</th>
-			<th>Celular</th>
-			<th></th>
-		</tr>
-	</tfoot>
-</table>
+    <div class="table-responsive">     
+        <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Permisos</th>
+                    <th>Nombre</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Tel. Casa</th>
+                    <th>Celular</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if($usuarios) {
+                    $i=1;
+                    foreach($usuarios as $fila) {
+                    ?>
+                        <tr id="fila-<?php echo $fila->{'idUsuario'} ?>">
+                            <td><?php echo $fila->{'usuario'} ?></td>
+                            <td><?php echo $fila->{'permisos'} ?></td>
+                            <td><?php echo $fila->{'nombre'} ?></td>
+                            <td><?php echo $fila->{'apellido_paterno'} ?></td>
+                            <td><?php echo $fila->{'apellido_materno'} ?></td>
+                            <td><?php echo $fila->{'telefono_casa'} ?></td>
+                            <td><?php echo $fila->{'telefono_celular'} ?></td>
+
+                            <td><a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idUsuario'} ?>">Editar</a>
+                            <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idUsuario'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                        </tr>
+                        <?php $i++; 
+                    }   
+                }
+                ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Permisos</th>
+                    <th>Nombre</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Tel. Casa</th>
+                    <th>Celular</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div> <!-- /division renglon en 12-->
 </div> <!-- / renglon-->
 </div> <!-- /container -->

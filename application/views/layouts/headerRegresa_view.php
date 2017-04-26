@@ -8,32 +8,67 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
     <title> <?php if ($nombre_Empresa != "") { echo $nombre_Empresa; }?> </title>
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/css/bootstrap.css" rel="stylesheet">
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url(); ?>/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script> 
+    <script src="<?php echo base_url(); ?>/js/ie10-viewport-bug-workaround.js"></script> 
+    
+    <!-- Para Slider -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>/styles/media-queries.css" />
+    <link rel="stylesheet" href="<?php echo base_url(); ?>/flex-slider/flexslider.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>/flex-slider/jquery.flexslider-min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>/scripts/setup.js"></script> 
+    
   </head>
 <body>
 <div class="container">
     <div class="row-fluid">
         <div class="col-md-12">
+            <br>
         <!-- xs phones, sm tablets, md desktops  lg larger desktops -->
             <img src="" />  
-            <h1 class="texst-center">
-                <?php if ($nombre_Empresa != "") { echo $nombre_Empresa; }?>
-            </h1>   
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="#"><?php if ($nombre_Empresa != "") { echo $nombre_Empresa; }?></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <!-- Para leer permisos 
+                        1.- inventario
+                        2.- ventas
+                        3.- compras
+                        4.- consultas
+                        5.- proveedores
+                        6.- clientes
+                        7.- Empleados
+                        8.- configuracion                  
+                    -->
+                  <li class="active"><a href="#">Inicio</a></li>
+                    <?php if ($permisos[0] == "1") { ?>
+                  <li><a href="#">Inventario</a></li>
+                    <?php } if ($permisos[1] == "1") { ?>
+                  <li><a href="#">Ventas</a></li>
+                    <?php } if ($permisos[2] == "1") { ?>
+                  <li><a href="#">Compras</a></li>
+                    <?php } if ($permisos[3] == "1") { ?>
+                  <li><a href="#">Consultas</a></li>
+                    <?php } if ($permisos[4] == "1") { ?>
+                  <li><a href="#">Proveedores</a></li>
+                    <?php } if ($permisos[5] == "1") { ?>
+                  <li><a href="#">Clientes</a></li>
+                    <?php } if ($permisos[6] == "1") { ?>
+                  <li><a href="../mostrarusuarios">Empleados</a></li>
+                    <?php } if ($permisos[7] == "1") { ?>
+                  <li><a href="usuarios_controller/configurarSistema">Configuraci&oacute;n</a></li>
+                    <?php } ?>
+                  <li><a href="../cerrarSesion">Salir</a></li>
+                </ul>
+              </div>
+            </nav>            
         </div>
     </div>
-    <div class="row-fluid">
-        <div class="col-md-12">
-            <div class="col-md-3">
-                <ul class="nav nav-pills nav-stacked">
-                  <li><a href="../contenido1">Inicio</a></li>
-                  <li><a href="../contenido2">Consultas</a></li>
-                  <li><a href="../contenido3">Entregas</a></li>
-                  <li><a href="../contenido4">Configuraci&oacute;n</a></li>
-                </ul>
-            </div>        
+            

@@ -38,17 +38,15 @@
 |
 */
 
-$route['default_controller'] = "principal_controller";
-//rutas principales
-//$route['actualizaEncargado/(:num)'] = "inicio_controller/actualizarEncargado/$1";
-$route['obtener_alumno_por_id/(:num)'] = "principal_controller/obtener_alumno_por_id/$1";
-$route['obtenerAlumnos'] = "principal_controller/obtenerAlumnos";
-$route['insertar_alumno'] = "principal_controller/insertarAlumno";
-$route['borrar_alumno/(:num)'] = "principal_controller/borrarAlumno/$1";
-$route['actualizar_alumno'] = "principal_controller/actualizarAlumno";
-
-
+$route['default_controller'] = "usuarios_controller";
+//rutas usuarios importarUsersExcel
+$route['verificaUsuario'] = "usuarios_controller/verificaUsuario";
 $route['mostrarusuarios'] = "usuarios_controller/mostrarUsuarios";
+$route['actualizarUsuario/(:num)'] = "usuarios_controller/actualizarUsuario/$1";
+$route['eliminarUsuario/(:num)'] = "usuarios_controller/eliminarUsuario/$1";
+$route['nuevoUsuario'] = "usuarios_controller/nuevoUsuario";
+$route['importarUsersExcel'] = "usuarios_controller/importarUsersExcel";
+
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 
 

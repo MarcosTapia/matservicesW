@@ -61,7 +61,7 @@
                     <?php } if ($permisos[5] == "1") { ?>
                   <li><a href="#">Clientes</a></li>
                     <?php } if ($permisos[6] == "1") { ?>
-                  <li><a href="mostrarUsuarios">Empleados</a></li>
+                  <li><a href="mostrarusuarios">Empleados</a></li>
                     <?php } if ($permisos[7] == "1") { ?>
                   <li><a href="usuarios_controller/configurarSistema">Configuraci&oacute;n</a></li>
                     <?php } ?>
