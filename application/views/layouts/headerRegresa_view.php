@@ -48,20 +48,28 @@
                         8.- configuracion                  
                     -->
                   <li class="active"><a href="#">Inicio</a></li>
+                    
                     <?php if ($permisos[0] == "1") { ?>
                   <li><a href="#">Inventario</a></li>
+                    
                     <?php } if ($permisos[1] == "1") { ?>
                   <li><a href="#">Ventas</a></li>
+                    
                     <?php } if ($permisos[2] == "1") { ?>
                   <li><a href="#">Compras</a></li>
+                    
                     <?php } if ($permisos[3] == "1") { ?>
                   <li><a href="#">Consultas</a></li>
+                    
                     <?php } if ($permisos[4] == "1") { ?>
-                  <li><a href="#">Proveedores</a></li>
+                  <li><a href="../proveedores_controller/mostrarproveedores">Proveedores</a></li>
+                    
                     <?php } if ($permisos[5] == "1") { ?>
                   <li><a href="#">Clientes</a></li>
+                    
                     <?php } if ($permisos[6] == "1") { ?>
                   <li><a href="../mostrarusuarios">Empleados</a></li>
+                    
                     <?php } if ($permisos[7] == "1") { ?>
                   <li><a href="usuarios_controller/configurarSistema">Configuraci&oacute;n</a></li>
                     <?php } ?>

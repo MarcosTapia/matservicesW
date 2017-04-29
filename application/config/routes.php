@@ -47,6 +47,14 @@ $route['eliminarUsuario/(:num)'] = "usuarios_controller/eliminarUsuario/$1";
 $route['nuevoUsuario'] = "usuarios_controller/nuevoUsuario";
 $route['importarUsersExcel'] = "usuarios_controller/importarUsersExcel";
 
+//rutas proveedores importarProveedoresExcel
+$route['mostrarproveedores'] = "proveedores_controller/mostrarProveedores";
+$route['actualizarProveedor/(:num)'] = "proveedores_controller/actualizarProveedor/$1";
+$route['eliminarProveedor/(:num)'] = "proveedores_controller/eliminarProveedor/$1";
+$route['nuevoproveedor'] = "proveedores_controller/nuevoProveedor";
+$route['importarProveedoresExcel'] = "proveedores_controller/importarProveedoresExcel";
+
+
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 
 
