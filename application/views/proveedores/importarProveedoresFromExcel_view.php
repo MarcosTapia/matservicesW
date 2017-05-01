@@ -3,7 +3,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>css/bootstrap.css" />
     <meta charset="utf-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Importar Usuarios</title>
+	<title>Importar Proveedores</title>
 </head>
 <body>      
     <div class="container"> <!--class="container-fluid" -->

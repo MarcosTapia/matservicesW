@@ -8,82 +8,116 @@
     <div class="container"> <!--class="container-fluid" -->
             <div class="row-fluid">
                 <div class="col-sm-9">
-                    <form class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/usuarios_controller/actualizarUsuarioFromFormulario" method="post">
-                        <h4>Actualizaci&oacute;n de Empleados</h4>
-                        <input type="hidden" name="idUsuario" id="idUsuario" value="<?php echo $usuario->{'idUsuario'}; ?>" />
+                    <form class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/proveedores_controller/actualizarProveedorFromFormulario" method="post">
+                        <h4>Actualizaci&oacute;n de Proveedores</h4>
+                        <input type="hidden" name="idProveedor" id="idProveedor" value="<?php echo $proveedor->{'idProveedor'}; ?>" />
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="usuario">Usuario:</label>
+                          <label class="control-label col-sm-2" for="empresa">Empresa:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="usuario" name="usuario" value="<?php echo $usuario->{'usuario'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="empresa" name="empresa" value="<?php echo $proveedor->{'empresa'}; ?>" placeholder="Nombre Empresa">
                           </div>					  
                         </div>  
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="clave">Clave:</label>
-                          <div class="col-sm-10">
-                                <input type="text" class="form-control" id="clave" name="clave" value="<?php echo $usuario->{'clave'}; ?>" placeholder="C&oacute;digo">
-                          </div>					  
-                        </div> 
-
-                        <div class="form-group">
-                            <fieldset border="3">
-                                <legent>Permisos</legent>
-                                <div class="checkbox">		
-                                    <label><input type="checkbox" name="chkInventario" <?php if ($usuario->{'permisos'}[0]=="1") {
-                                            echo "checked";	} ?>> Inventario</label>
-                                    <label><input type="checkbox" name="chkVentas" <?php if ($usuario->{'permisos'}[1]=="1") {
-                                            echo "checked";	} ?>>Ventas</label>
-                                    <label><input type="checkbox" name="chkCompras" <?php if ($usuario->{'permisos'}[2]=="1") {
-                                            echo "checked";	} ?>>Compras</label>
-                                    <label><input type="checkbox" name="chkConsultas" <?php if ($usuario->{'permisos'}[2]=="1") {
-                                            echo "checked";	} ?>>Consultas</label>
-                                    <label><input type="checkbox" name="chkProveedores" <?php if ($usuario->{'permisos'}[2]=="1") {
-                                            echo "checked";	} ?>>Proveedores</label>
-                                    <label><input type="checkbox" name="chkClientes" <?php if ($usuario->{'permisos'}[2]=="1") {
-                                            echo "checked";	} ?>>Clientes</label>
-                                    <label><input type="checkbox" name="chkEmpleados" <?php if ($usuario->{'permisos'}[2]=="1") {
-                                            echo "checked";	} ?>>Empleados</label>
-                                    <label><input type="checkbox" name="chkConfiguracion" <?php if ($usuario->{'permisos'}[2]=="1") {
-                                            echo "checked";	} ?>>Configuraci&oacute;n</label>
-                                </div>
-                            </fieldset>	 
-                        </div> 
-
-                        <div class="form-group">
                           <label class="control-label col-sm-2" for="nombre">Nombre:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $usuario->{'nombre'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $proveedor->{'nombre'}; ?>" placeholder="Nombre Representante">
                           </div>					  
-                        </div> 
+                        </div>  
+                    
+                        <div class="form-group">
+                          <label class="control-label col-sm-2" for="apellidos">Apellidos:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="apellidos" name="apellidos" value="<?php echo $proveedor->{'apellidos'}; ?>" placeholder="Apellidos Representante">
+                          </div>					  
+                        </div>  
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="apellido_paterno">Apellido Paterno:</label>
+                            <label class="control-label col-sm-2" for="telefono_casa">Tel&eacute;fono Empresa:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" value="<?php echo $usuario->{'apellido_paterno'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="telefono_casa" name="telefono_casa" value="<?php echo $proveedor->{'telefono_casa'}; ?>" placeholder="Tel&eacute;fono Empresa">
                           </div>					  
-                        </div> 
-
+                        </div>  
+                    
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="apellido_materno">Apellido Materno:</label>
+                            <label class="control-label col-sm-2" for="telefono_celular">Celular:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="apellido_materno" name="apellido_materno" value="<?php echo $usuario->{'apellido_materno'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="telefono_celular" name="telefono_celular" value="<?php echo $proveedor->{'telefono_celular'}; ?>" placeholder="Celular Representante">
                           </div>					  
-                        </div> 
-
+                        </div>  
+                    
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="telefono_casa">Telefono Casa:</label>
+                            <label class="control-label col-sm-2" for="direccion1">Direcci&oacute;n 1:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="telefono_casa" name="telefono_casa" value="<?php echo $usuario->{'telefono_casa'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="direccion1" name="direccion1" value="<?php echo $proveedor->{'direccion1'}; ?>" placeholder="Direcci&oacute;n 1">
                           </div>					  
-                        </div> 
-
+                        </div>  
+                    
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="telefono_celular">Telefono Celular:</label>
+                            <label class="control-label col-sm-2" for="direccion2">Direcci&oacute;n 2:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="telefono_celular" name="telefono_celular" value="<?php echo $usuario->{'telefono_celular'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="direccion2" name="direccion2" value="<?php echo $proveedor->{'direccion2'}; ?>" placeholder="Direcci&oacute;n 2">
                           </div>					  
-                        </div> 
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="rfc">RFC:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $proveedor->{'rfc'}; ?>" placeholder="RFC">
+                          </div>					  
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="email">Email:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="email" name="email" value="<?php echo $proveedor->{'email'}; ?>" placeholder="Email">
+                          </div>					  
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="ciudad">Ciudad:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="ciudad" name="ciudad" value="<?php echo $proveedor->{'ciudad'}; ?>" placeholder="Ciudad">
+                          </div>					  
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="estado">Estado:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="estado" name="estado" value="<?php echo $proveedor->{'estado'}; ?>" placeholder="Estado">
+                          </div>					  
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="cp">CP:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="cp" name="cp" value="<?php echo $proveedor->{'cp'}; ?>" placeholder="C&oacute;digo Postal">
+                          </div>					  
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="pais">Pa&iacute;s:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="pais" name="pais" value="<?php echo $proveedor->{'pais'}; ?>" placeholder="Pa&iacute;s">
+                          </div>					  
+                        </div>  
+                    
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="comentarios">Comentarios:</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" id="comentarios" name="comentarios" value="<?php echo $proveedor->{'comentarios'}; ?>" placeholder="Comentarios">
+                          </div>					  
+                        </div>  
+                    
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="noCuenta">No. Cuenta:</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="noCuenta" name="noCuenta" value="<?php echo $proveedor->{'noCuenta'}; ?>" placeholder="No. Cuenta">
+                      </div>					  
+                    </div>  
+                    
+                        
 
                         <table>
                             <tr>
@@ -99,7 +133,7 @@
                                 <td>
                                     <div class="form-group">        
                                       <div class="col-sm-offset-2 col-sm-10">
-                                            <a href="<?php echo base_url();?>index.php/usuarios_controller/mostrarUsuarios">
+                                            <a href="<?php echo base_url();?>index.php/proveedores_controller/mostrarProveedores">
                                             <button type="button" class="btn btn-xs btn-danger">Regresar</button>
                                             </a>
                                       </div>

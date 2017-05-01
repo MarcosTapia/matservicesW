@@ -62,18 +62,17 @@
                   <li><a href="#">Consultas</a></li>
                     
                     <?php } if ($permisos[4] == "1") { ?>
-                  <li><a href="../proveedores_controller/mostrarproveedores">Proveedores</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/proveedores_controller/mostrarproveedores">Proveedores</a></li>
                     
                     <?php } if ($permisos[5] == "1") { ?>
                   <li><a href="#">Clientes</a></li>
                     
                     <?php } if ($permisos[6] == "1") { ?>
-                  <li><a href="../usuarios_controller/mostrarusuarios">Empleados</a></li>
-                    
+                  <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/mostrarusuarios">Empleados</a></li>
                     <?php } if ($permisos[7] == "1") { ?>
-                  <li><a href="usuarios_controller/configurarSistema">Configuraci&oacute;n</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/configuracion_controller/mostrarvalores">Configuraci&oacute;n</a></li>
                     <?php } ?>
-                  <li><a href="cerrarSesion">Salir</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/cerrarSesion">Salir</a></li>
                 </ul>
               </div>
             </nav>            

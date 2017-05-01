@@ -24,7 +24,7 @@ class Usuarios_controller extends CI_Controller {
     function verificaUsuario() {
         //Llamada a Webservices de Usuarios
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/usuarios/verifica_usuario.php?usuario='.$_POST['usuario'].'&clave='.$_POST['clave'];
+        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/verifica_usuario.php?usuario='.$_POST['usuario'].'&clave='.$_POST['clave'];
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -79,7 +79,7 @@ class Usuarios_controller extends CI_Controller {
     
     function mostrarUsuarios() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/usuarios/obtener_usuarios.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -107,7 +107,7 @@ class Usuarios_controller extends CI_Controller {
     function actualizarUsuario($idUsuario) {
         //Obtiene usuario por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
+        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -118,7 +118,7 @@ class Usuarios_controller extends CI_Controller {
         if ($datos->{'estado'}==1) {
             $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>'checar despues',
                 'permisos' => $this->session->userdata('permisos'));
-            $this->load->view('layouts/headerRegresa_view',$data);
+            $this->load->view('layouts/header_view',$data);
             $this->load->view('usuarios/actualizaUsuario_view',$data);
             $this->load->view('layouts/pie_view',$data);
         } else {
@@ -203,7 +203,7 @@ class Usuarios_controller extends CI_Controller {
                 "telefono_celular" => $telefono_celular
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/usuarios/actualizar_usuario.php');
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/actualizar_usuario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -220,15 +220,14 @@ class Usuarios_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
-//            redirect('contenido4');
-            $this->mostrarUsuarios();
+            redirect('/usuarios_controller/mostrarUsuarios');
         }
     }
 
     function eliminarUsuario($idUsuario) {
         $data = array("idUsuario" => $idUsuario);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/usuarios/borrar_usuario.php');
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/borrar_usuario.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -245,7 +244,6 @@ class Usuarios_controller extends CI_Controller {
         //echo $result;
 
         //Fin llamado WS
-//            redirect('contenido4');
         redirect('/usuarios_controller/mostrarUsuarios');
     }
     
@@ -334,7 +332,7 @@ class Usuarios_controller extends CI_Controller {
                 "telefono_celular" => $telefono_celular
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/usuarios/insertar_usuario.php');
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -351,8 +349,7 @@ class Usuarios_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
-//            redirect('contenido4');
-            $this->mostrarUsuarios();
+            redirect('/usuarios_controller/mostrarUsuarios');
         }
     }
     //Fin llamada a webservices de usuarios
@@ -394,7 +391,7 @@ class Usuarios_controller extends CI_Controller {
                 
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/usuarios/insertar_usuario.php');
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -419,7 +416,7 @@ class Usuarios_controller extends CI_Controller {
     public function exportarExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/usuarios/obtener_usuarios.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
