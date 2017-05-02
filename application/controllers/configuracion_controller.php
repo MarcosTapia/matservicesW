@@ -1,5 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Configuracion_controller extends CI_Controller {
+    private $categoriasGlobal;
+    private $datosEmpresaGlobal;
+    private $nombreEmpresaGlobal;
+    private $sistemaGlobal;
+    
     function __construct(){
         parent::__construct();
         $this->load->model('sistema_model');
@@ -10,7 +15,14 @@ class Configuracion_controller extends CI_Controller {
         //para subir imagenes
         $this->load->helper("URL", "DATE", "URI", "FORM");
         $this->load->library('upload');
-        $this->load->model('mupload_model');        
+        $this->load->model('mupload_model');   
+        
+        //valores globales de categorias y datos de Empresa
+        $this->categoriasGlobal = $this->cargaCategorias();
+        $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
+        $this->sistemaGlobal = $this->cargaDatosSistema();
+        $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0];
+        //echo "--->".$this->nombreEmpresaGlobal->{'nombreEmpresa'}."";
     }
 
     function index(){
@@ -20,8 +32,8 @@ class Configuracion_controller extends CI_Controller {
     function regresa() {
         echo "error";
     }
-
-    function mostrarValores() {
+    
+    function cargaCategorias() {
         //muestra valores de categorias
         # An HTTP GET request example
         $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
@@ -34,13 +46,48 @@ class Configuracion_controller extends CI_Controller {
         curl_close($ch);
         $categorias;
         $i=0;
-        $data;
-        $data = array('nombre_Empresa'=>'checar despues');
-        $data = array('categorias'=>$datos->{'categorias'},'nombre_Empresa'=>'checar despues',
-            'permisos' => $this->session->userdata('permisos'));
         //Fin muestra valores de categorias
-        
-        
+        return $datos->{'categorias'};
+    }
+    
+    function cargaDatosEmpresa() {
+        //muestra valores de datos de Empresa
+        # An HTTP GET request example
+        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresas.php';
+        $ch2 = curl_init($url2);
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        $data2 = curl_exec($ch2);
+        $datos2 = json_decode($data2);
+        curl_close($ch2);
+        $i=0;
+        return $datos2->{'datosEmpresas'};
+        //Fin muestra valores de datos de Empresa
+    }
+    
+    function cargaDatosSistema() {
+        //muestra valores de datos del Sistema
+        # An HTTP GET request example
+        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistemas.php';
+        $ch2 = curl_init($url2);
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        $data2 = curl_exec($ch2);
+        $datos2 = json_decode($data2);
+        curl_close($ch2);
+        $i=0;
+        return $datos2->{'sistemas'};
+        //Fin muestra valores de datos de Empresa
+    }
+
+    function mostrarValores() {
+        $data = array('categorias'=>$this->categoriasGlobal,
+                'datosEmpresas'=>$this->datosEmpresaGlobal,
+                'sistemas'=>$this->sistemaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/adminConfiguracion_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -58,7 +105,10 @@ class Configuracion_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
-            $data = array('categoria'=>$datos->{'categoria'},'nombre_Empresa'=>'checar despues',
+            $data = array('categoria'=>$datos->{'categoria'},
+                'datosEmpresas'=>$this->datosEmpresaGlobal,
+                'sistemas'=>$this->sistemaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('configuracion/actualizaCategoria_view',$data);
@@ -66,6 +116,52 @@ class Configuracion_controller extends CI_Controller {
         } else {
             echo "error";
         }
+    }
+    
+    function actualizarDatosEmpresa($idEmpresa) {
+        //Obtiene categoria por id
+        # An HTTP GET request example
+        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresa_por_id.php?idEmpresa='.$idEmpresa;
+        $ch2 = curl_init($url2);
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        $data2 = curl_exec($ch2);
+        $datos2 = json_decode($data2);
+        curl_close($ch2);
+            
+        $data = array('categorias'=>$this->categoriasGlobal,
+            'datosEmpresa'=>$datos2->{'datosEmpresa'},
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'permisos' => $this->session->userdata('permisos'));
+            
+            
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('configuracion/actualizaDatosEmpresa_view',$data);
+        $this->load->view('layouts/pie_view',$data);
+    }
+    
+    function actualizarSistema($idSistema) {
+        //Obtiene categoria por id
+        # An HTTP GET request example
+        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistema_por_id.php?idSistema='.$idSistema;
+        $ch2 = curl_init($url2);
+        curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+        $data2 = curl_exec($ch2);
+        $datos2 = json_decode($data2);
+        curl_close($ch2);
+            
+        $data = array('categorias'=>$this->categoriasGlobal,
+            'sistema'=>$datos2->{'sistema'},
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'permisos' => $this->session->userdata('permisos'));
+            
+            
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('configuracion/actualizaSistema_view',$data);
+        $this->load->view('layouts/pie_view',$data);
     }
 
     function actualizarCategoriaFromFormulario(){
@@ -123,7 +219,10 @@ class Configuracion_controller extends CI_Controller {
     }
     
     function nuevoCategoria() {
-        $data = array('nombre_Empresa'=>'checar despues',
+        $data = array(
+            'datosEmpresas'=>$this->datosEmpresaGlobal,
+            'sistemas'=>$this->sistemaGlobal,
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/nuevoCategoria_view',$data);
@@ -162,7 +261,10 @@ class Configuracion_controller extends CI_Controller {
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarCategoriasExcel(){
-        $data = array('nombre_Empresa'=>'checar despues',
+        $data = array(
+            'datosEmpresas'=>$this->datosEmpresaGlobal,
+            'sistemas'=>$this->sistemaGlobal,
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/importarCategoriasFromExcel_view',$data);
@@ -212,10 +314,10 @@ class Configuracion_controller extends CI_Controller {
     //Fin Importar desde Excel con libreria de PHPExcel
     
     //Exportar datos a Excel
-    public function exportarProveedorExcel(){
+    public function exportarCategoriaExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -226,7 +328,7 @@ class Configuracion_controller extends CI_Controller {
         //fin llamado de ws
         $id=$this->uri->segment(3);
 //        $nilai=$this->login_model->obtieneUsuarios();
-        $nilai=$datos->{'proveedores'};
+        $nilai=$datos->{'categorias'};
 //        if (isset($datos->{'usuarios'})) {
 //            foreach($nilai as $h){
 //                echo "azul";
@@ -236,13 +338,11 @@ class Configuracion_controller extends CI_Controller {
         foreach($nilai as $h){
             $totn = $totn + 1;
         }
-        $heading=array('Empresa','Nombre','Apellidos','Telefono_casa',
-            'Telefono_celular','Direccion1','Direccion2','RFC',
-            'Email','Ciudad','Estado','CP','País','Comentarios','No. Cuenta');
+        $heading=array('Categoría');
         $this->load->library('excel');
         //Create a new Object
         $objPHPExcel = new PHPExcel();
-        $objPHPExcel->getActiveSheet()->setTitle("Proveedores");
+        $objPHPExcel->getActiveSheet()->setTitle("Categorias");
 
         //Loop Heading
         $rowNumberH = 1;
@@ -259,21 +359,7 @@ class Configuracion_controller extends CI_Controller {
         $no = 1;
 
         foreach($nilai as $n){
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'empresa'});
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$n->{'nombre'});
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$n->{'apellidos'});
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'telefono_casa'});
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$n->{'telefono_celular'});
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'direccion1'});
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$n->{'direccion2'});
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,$n->{'rfc'});
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$n->{'email'});
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,$n->{'ciudad'});
-            $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,$n->{'estado'});
-            $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,$n->{'cp'});
-            $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,$n->{'pais'});
-            $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,$n->{'comentarios'});
-            $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,$n->{'noCuenta'});
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'descripcionCategoria'});
             $row++;
             $no++;
         }
@@ -287,11 +373,11 @@ class Configuracion_controller extends CI_Controller {
                         )
                 )
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:O'.$maxrow)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:A'.$maxrow)->applyFromArray($styleArray);
         //Save as an Excel BIFF (xls) file
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Proveedores.xls"');
+        header('Content-Disposition: attachment;filename="Categorias.xls"');
         header('Cache-Control: max-age=0');
         $objWriter->save('php://output');
         exit();

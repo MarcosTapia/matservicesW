@@ -11,12 +11,22 @@
 			<div class="col-sm-2">		
 			</div>		
 			<div class="col-sm-5">	
-				<br><br>
-				<form method='post' action='importarExcel' enctype='multipart/form-data'>
-					<input type='file' name='excel' />    
-					<input type='submit' name='enviar'  value='Importar'  />
-					<input type='hidden' value='upload' name='action' />
-				</form>
+                            <br>
+                            <h4 style="text-align: center">Importar Empleados</h4>
+                            <br>
+                            <form method='post' action='importarExcel' enctype='multipart/form-data'>
+                                    <input type='file' name='excel' />    
+                                    <input type='submit' name='enviar'  value='Importar'  />
+                                    <input type='hidden' value='upload' name='action' />
+                            </form>
+                            <br><br>
+                            <div class="form-group">        
+                              <div class="col-sm-offset-2 col-sm-10">
+                                    <a href="<?php echo base_url();?>index.php/usuarios_controller/mostrarUsuarios">
+                                    <button type="button" class="btn btn-xs btn-danger">Regresar</button>
+                                    </a>
+                              </div>
+                            </div>
 			</div>		
 			<div class="col-sm-5">		
 			</div>		

@@ -33,13 +33,13 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" style="border: 1px solid #FFF;border-color: red">
             <h3 style="text-align: center">Configuraci&oacute;n General del Sistema</h3>
         </div>
     </div>
     <div class="row">
         
-        <div class="col-sm-6">
+        <div class="col-sm-6" style="border: 1px solid #FFF;border-color: red">
             <form class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/configuracion_controller/actualizarCategoriaFromFormulario" method="post">
                 <h4>Modificar Categor&iacute;a</h4>
                 <input type="hidden" name="idCategoria" id="idCategoria" value="<?php echo $categoria->{'idCategoria'}; ?>" />
@@ -76,6 +76,107 @@
             </form>
         </div>	
         <div class="col-md-6">
+            <h4 style="text-align: center">Configuraci&oacute;n General del Sistema</h4>
+            <br>
+            <h5>Datos de la Empresa</h5>
+            <div class="table-responsive">     
+                <table class="table table-striped" style="border: 1px solid #FFF;border-color: red">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>RFC</th>
+                            <th>Direcci&oacute;n</th>
+                            <th>Email</th>
+                            <th>Tel&eacute;fono</th>
+                            <th>CP</th>
+                            <th>Ciudad</th>
+                            <th>Estado</th>
+                            <th>Pais</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($datosEmpresas) {
+                            $i=1;
+                            foreach($datosEmpresas as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idEmpresa'} ?>">
+                                    <td><?php echo $fila->{'nombreEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'rfcEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'direccionEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'emailEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'telEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'cpEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'ciudadEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'estadoEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'paisEmpresa'} ?></td>
+                                    <td>
+                                        <a class="btn btn-xs btn-primary" href="actualizarDatosEmpresa/<?php echo $fila->{'idEmpresa'} ?>">Editar</a>
+                                    </td>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        } 
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <!-- VALORES GENERALES DEL SISTEMA -->
+            <h5>Valores Generales del Sistema</h5>
+            <div class="table-responsive">     
+                <table class="table table-striped" style="border: 1px solid #FFF;border-color: red">
+                    <thead>
+                        <tr>
+                            <th>IVA</th>
+                            <th>Historial Proveedores</th>
+                            <th>Elecci&oacute;n Precio</th>
+                            <th>Inventario</th>
+                            <th>Ventas</th>
+                            <th>Compras</th>
+                            <th>Consultas</th>
+                            <th>Proveedores</th>
+                            <th>Clientes</th>
+                            <th>Empleados</th>
+                            <th>Empresa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($sistemas) {
+                            $i=1;
+                            foreach($sistemas as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idSistema'} ?>">
+                                    <td><?php echo $fila->{'ivaEmpresa'} ?></td>
+                                    
+                                    <td><?php echo $fila->{'historicoProveedores'} ?></td>
+                                    <td><?php echo $fila->{'criterioHistoricoProveedores'} ?></td>
+                                    <td><?php echo $fila->{'camposInventario'} ?></td>
+                                    <td><?php echo $fila->{'camposVentas'} ?></td>
+                                    <td><?php echo $fila->{'camposCompras'} ?></td>
+                                    <td><?php echo $fila->{'camposConsultas'} ?></td>
+                                    <td><?php echo $fila->{'camposProveedores'} ?></td>
+                                    <td><?php echo $fila->{'camposClientes'} ?></td>
+                                    <td><?php echo $fila->{'camposEmpleados'} ?></td>
+                                    <td><?php echo $fila->{'camposEmpresa'} ?></td>
+                                    
+                                    <td>
+                                        <a class="btn btn-xs btn-primary" href="actualizarSistema/<?php echo $fila->{'idSistema'} ?>">Editar</a>
+                                    </td>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        } 
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <!-- FIN VALORES GENERALES DEL SISTEMA -->
         </div>
     </div> <!-- / renglon-->
 </div> <!-- /container -->

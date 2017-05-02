@@ -57,12 +57,13 @@ $route['exportarProveedorExcel'] = "proveedores_controller/exportarProveedoresEx
 
 //rutas categorias direccionadas a configuracion 
 $route['mostrarvalores'] = "configuracion_controller/mostrarValores";
-//$route['mostrarcategorias'] = "configuracion_controller/mostrarProveedores";
 $route['actualizarCategoria/(:num)'] = "configuracion_controller/actualizarCategoria/$1";
 $route['eliminarCategoria/(:num)'] = "configuracion_controller/eliminarCategoria/$1";
 $route['nuevocategoria'] = "configuracion_controller/nuevoCategoria";
 $route['importarCategoriasExcel'] = "configuracion_controller/importarCategoriasExcel";
-//$route['exportarCategoriaExcel'] = "configuracion_controller/exportarProveedoresExcel";
+$route['exportarCategoriaExcel'] = "configuracion_controller/exportarCategoriaExcel";
+$route['actualizarDatosEmpresa/(:num)'] = "configuracion_controller/actualizarDatosEmpresa/$1";
+$route['actualizarSistema/(:num)'] = "configuracion_controller/actualizarSistema/$1";
 
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 
