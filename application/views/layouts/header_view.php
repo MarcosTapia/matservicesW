@@ -50,7 +50,7 @@
                   <li class="active"><a href="#">Inicio</a></li>
                     
                     <?php if ($permisos[0] == "1") { ?>
-                  <li><a href="#">Inventario</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/inventarios_controller/mostrarinventarios">Inventarios</a></li>
                     
                     <?php } if ($permisos[1] == "1") { ?>
                   <li><a href="#">Ventas</a></li>
@@ -65,7 +65,7 @@
                   <li><a href="<?php echo base_url(); ?>index.php/proveedores_controller/mostrarproveedores">Proveedores</a></li>
                     
                     <?php } if ($permisos[5] == "1") { ?>
-                  <li><a href="#">Clientes</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/clientes_controller/mostrarclientes">Clientes</a></li>
                     
                     <?php } if ($permisos[6] == "1") { ?>
                   <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/mostrarusuarios">Empleados</a></li>

@@ -5,6 +5,16 @@ class Configuracion_controller extends CI_Controller {
     private $nombreEmpresaGlobal;
     private $sistemaGlobal;
     
+    //permisos campos inventario
+    private $permisosCamposInventarioGlobal;
+    private $permisosCamposVentasGlobal;
+    private $permisosCamposComprasGlobal;
+    private $permisosCamposConsultasGlobal;
+    private $permisosCamposProveedoresGlobal;
+    private $permisosCamposClientesGlobal;
+    private $permisosCamposEmpleadosGlobal;
+    private $permisosCamposEmpresaGlobal;
+    
     function __construct(){
         parent::__construct();
         $this->load->model('sistema_model');
@@ -23,6 +33,16 @@ class Configuracion_controller extends CI_Controller {
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0];
         //echo "--->".$this->nombreEmpresaGlobal->{'nombreEmpresa'}."";
+        
+//    private $permisosCamposInventarioGlobal;
+//    private $permisosCamposVentasGlobal;
+//    private $permisosCamposComprasGlobal;
+//    private $permisosCamposConsultasGlobal;
+//    private $permisosCamposProveedoresGlobal;
+//    private $permisosCamposClientesGlobal;
+//    private $permisosCamposEmpleadosGlobal;
+//    private $permisosCamposEmpresaGlobal;
+        
     }
 
     function index(){
@@ -174,6 +194,562 @@ class Configuracion_controller extends CI_Controller {
                 "descripcionCategoria" => $descripcionCategoria);
             $data_string = json_encode($data);
             $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/categorias/actualizar_categoria.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            echo $result;
+            
+            //Fin llamado WS
+            redirect('/configuracion_controller/mostrarValores');
+        }
+    }
+    
+    function actualizarDatosEmpresaFromFormulario(){
+        if ($this->input->post('submit')){
+            //LLamadfo de WS
+            $idEmpresa = $this->input->post("idEmpresa");
+            $nombreEmpresa = $this->input->post("nombreEmpresa");
+            $rfcEmpresa = $this->input->post("rfcEmpresa");
+            $direccionEmpresa = $this->input->post("direccionEmpresa");
+            $emailEmpresa = $this->input->post("emailEmpresa");
+            $telEmpresa = $this->input->post("telEmpresa");
+            $cpEmpresa = $this->input->post("cpEmpresa");
+            $ciudadEmpresa = $this->input->post("ciudadEmpresa");
+            $estadoEmpresa = $this->input->post("estadoEmpresa");
+            $paisEmpresa = $this->input->post("paisEmpresa");
+            
+            $data = array("idEmpresa" => $idEmpresa, 
+            "nombreEmpresa" => $nombreEmpresa,
+            "rfcEmpresa" => $rfcEmpresa,
+            "direccionEmpresa" => $direccionEmpresa,
+            "emailEmpresa" => $emailEmpresa,
+            "telEmpresa" => $telEmpresa,
+            "cpEmpresa" => $cpEmpresa,
+            "ciudadEmpresa" => $ciudadEmpresa,
+            "estadoEmpresa" => $estadoEmpresa,
+            "paisEmpresa" => $paisEmpresa
+                    );
+            $data_string = json_encode($data);
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/datosempresa/actualizar_datosempresa.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            echo $result;
+            
+            //Fin llamado WS
+            redirect('/configuracion_controller/mostrarValores');
+        }
+    }
+    
+    function actualizarSistemaFromFormulario(){
+        if ($this->input->post('submit')){
+            /************************************************************************/
+            /************************************************************************/
+            //inicializa valores de permisos
+            $this->permisosCamposInventarioGlobal = "";
+            $this->permisosCamposVentasGlobal = "";
+            $this->permisosCamposComprasGlobal = "";
+            $this->permisosCamposConsultasGlobal = "";
+            $this->permisosCamposProveedoresGlobal = "";
+            $this->permisosCamposClientesGlobal = "";
+            $this->permisosCamposEmpleadosGlobal = "";
+            $this->permisosCamposEmpresaGlobal = "";
+            //fin inicializa valores de permisos
+
+            //Arma permisos Inventario
+            if ($this->input->post("chkCamposInventarioSistema0")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema1")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema2")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema3")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema4")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema5")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema6")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema7")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema8")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            if ($this->input->post("chkCamposInventarioSistema9")=="on") {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."1";
+            } else {
+                $this->permisosCamposInventarioGlobal = $this->permisosCamposInventarioGlobal."0";
+            }
+            //Fin Arma permisos Inventario
+            
+            
+            //Arma permisos Ventas *************
+            if ($this->input->post("chkCamposVentasSistema0")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema1")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema2")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema3")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema4")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema5")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema6")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema7")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema8")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            if ($this->input->post("chkCamposVentasSistema9")=="on") {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."1";
+            } else {
+                $this->permisosCamposVentasGlobal = $this->permisosCamposVentasGlobal."0";
+            }
+            //Fin Arma permisos Ventas
+            
+            
+            //Arma permisos Compras **********
+            if ($this->input->post("chkCamposComprasSistema0")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema1")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema2")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema3")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema4")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema5")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema6")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema7")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema8")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            if ($this->input->post("chkCamposComprasSistema9")=="on") {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."1";
+            } else {
+                $this->permisosCamposComprasGlobal = $this->permisosCamposComprasGlobal."0";
+            }
+            //Fin Arma permisos Compras
+            
+            
+            //Arma permisos Consultas **********
+            if ($this->input->post("chkCamposConsultasSistema0")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema1")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema2")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema3")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema4")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema5")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema6")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema7")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema8")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            if ($this->input->post("chkCamposConsultasSistema9")=="on") {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."1";
+            } else {
+                $this->permisosCamposConsultasGlobal = $this->permisosCamposConsultasGlobal."0";
+            }
+            //Fin Arma permisos Consultas
+            
+            
+            //Arma permisos Proveedores **********
+            if ($this->input->post("chkCamposProveedoresSistema0")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema1")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema2")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema3")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema4")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema5")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema6")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema7")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema8")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            if ($this->input->post("chkCamposProveedoresSistema9")=="on") {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."1";
+            } else {
+                $this->permisosCamposProveedoresGlobal = $this->permisosCamposProveedoresGlobal."0";
+            }
+            //Fin Arma permisos Proveedores
+            
+            
+            //Arma permisos Clientes **********
+            if ($this->input->post("chkCamposClientesSistema0")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema1")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema2")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema3")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema4")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema5")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema6")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema7")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema8")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            if ($this->input->post("chkCamposClientesSistema9")=="on") {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."1";
+            } else {
+                $this->permisosCamposClientesGlobal = $this->permisosCamposClientesGlobal."0";
+            }
+            //Fin Arma permisos Clientes
+            
+            
+            //Arma permisos Empleados **********
+            if ($this->input->post("chkCamposEmpleadosSistema0")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema1")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema2")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema3")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema4")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema5")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema6")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema7")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema8")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpleadosSistema9")=="on") {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."1";
+            } else {
+                $this->permisosCamposEmpleadosGlobal = $this->permisosCamposEmpleadosGlobal."0";
+            }
+            //Fin Arma permisos Empleados
+            
+            
+            //Arma permisos Empresa **********
+            if ($this->input->post("chkCamposEmpresaSistema0")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema1")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema2")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema3")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema4")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema5")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema6")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema7")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema8")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            if ($this->input->post("chkCamposEmpresaSistema9")=="on") {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."1";
+            } else {
+                $this->permisosCamposEmpresaGlobal = $this->permisosCamposEmpresaGlobal."0";
+            }
+            //Fin Arma permisos Empresa
+            /************************************************************************/
+            /************************************************************************/
+            
+            //LLamadfo de WS
+            $idSistema = $this->input->post("idSistema");
+            $ivaEmpresa = $this->input->post("ivaEmpresa");
+            $historicoProveedores = "";
+            if ($this->input->post("historicoProveedores")=="on") {
+                $historicoProveedores = $historicoProveedores."1";
+            } else {
+                $historicoProveedores = $historicoProveedores."0";
+            }
+            $criterioHistoricoProveedores = $this->input->post("criterioHistoricoProveedores");
+            $camposInventario = $this->permisosCamposInventarioGlobal;
+            $camposVentas = $this->permisosCamposVentasGlobal;
+            $camposCompras = $this->permisosCamposComprasGlobal;
+            $camposConsultas = $this->permisosCamposConsultasGlobal;
+            $camposProveedores = $this->permisosCamposProveedoresGlobal;
+            $camposClientes = $this->permisosCamposClientesGlobal;
+            $camposEmpleados = $this->permisosCamposEmpleadosGlobal;
+            $camposEmpresa = $this->permisosCamposEmpresaGlobal;
+            
+            $data = array("idSistema" => $idSistema, 
+                "ivaEmpresa" => $ivaEmpresa,
+                "historicoProveedores" => $historicoProveedores,
+                "criterioHistoricoProveedores" => $criterioHistoricoProveedores,
+                "camposInventario" => $camposInventario,
+                "camposVentas" => $camposVentas,
+                "camposCompras" => $camposCompras,
+                "camposConsultas" => $camposConsultas,
+                "camposProveedores" => $camposProveedores,
+                "camposClientes" => $camposClientes,
+                "camposEmpleados" => $camposEmpleados,
+                "camposEmpresa" => $camposEmpresa                    
+                    );
+//            echo "-->".$idSistema."-->".$ivaEmpresa."-->".$historicoProveedores.
+//                    "-->".$criterioHistoricoProveedores."-->".
+//                    $camposInventario."-->".$camposVentas."-->".
+//                    $camposCompras."-->".$camposConsultas."-->".
+//                    $camposProveedores."-->".$camposClientes."-->".
+//                    $camposEmpleados."-->".$camposEmpresa;
+            
+            $data_string = json_encode($data);
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/sistema/actualizar_sistema.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

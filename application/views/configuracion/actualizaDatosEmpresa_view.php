@@ -79,7 +79,7 @@
             <br>
         </div>	
         <div class="col-md-6">
-            <form class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/configuracion_controller/actualizarCategoriaFromFormulario" method="post">
+            <form class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/configuracion_controller/actualizarDatosEmpresaFromFormulario" method="post">
                 <h4>Modificar Datos de la Empresa</h4>
                 <input type="hidden" name="idEmpresa" id="idEmpresa" value="<?php echo $datosEmpresa->{'idEmpresa'}; ?>" />
 
@@ -89,7 +89,62 @@
                       <input type="text" class="form-control" id="nombreEmpresa" name="nombreEmpresa" value="<?php echo $datosEmpresa->{'nombreEmpresa'}; ?>" placeholder="Descripci&oacute;n de la Categor&iacute;a">
                   </div>					  
                 </div>  
-
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="rfcEmpresa">RFC:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="rfcEmpresa" name="rfcEmpresa" value="<?php echo $datosEmpresa->{'rfcEmpresa'}; ?>" placeholder="RFC">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="direccionEmpresa">Direcci&oacute;n:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="direccionEmpresa" name="direccionEmpresa" value="<?php echo $datosEmpresa->{'direccionEmpresa'}; ?>" placeholder="Direcci&oacute;n">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="emailEmpresa">Email:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="emailEmpresa" name="emailEmpresa" value="<?php echo $datosEmpresa->{'emailEmpresa'}; ?>" placeholder="Email">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="telEmpresa">Tel&eacute;fono:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="telEmpresa" name="telEmpresa" value="<?php echo $datosEmpresa->{'telEmpresa'}; ?>" placeholder="Tel&eacute;fono:">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="cpEmpresa">CP:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="cpEmpresa" name="cpEmpresa" value="<?php echo $datosEmpresa->{'cpEmpresa'}; ?>" placeholder="CP">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="ciudadEmpresa">Ciudad:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="ciudadEmpresa" name="ciudadEmpresa" value="<?php echo $datosEmpresa->{'ciudadEmpresa'}; ?>" placeholder="Ciudad">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="estadoEmpresa">Estado:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="estadoEmpresa" name="estadoEmpresa" value="<?php echo $datosEmpresa->{'estadoEmpresa'}; ?>" placeholder="Estado">
+                  </div>					  
+                </div>  
+                
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="paisEmpresa">Pa&iacute;s:</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="paisEmpresa" name="paisEmpresa" value="<?php echo $datosEmpresa->{'paisEmpresa'}; ?>" placeholder="Pa&iacute;s">
+                  </div>					  
+                </div>  
                 <table>
                     <tr>
                         <td>

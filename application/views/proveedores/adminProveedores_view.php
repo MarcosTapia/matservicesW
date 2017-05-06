@@ -137,7 +137,11 @@
             </div>
         </div> <!-- /division renglon en 12-->
     </div> <!-- / renglon-->
-
+    
+    <?php 
+    if ($historicoPreciosProveedores) {
+        if ($historicoPreciosProveedores == "1") {
+    ?>    
     <div class="row">
         <div class="col-md-12">
             <br>&nbsp;
@@ -246,6 +250,10 @@
             </div>
         </div> <!-- /division renglon en 12-->
     </div> <!-- / renglon-->
+    <?php 
+        }
+    }
+    ?>    
     
 </div> <!-- /container -->
 </body>	

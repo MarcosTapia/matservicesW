@@ -1,8 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Proveedores_controller extends CI_Controller {
+class Clientes_controller extends CI_Controller {
     private $datosEmpresaGlobal;
     private $nombreEmpresaGlobal;
-    private $historicoProveedoresGlobal;
     
     function __construct(){
         parent::__construct();
@@ -19,7 +18,6 @@ class Proveedores_controller extends CI_Controller {
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
-        $this->historicoProveedoresGlobal = $this->sistemaGlobal[0]->{'historicoProveedores'};
     }
 
     function index(){
@@ -62,9 +60,9 @@ class Proveedores_controller extends CI_Controller {
         //Fin muestra valores de datos de Empresa
     }
     
-    function mostrarProveedores() {
+    function mostrarClientes() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/clientes/obtener_clientes.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -77,12 +75,10 @@ class Proveedores_controller extends CI_Controller {
         $data;
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
         if ($datos->{'estado'}==1) {
-//            echo "".$this->historicoProveedoresGlobal;
-            $data = array('proveedores'=>$datos->{'proveedores'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'permisos' => $this->session->userdata('permisos'),
-                'historicoPreciosProveedores' => $this->historicoProveedoresGlobal);
+            $data = array('clientes'=>$datos->{'clientes'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
-            $this->load->view('proveedores/adminProveedores_view',$data);
+            $this->load->view('clientes/adminClientes_view',$data);
             $this->load->view('layouts/pie_view',$data);
         } else {
             $this->load->view('layouts/header_view',$data);
@@ -91,10 +87,10 @@ class Proveedores_controller extends CI_Controller {
         }
     }
     
-    function actualizarProveedor($idProveedor) {
+    function actualizarCliente($idCliente) {
         //Obtiene usuario por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedor_por_id.php?idProveedor='.$idProveedor;
+        $url = 'http://localhost/matserviceswsok/matservsthread1/clientes/obtener_cliente_por_id.php?idCliente='.$idCliente;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -103,21 +99,21 @@ class Proveedores_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
-            $data = array('proveedor'=>$datos->{'proveedor'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            $data = array('cliente'=>$datos->{'cliente'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
-            $this->load->view('proveedores/actualizaProveedor_view',$data);
+            $this->load->view('clientes/actualizaCliente_view',$data);
             $this->load->view('layouts/pie_view',$data);
         } else {
             echo "error";
         }
     }
 
-    function actualizarProveedorFromFormulario()
+    function actualizarClientesFromFormulario()
     {
         if ($this->input->post('submit')){
             //LLamadfo de WS
-            $idProveedor = $this->input->post("idProveedor");
+            $idCliente = $this->input->post("idCliente");
             $empresa = $this->input->post("empresa");
             $nombre = $this->input->post("nombre");
             $apellidos = $this->input->post("apellidos");
@@ -134,7 +130,7 @@ class Proveedores_controller extends CI_Controller {
             $comentarios = $this->input->post("comentarios");
             $noCuenta = $this->input->post("noCuenta");
             
-            $data = array("idProveedor" => $idProveedor, 
+            $data = array("idCliente" => $idCliente, 
                 "empresa" => $empresa, 
                 "nombre" => $nombre,
                 "apellidos" => $apellidos,
@@ -152,7 +148,7 @@ class Proveedores_controller extends CI_Controller {
                 "noCuenta" => $noCuenta
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/actualizar_proveedor.php');
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/actualizar_cliente.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -169,14 +165,14 @@ class Proveedores_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
-            redirect('/proveedores_controller/mostrarProveedores');
+            redirect('/clientes_controller/mostrarClientes');
         }
     }
 
-    function eliminarProveedor($idProveedor) {
-        $data = array("idProveedor" => $idProveedor);
+    function eliminarCliente($idCliente) {
+        $data = array("idCliente" => $idCliente);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/borrar_proveedor.php');
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/borrar_cliente.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -193,18 +189,18 @@ class Proveedores_controller extends CI_Controller {
         //echo $result;
 
         //Fin llamado WS
-        redirect('/proveedores_controller/mostrarProveedores');
+        redirect('/clientes_controller/mostrarClientes');
     }
     
-    function nuevoProveedor() {
+    function nuevoCliente() {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
-        $this->load->view('proveedores/nuevoProveedor_view',$data);
+        $this->load->view('clientes/nuevoCliente_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }
 
-    function nuevoProveedorFromFormulario()
+    function nuevoClienteFromFormulario()
     {
         if ($this->input->post('submit')){
             //LLamadfo de WS
@@ -241,7 +237,7 @@ class Proveedores_controller extends CI_Controller {
                 "noCuenta" => $noCuenta
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/insertar_proveedor.php');
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/insertar_cliente.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -258,17 +254,17 @@ class Proveedores_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
-            redirect('/proveedores_controller/mostrarProveedores');
+            redirect('/clientes_controller/mostrarClientes');
         }
     }
-    //Fin llamada a webservices de usuarios
+    //Fin llamada a webservices de clientes
     
     //Importar desde Excel con libreria de PHPExcel
-    public function importarProveedoresExcel(){
+    public function importarClientesExcel(){
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
-        $this->load->view('proveedores/importarProveedoresFromExcel_view',$data);
+        $this->load->view('clientes/importarClientesFromExcel_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }        
 
@@ -307,7 +303,7 @@ class Proveedores_controller extends CI_Controller {
                 
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/insertar_proveedor.php');
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/insertar_cliente.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -324,15 +320,15 @@ class Proveedores_controller extends CI_Controller {
                 //echo $result;
             } 
         }
-        $this->mostrarProveedores();
+        $this->mostrarClientes();
     }        
     //Fin Importar desde Excel con libreria de PHPExcel
     
     //Exportar datos a Excel
-    public function exportarProveedorExcel(){
+    public function exportarClienteExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/clientes/obtener_clientes.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -343,7 +339,7 @@ class Proveedores_controller extends CI_Controller {
         //fin llamado de ws
         $id=$this->uri->segment(3);
 //        $nilai=$this->login_model->obtieneUsuarios();
-        $nilai=$datos->{'proveedores'};
+        $nilai=$datos->{'clientes'};
 //        if (isset($datos->{'usuarios'})) {
 //            foreach($nilai as $h){
 //                echo "azul";
@@ -359,7 +355,7 @@ class Proveedores_controller extends CI_Controller {
         $this->load->library('excel');
         //Create a new Object
         $objPHPExcel = new PHPExcel();
-        $objPHPExcel->getActiveSheet()->setTitle("Proveedores");
+        $objPHPExcel->getActiveSheet()->setTitle("Clientes");
 
         //Loop Heading
         $rowNumberH = 1;
@@ -408,7 +404,7 @@ class Proveedores_controller extends CI_Controller {
         //Save as an Excel BIFF (xls) file
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Proveedores.xls"');
+        header('Content-Disposition: attachment;filename="Clientes.xls"');
         header('Cache-Control: max-age=0');
         $objWriter->save('php://output');
         exit();

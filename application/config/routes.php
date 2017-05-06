@@ -55,6 +55,14 @@ $route['nuevoproveedor'] = "proveedores_controller/nuevoProveedor";
 $route['importarProveedoresExcel'] = "proveedores_controller/importarProveedoresExcel";
 $route['exportarProveedorExcel'] = "proveedores_controller/exportarProveedoresExcel";
 
+//rutas clientes importarClientesExcel
+$route['mostrarclientes'] = "clientes_controller/mostrarClientes";
+$route['actualizarCliente/(:num)'] = "clientes_controller/actualizarCliente/$1";
+$route['eliminarCliente/(:num)'] = "clientes_controller/eliminarCliente/$1";
+$route['nuevoCliente'] = "clientes_controller/nuevoCliente";
+$route['importarClientesExcel'] = "clientes_controller/importarClientesExcel";
+$route['exportarClienteExcel'] = "clientes_controller/exportarClienteExcel";
+
 //rutas categorias direccionadas a configuracion 
 $route['mostrarvalores'] = "configuracion_controller/mostrarValores";
 $route['actualizarCategoria/(:num)'] = "configuracion_controller/actualizarCategoria/$1";
@@ -64,6 +72,15 @@ $route['importarCategoriasExcel'] = "configuracion_controller/importarCategorias
 $route['exportarCategoriaExcel'] = "configuracion_controller/exportarCategoriaExcel";
 $route['actualizarDatosEmpresa/(:num)'] = "configuracion_controller/actualizarDatosEmpresa/$1";
 $route['actualizarSistema/(:num)'] = "configuracion_controller/actualizarSistema/$1";
+
+//rutas inventarios importarInventariosExcel
+$route['mostrarinventarios'] = "inventarios_controller/mostrarInventarios";
+$route['actualizarInventario/(:num)'] = "inventarios_controller/actualizarCliente/$1";
+$route['eliminarInventario/(:num)'] = "inventarios_controller/eliminarCliente/$1";
+$route['nuevoInventario'] = "inventarios_controller/nuevoCliente";
+$route['importarInventariosExcel'] = "inventarios_controller/importarClientesExcel";
+$route['exportarInventarioExcel'] = "inventarios_controller/exportarClienteExcel";
+
 
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 

@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Usuarios_controller extends CI_Controller {
+class Inventarios_controller extends CI_Controller {
     private $datosEmpresaGlobal;
     private $nombreEmpresaGlobal;
     
@@ -60,10 +60,9 @@ class Usuarios_controller extends CI_Controller {
         echo "error";
     }
     
-    function verificaUsuario() {
-        //Llamada a Webservices de Usuarios
+    function mostrarInventarios() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/verifica_usuario.php?usuario='.$_POST['usuario'].'&clave='.$_POST['clave'];
+        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -71,71 +70,20 @@ class Usuarios_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
-        if ($datos->{'estado'}==1) {
-            //separa campos
-            $i=1;
-            foreach($datos->{'usuario'} as $fila) {
-                switch ($i) {
-                    case 1: $idUsuario = $fila; break;
-                    case 2: $usuario = $fila; break;
-                    case 3: $clave = $fila; break;
-                    case 4: $permisos = $fila; break;
-                    case 5: $nombre = $fila; break;
-                    case 6: $apellido_paterno = $fila; break;
-                    case 7: $apellido_materno = $fila; break;
-                    case 8: $telefono_casa = $fila; break;
-                    case 9: $telefono_celular = $fila; break;
-                }
-                $i++;
-            }
-            //fin separa campos
-            
-            //crea campos de sesion
-            $this->session->set_userdata('nombre', $nombre." ".$apellido_paterno." ".$apellido_materno);
-            $this->session->set_userdata('permisos', $permisos);
-            $this->session->set_userdata('usuario', $usuario);					
-            $this->session->set_userdata('clave', $clave);					
-            //fin crea campos de sesion
-            $data = array('idUsuario'=>$idUsuario,
-                    'usuario'=>$usuario,'clave'=>$clave,
-                    'permisos'=>$permisos,'nombre'=>$nombre,
-                    'apellido_paterno'=>$apellido_paterno,
-                    'apellido_materno'=>$apellido_materno,
-                    'telefono_casa' => $telefono_casa,
-                    'telefono_celular' => $telefono_celular,
-                    'nombre_Empresa'=>$this->nombreEmpresaGlobal
-                );
-            $this->load->view('layouts/header_view',$data);
-            $this->load->view('principal_view',$data);
-            $this->load->view('layouts/pie_view',$data);
-        } else {
-            $data = array('error'=>'1');
-            //$this->load->view('login_view',$data);
-            redirect($this->index(),$data);
-        }
-    }
-    
-    function mostrarUsuarios() {
-        # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuarios.php';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $datos = json_decode($data);
-        curl_close($ch);
-        $usuarios;
+        $inventarios;
         $i=0;
         $data;
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
         if ($datos->{'estado'}==1) {
-            $data = array('usuarios'=>$datos->{'usuarios'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            $data = array('inventarios'=>$datos->{'inventarios'},
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
-            $this->load->view('usuarios/adminUsers_view',$data);
+            $this->load->view('inventarios/adminInventarios_view',$data);
             $this->load->view('layouts/pie_view',$data);
         } else {
+            $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('principal_view',$data);
             $this->load->view('layouts/pie_view',$data);

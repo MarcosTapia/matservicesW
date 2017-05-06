@@ -1,75 +1,62 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-  <head>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>  	
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta name="description" content="fresh Gray Bootstrap 3.0 Responsive Theme "/>
+    <meta name="keywords" content="Template, Theme, web, html5, css3, Bootstrap,Bootstrap 3.0 Responsive Theme" />
+    <meta name="author" content="Mindfreakerstuff"/>
+    <link rel="shortcut icon" href="favicon.png"> 
     <title>Ingreso al Sistema</title>
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script> 
-    <script>
-        function borraDatos() {
-            document.getElementById('usuario').value = "";
-            document.getElementById('clave').value = "";
-        }
-    </script>        
-  </head>
-  <body onload="borraDatos()">
-<div class="container">
-    <div class="row-fluid">
-        <div class="col-md-4">
-            &nbsp;
-        </div>
-        <div class="col-md-4">
-            <br><br><br><br><br><br><br>
-            <form class="form-horizontal" role="form" action="<?php echo site_url();?>index.php/usuarios_controller/verificaUsuario" method="post">
-                <div class="form-group">
-                    Ingreso al Sistema
+    <!-- Bootstrap core CSS -->
+    <link href="<?php echo base_url(); ?>/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="<?php echo base_url(); ?>/css/login.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/css/animate-custom.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <!-- start Login box -->
+    <div class="container" id="login-block">
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
+                <div class="login-box clearfix animated flipInY">
+                    <div class="login-logo">
+                        <h3 style="font-weight:bold;">INGRESO AL SISTEMA</h3>
+                        <br />
+                        <a href="#"><img src="<?php echo base_url(); ?>/images/login_logo.png" alt="Logo de la Empresa" /></a>
+                    </div> 
+                    <hr />
+                    <div class="login-form">
+                        <div class="alert alert-error hide">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <h4>Error!</h4>
+                             Your Error Message goes here
+                        </div>
+                        <form action="<?php echo site_url();?>index.php/usuarios_controller/verificaUsuario" method="post"  >
+                            <input type="text" name="usuario" placeholder="Nombre de Usuario" required/> 
+                            <input type="password" name="clave" placeholder="Contraseña" required/> 
+                            <button type="submit" class="btn btn-red">Ingresar</button> 
+                        </form>	
+                    </div> 			        	
                 </div>
-                <div class="form-group">
-                    <?php 
-                        if (isset($error)) {
-                          echo "USUARIO O CLAVE INCORRECTA";
-                        } 
-                    ?>
-                </div>
-                <div class="form-group">
-                    <label for="usuario" class="control-label col-sm-2">Usuario:</label>
-                    <div class="col-sm-7">
-                        <input type="text" style="font-size: 11px;" 
-                               class="form-control" id="usuario" 
-                               name="usuario" 
-                               placeholder="Usuario">                            
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="clave" class="control-label col-sm-2">Clave:</label>
-                    <div class="col-sm-7">
-                        <input type="password" style="font-size: 11px;" 
-                               class="form-control" id="clave" 
-                               name="clave" />                            
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-7">
-                        <?php $submitBtn = array('class' => 'btn-success',  
-                            'value' => 'Ingresar', 'name'=>'submit'); 
-                        echo form_submit($submitBtn); ?>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-4">
-            &nbsp;
+            </div>
         </div>
     </div>
+    <!-- End Login box -->
+    <footer class="container">
+            <p id="footer-text"><small></small></p>
+    </footer>
+
+    <script src="./js/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="./js/jquery-1.9.1.min.js"><\/script>')</script> 
+    <script src="./js/bootstrap.min.js"></script> 
+    <script src="./js/placeholder-shim.min.js"></script>        
+    <script src="./js/custom.js"></script>
 </body>
 </html>
