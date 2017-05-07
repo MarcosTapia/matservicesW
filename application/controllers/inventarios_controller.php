@@ -233,11 +233,11 @@ class Inventarios_controller extends CI_Controller {
         redirect('/usuarios_controller/mostrarUsuarios');
     }
     
-    function nuevoUsuario() {
+    function nuevoInventario() {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
-        $this->load->view('usuarios/nuevoUsuario_view',$data);
+        $this->load->view('inventarios/nuevoInventario_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }
 

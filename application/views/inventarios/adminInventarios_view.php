@@ -34,7 +34,8 @@
 <div class="container">
 <div class="row">
 <div class="col-md-12">
-    <p><a class="btn btn-xs btn-success" href="nuevoUsuario">Nuevo Empleado</a>
+    <p>
+    <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
     <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Edici&oacute;n M&uacute;ltiple</a>
@@ -58,7 +59,7 @@
                     idProveedor
                     idCategoria
                     -->
-                    <th></th>
+                    <th>Edici&oacute;n</th>
                     <th>Surtir</th>
                     <th>C&oacute;digo</th>
                     <th>Descripci&oacute;n</th>
@@ -70,7 +71,7 @@
                     <th>Ubicaci&oacute;n</th>
                     <th>Observ.</th>
                     <th>FechaIngreso</th>
-                    <th>Provved.</th>
+                    <th>Proveed.</th>
                     <th>Categor&iacute;a</th>
                     <th></th>
                 </tr>
@@ -83,19 +84,23 @@
                     ?>
                         <tr id="fila-<?php echo $fila->{'idArticulo'} ?>">
                             <td><?php echo "<div class='checkbox' name='".$fila->{'idArticulo'}."'><label><input type='checkbox'></label></div>";?></td>
+                            <td>
+                                <?php if ($fila->{'existencia'} <= $fila->{'existenciaMinima'}) { ?>
+                                <img src="<?php echo base_url(); ?>/images/sistemaicons/yes.ico" alt="" />
+                                <?php } ?>
+                            </td>
                             <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
-                            <td><?php echo $fila->{'codigo'} ?></td>
+                            <td><?php echo $fila->{'descripcion'} ?></td>
+                            <td><?php echo $fila->{'precioCosto'} ?></td>
+                            <td><?php echo $fila->{'precioUnitario'} ?></td>
+                            <td><?php echo $fila->{'porcentajeImpuesto'} ?></td>
+                            <td><?php echo $fila->{'existencia'} ?></td>
+                            <td><?php echo $fila->{'existenciaMinima'} ?></td>
+                            <td><?php echo $fila->{'ubicacion'} ?></td>
+                            <td><?php echo $fila->{'observaciones'} ?></td>
+                            <td><?php echo $fila->{'fechaIngreso'} ?></td>
+                            <td><?php echo $fila->{'empresa'} ?></td>
+                            <td><?php echo $fila->{'descripcionCategoria'} ?></td>
 
                             <td><a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idArticulo'} ?>">Editar</a>
                             <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
@@ -107,7 +112,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th></th>
+                    <th>Edici&oacute;n</th>
                     <th>Surtir</th>
                     <th>C&oacute;digo</th>
                     <th>Descripci&oacute;n</th>
@@ -119,7 +124,7 @@
                     <th>Ubicaci&oacute;n</th>
                     <th>Observ.</th>
                     <th>FechaIngreso</th>
-                    <th>Provved.</th>
+                    <th>Proveed.</th>
                     <th>Categor&iacute;a</th>
                     <th></th>
                 </tr>
