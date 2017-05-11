@@ -2,6 +2,9 @@
 class Inventarios_controller extends CI_Controller {
     private $datosEmpresaGlobal;
     private $nombreEmpresaGlobal;
+    private $proveedoresGlobal;
+    private $categoriasGlobal;
+    private $ivaEmpresaGlobal;
     
     function __construct(){
         parent::__construct();
@@ -17,7 +20,10 @@ class Inventarios_controller extends CI_Controller {
         
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
         $this->sistemaGlobal = $this->cargaDatosSistema();
+        $this->proveedoresGlobal = $this->cargaDatosProveedores();
+        $this->categoriasGlobal = $this->cargaDatosCategorias();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
+        $this->ivaEmpresaGlobal = $this->sistemaGlobal[0]->{'ivaEmpresa'};
     }
     
     function cargaDatosEmpresa() {
@@ -50,6 +56,36 @@ class Inventarios_controller extends CI_Controller {
         $i=0;
         return $datos2->{'sistemas'};
         //Fin muestra valores de datos de Empresa
+    }
+    
+    function cargaDatosProveedores() {
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        return $datos->{'proveedores'};
+    }
+    
+    function cargaDatosCategorias() {
+        //muestra valores de categorias
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $categorias;
+        $i=0;
+        //Fin muestra valores de categorias
+        return $datos->{'categorias'};
     }
 
     function index(){
@@ -235,107 +271,96 @@ class Inventarios_controller extends CI_Controller {
     
     function nuevoInventario() {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'proveedores' => $this->proveedoresGlobal,
+            'categorias' => $this->categoriasGlobal,
+            'ivaEmpresa' => $this->ivaEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('inventarios/nuevoInventario_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }
 
-    function nuevoUsuarioFromFormulario()
+    function nuevoInventarioFromFormulario()
     {
         if ($this->input->post('submit')){
-            //procesado de permisos de usuario
-            $permisosUsuarioLocal = "";
-            //inventario
-            if ($this->input->post('chkInventario')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //ventas
-            if ($this->input->post('chkVentas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Compras
-            if ($this->input->post('chkCompras')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Consultas
-            if ($this->input->post('chkConsultas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Proveedores
-            if ($this->input->post('chkProveedores')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Clientes
-            if ($this->input->post('chkClientes')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Empleados
-            if ($this->input->post('chkEmpleados')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Configuracion
-            if ($this->input->post('chkConfiguracion')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //fin procesado de permisos de usuario
-            
             //LLamadfo de WS
-            $idUsuario = $this->input->post("idUsuario");
-            $usuario = $this->input->post("usuario");
-            $clave = md5($this->input->post("clave"));
-            $permisos = $permisosUsuarioLocal;
-            $nombre = $this->input->post("nombre");
-            $apellido_paterno = $this->input->post("apellido_paterno");
-            $apellido_materno = $this->input->post("apellido_materno");
-            $telefono_casa = $this->input->post("telefono_casa");
-            $telefono_celular = $this->input->post("telefono_celular");
+            $codigo = $this->input->post("codigo");
+            $descripcion = $this->input->post("descripcion");
+            $precioCosto = $this->input->post("precioCosto");
+            $precioUnitario = $this->input->post("precioUnitario");
+            $porcentajeImpuesto = $this->input->post("porcentajeImpuesto");
+            $existencia = $this->input->post("existencia");
+            $existenciaMinima = $this->input->post("existenciaMinima");
+            $ubicacion = $this->input->post("ubicacion");
+            $fechaIngreso = $this->input->post("fechaIngreso");
+
+            $proveedor = $this->input->post("proveedor");
+            $categoria = $this->input->post("categoria");
+            //falta archivo imagen
+            //$fechaIngreso = $this->input->post("fechaIngreso");
+            $nombre_img = $_FILES['imagen']['name'];
+            $tipo = $_FILES['imagen']['type'];
+            $tamano = $_FILES['imagen']['size'];
+            //Si existe imagen y tiene un tamaño correcto
+            if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 200000)) {
+               //indicamos los formatos que permitimos subir a nuestro servidor
+               if (($_FILES["imagen"]["type"] == "image/jpeg")
+               || ($_FILES["imagen"]["type"] == "image/jpg")
+               || ($_FILES["imagen"]["type"] == "image/png"))
+               {
+                  // Ruta donde se guardarán las imágenes que subamos
+                  //$directorio = base_url().'fotos/inventario/';
+                  $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+                  echo $directorio;
+                  // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                  move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
+                } else {
+                   //si no cumple con el formato
+                   echo "No se puede subir una imagen con ese formato ";
+                }
+            } else {
+               //si existe la variable pero se pasa del tamaño permitido
+               if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
+            }            
+            //fin falta archivo imagen
             
-            $data = array("idUsuario" => $idUsuario, 
-                "usuario" => $usuario, 
-                "clave" => $clave, 
-                "permisos" => $permisos, 
-                "nombre" => $nombre, 
-                "apellido_paterno" => $apellido_paterno, 
-                "apellido_materno" => $apellido_materno, 
-                "telefono_casa" => $telefono_casa, 
-                "telefono_celular" => $telefono_celular
-                    );
-            $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_string))
-            );
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            //execute post
-            $result = curl_exec($ch);
-            //close connection
-            curl_close($ch);
-            echo $result;
+            $observaciones = $this->input->post("observaciones");
             
-            //Fin llamado WS
-            redirect('/usuarios_controller/mostrarUsuarios');
+            
+            echo $codigo."->".$descripcion."->".$precioCosto."->".
+            $precioUnitario."->".$porcentajeImpuesto."->".$existencia."->".
+            $existenciaMinima."->".$ubicacion."->".$fechaIngreso
+            ."->".$proveedor."->".$categoria."->".$observaciones."->".$nombre_img;
+            
+//            $data = array("idUsuario" => $idUsuario, 
+//                "usuario" => $usuario, 
+//                "clave" => $clave, 
+//                "permisos" => $permisos, 
+//                "nombre" => $nombre, 
+//                "apellido_paterno" => $apellido_paterno, 
+//                "apellido_materno" => $apellido_materno, 
+//                "telefono_casa" => $telefono_casa, 
+//                "telefono_celular" => $telefono_celular
+//                    );
+//            $data_string = json_encode($data);
+//            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
+//            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+//                'Content-Type: application/json',
+//                'Content-Length: ' . strlen($data_string))
+//            );
+//            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+//            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+//            //execute post
+//            $result = curl_exec($ch);
+//            //close connection
+//            curl_close($ch);
+//            echo $result;
+//            
+//            //Fin llamado WS
+//            redirect('/usuarios_controller/mostrarInventarios');
         }
     }
     //Fin llamada a webservices de usuarios
