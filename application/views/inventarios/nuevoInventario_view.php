@@ -22,6 +22,27 @@
             margin: 10px 5px 0 0;
           }
     </style>
+    <script>
+        document.getElementById("precioCosto").addEventListener("keydown", function(e) {
+            if (!e) { var e = window.event; }
+            e.preventDefault(); // sometimes useful
+
+            // Enter is pressed
+            if (e.keyCode == 13) { obtienePrecioUnitario(); }
+        }, false);
+
+        function obtienePrecioUnitario(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            var str = document.getElementById('precioCosto').innerHTML;
+            alert(str);
+            var patt1 = /[0-9]/g;
+            var result = str.match(patt1);
+            alert(result);
+//            if(code == 13) { //Enter keycode
+//                document.getElementById('existencia').focus();
+//            }
+        }
+    </script>
 </head>
 <body>      
     <div class="container"> <!--class="container-fluid" -->
@@ -48,7 +69,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="precioCosto">Precio Costo:</label>
                       <div class="col-sm-10">
-                          <input type="text" class="form-control" id="precioCosto" name="precioCosto" placeholder="Precio Costo">
+                          <input type="text" class="form-control" id="precioCosto" name="precioCosto" placeholder="Precio Costo" onkeypress="obtienePrecioUnitario(event);">
                       </div>					  
                     </div>  
 
@@ -179,7 +200,7 @@
                     <div class="form-group">        
                       <div class="col-sm-offset-2 col-sm-10">
                             <?php $submitBtn = array('class' => 'btn btn-xs btn-success
-                            ',  'value' => 'Procesar', 'name'=>'submit'); 
+                            ',  'value' => 'Procesar', 'name'=>'submit','disabled' => true); 
                             echo form_submit($submitBtn); ?>
                             <a href="<?php echo base_url();?>index.php/inventarios_controller/mostrarInventarios">
                             <button type="button" class="btn btn-xs btn-danger">Regresar</button>

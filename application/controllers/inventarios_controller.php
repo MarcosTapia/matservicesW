@@ -87,7 +87,20 @@ class Inventarios_controller extends CI_Controller {
         //Fin muestra valores de categorias
         return $datos->{'categorias'};
     }
-
+    
+    function obtieneMaxIdInventario() {
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_maxidinventarios.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        return $datos->{'inventarios'};
+    }
+        
     function index(){
         $this->load->view('login_view');
     }
@@ -95,6 +108,10 @@ class Inventarios_controller extends CI_Controller {
     function regresa() {
         echo "error";
     }
+        //obtiene maxId de inventario
+//        $maxIdReg = $this->obtieneMaxIdInventario();
+//        $maxId = $maxIdReg[0]->{'idArticulo'};
+        //fin obtiene maxId de inventario
     
     function mostrarInventarios() {
         # An HTTP GET request example
@@ -293,16 +310,20 @@ class Inventarios_controller extends CI_Controller {
             $existenciaMinima = $this->input->post("existenciaMinima");
             $ubicacion = $this->input->post("ubicacion");
             $fechaIngreso = $this->input->post("fechaIngreso");
-
             $proveedor = $this->input->post("proveedor");
             $categoria = $this->input->post("categoria");
-            //falta archivo imagen
-            //$fechaIngreso = $this->input->post("fechaIngreso");
             $nombre_img = $_FILES['imagen']['name'];
+            
+            //obtiene maxId de inventario
+            $maxIdReg = $this->obtieneMaxIdInventario();
+            $maxId = 0;
+            $maxId = $maxIdReg[0]->{'idArticulo'};
+            //fin obtiene maxId de inventario
+        
             $tipo = $_FILES['imagen']['type'];
             $tamano = $_FILES['imagen']['size'];
             //Si existe imagen y tiene un tamaño correcto
-            if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 200000)) {
+            if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
                //indicamos los formatos que permitimos subir a nuestro servidor
                if (($_FILES["imagen"]["type"] == "image/jpeg")
                || ($_FILES["imagen"]["type"] == "image/jpg")
@@ -311,56 +332,61 @@ class Inventarios_controller extends CI_Controller {
                   // Ruta donde se guardarán las imágenes que subamos
                   //$directorio = base_url().'fotos/inventario/';
                   $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
-                  echo $directorio;
+                  //Cambio el onombre de la imagen por producto mas id que corresponde
+                  if ($tipo=="image/png") {
+                      $nombre_img = "producto".($maxId + 1).".png";
+                  }
+                  if ($tipo=="image/jpeg") {
+                      $nombre_img = "producto".($maxId + 1).".jpeg";
+                  }
+                  if ($tipo=="image/jpg") {
+                      $nombre_img = "producto".($maxId + 1).".jpg";
+                  }
                   // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
                   move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
                 } else {
                    //si no cumple con el formato
                    echo "No se puede subir una imagen con ese formato ";
+                   return;
                 }
             } else {
                //si existe la variable pero se pasa del tamaño permitido
                if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
             }            
             //fin falta archivo imagen
-            
             $observaciones = $this->input->post("observaciones");
-            
-            
-            echo $codigo."->".$descripcion."->".$precioCosto."->".
-            $precioUnitario."->".$porcentajeImpuesto."->".$existencia."->".
-            $existenciaMinima."->".$ubicacion."->".$fechaIngreso
-            ."->".$proveedor."->".$categoria."->".$observaciones."->".$nombre_img;
-            
-//            $data = array("idUsuario" => $idUsuario, 
-//                "usuario" => $usuario, 
-//                "clave" => $clave, 
-//                "permisos" => $permisos, 
-//                "nombre" => $nombre, 
-//                "apellido_paterno" => $apellido_paterno, 
-//                "apellido_materno" => $apellido_materno, 
-//                "telefono_casa" => $telefono_casa, 
-//                "telefono_celular" => $telefono_celular
-//                    );
-//            $data_string = json_encode($data);
-//            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
-//            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-//            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-//                'Content-Type: application/json',
-//                'Content-Length: ' . strlen($data_string))
-//            );
-//            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-//            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-//            //execute post
-//            $result = curl_exec($ch);
-//            //close connection
-//            curl_close($ch);
-//            echo $result;
-//            
-//            //Fin llamado WS
-//            redirect('/usuarios_controller/mostrarInventarios');
+            $data = array("codigo" => $codigo, 
+                "descripcion" => $descripcion, 
+                "precioCosto" => $precioCosto, 
+                "precioUnitario" => $precioUnitario, 
+                "porcentajeImpuesto" => $porcentajeImpuesto, 
+                "existencia" => $existencia, 
+                "existenciaMinima" => $existenciaMinima, 
+                "ubicacion" => $ubicacion, 
+                "fechaIngreso" => $fechaIngreso,
+                "proveedor" => $proveedor,
+                "categoria" => $categoria,
+                "observaciones" => $observaciones,
+                "nombre_img" => $nombre_img
+                    );
+            $data_string = json_encode($data);
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/insertar_inventario.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            echo $result;
+            //Fin llamado WS
+            redirect('/inventarios_controller/mostrarInventarios');
         }
     }
     //Fin llamada a webservices de usuarios
