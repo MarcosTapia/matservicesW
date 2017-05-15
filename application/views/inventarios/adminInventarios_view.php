@@ -61,6 +61,7 @@
                     -->
                     <th>Edici&oacute;n</th>
                     <th>Surtir</th>
+                    <th>Sucursal</th>
                     <th>C&oacute;digo</th>
                     <th>Descripci&oacute;n</th>
                     <th>Precio Costo</th>
@@ -89,6 +90,7 @@
                                 <img src="<?php echo base_url(); ?>/images/sistemaicons/yes.ico" alt="" />
                                 <?php } ?>
                             </td>
+                            <td><?php echo $fila->{'descripcionSucursal'} ?></td>
                             <td><?php echo $fila->{'codigo'} ?></td>
                             <td><?php echo $fila->{'descripcion'} ?></td>
                             <td><?php echo $fila->{'precioCosto'} ?></td>
@@ -114,6 +116,7 @@
                 <tr>
                     <th>Edici&oacute;n</th>
                     <th>Surtir</th>
+                    <th>Sucursal</th>
                     <th>C&oacute;digo</th>
                     <th>Descripci&oacute;n</th>
                     <th>Precio Costo</th>

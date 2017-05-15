@@ -73,6 +73,14 @@ $route['exportarCategoriaExcel'] = "configuracion_controller/exportarCategoriaEx
 $route['actualizarDatosEmpresa/(:num)'] = "configuracion_controller/actualizarDatosEmpresa/$1";
 $route['actualizarSistema/(:num)'] = "configuracion_controller/actualizarSistema/$1";
 
+//rutas sucursales direccionadas a configuracion 
+$route['mostrarvalores'] = "configuracion_controller/mostrarValores";
+$route['actualizarSucursal/(:num)'] = "configuracion_controller/actualizarSucursal/$1";
+$route['eliminarSucursal/(:num)'] = "configuracion_controller/eliminarSucursal/$1";
+$route['nuevosucursal'] = "configuracion_controller/nuevoSucursal";
+$route['importarSucursalesExcel'] = "configuracion_controller/importarSucursalesExcel";
+$route['exportarSucursalExcel'] = "configuracion_controller/exportarSucursalExcel";
+
 //rutas inventarios importarInventariosExcel
 $route['mostrarinventarios'] = "inventarios_controller/mostrarInventarios";
 $route['actualizarInventario/(:num)'] = "inventarios_controller/actualizarCliente/$1";

@@ -28,16 +28,6 @@
 					"sPaginationType": "full_numbers"
 				} );
 			} );
-			$(document).ready(function() {
-				$('#example2').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-			$(document).ready(function() {
-				$('#tblSucursal').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
 		</script>
 </head>
 <body>
@@ -48,91 +38,27 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6" style="border: 1px solid #FFF;border-color: red">
-            <h4>Categor&iacute;as</h4>
-            <p><a class="btn btn-xs btn-success" href="nuevoCategoria">Nueva Categor&iacute;a</a>
-            <a class="btn btn-xs btn-success" href="importarCategoriasExcel">Importar desde Excel</a>
-            <a class="btn btn-xs btn-success" href="exportarCategoriaExcel">Exportar a Excel</a></p>
-            <div class="table-responsive">     
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
-                    <thead>
-                        <tr>
-                            <th>idCategor&iacute;a</th>
-                            <th>Categor&iacute;a</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if($categorias) {
-                            $i=1;
-                            foreach($categorias as $fila) {
-                            ?>
-                                <tr id="fila-<?php echo $fila->{'idCategoria'} ?>">
-                                    <td><?php echo $fila->{'idCategoria'} ?></td>
-                                    <td><?php echo $fila->{'descripcionCategoria'} ?></td>
-
-                                    <td><a class="btn btn-xs btn-primary" href="actualizarCategoria/<?php echo $fila->{'idCategoria'} ?>">Editar</a>
-                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarCategoria/<?php echo $fila->{'idCategoria'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
-                                </tr>
-                                <?php $i++; 
-                            }   
-                        }
-                        ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>idCategor&iacute;a</th>
-                            <th>Categor&iacute;a</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                </table>
+        
+        <div class="col-sm-6" style="border: 1px solid #FFF;border-color: red">
+            <br>
+            <h4 style="text-align: center">Importar Sucursales</h4>
+            <br>
+            <form method='post' action='importarSucursalFromExcel' enctype='multipart/form-data'>
+                <input type='file' name='excel' />    
+                <input type='submit' name='enviar' value='Importar' />
+                <input type='hidden' value='upload' name='action' />
+            </form>
+            <br><br>
+            <div class="form-group">        
+                <div class="col-sm-offset-2 col-sm-10">
+                      <a href="<?php echo base_url();?>index.php/configuracion_controller/mostrarValores">
+                      <button type="button" class="btn btn-xs btn-danger">Regresar</button>
+                      </a>
+                </div>
             </div>
             <br><br>
-            <h4>Sucursales</h4>
-            <p><a class="btn btn-xs btn-success" href="nuevoSucursal">Nueva Sucursal</a>
-            <a class="btn btn-xs btn-success" href="importarSucursalesExcel">Importar desde Excel</a>
-            <a class="btn btn-xs btn-success" href="exportarSucursalExcel">Exportar a Excel</a></p>
-            <div class="table-responsive">     
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="tblSucursal">
-                    <thead>
-                        <tr>
-                            <th>idSucursal</th>
-                            <th>Sucursal</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if($sucursales) {
-                            $i=1;
-                            foreach($sucursales as $fila) {
-                            ?>
-                                <tr id="fila-<?php echo $fila->{'idSucursal'} ?>">
-                                    <td><?php echo $fila->{'idSucursal'} ?></td>
-                                    <td><?php echo $fila->{'descripcionSucursal'} ?></td>
-
-                                    <td><a class="btn btn-xs btn-primary" href="actualizarSucursal/<?php echo $fila->{'idSucursal'} ?>">Editar</a>
-                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarSucursal/<?php echo $fila->{'idSucursal'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
-                                </tr>
-                                <?php $i++; 
-                            }   
-                        }
-                        ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>idSucursal</th>
-                            <th>Categor&iacute;a</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <br>
-        </div> 
-        <div class="col-md-6" style="border: 1px solid #FFF;border-color: red">
+        </div>	
+        <div class="col-md-6">
             <h4 style="text-align: center">Configuraci&oacute;n General del Sistema</h4>
             <br>
             <h5>Datos de la Empresa</h5>

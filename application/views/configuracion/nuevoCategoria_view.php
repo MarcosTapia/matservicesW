@@ -72,6 +72,7 @@
                     </tr>
                 </table>
             </form>
+            <br>
         </div>	
         <div class="col-md-6">
             <h4 style="text-align: center">Configuraci&oacute;n General del Sistema</h4>

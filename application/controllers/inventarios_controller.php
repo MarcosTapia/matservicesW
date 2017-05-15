@@ -4,6 +4,7 @@ class Inventarios_controller extends CI_Controller {
     private $nombreEmpresaGlobal;
     private $proveedoresGlobal;
     private $categoriasGlobal;
+    private $sucursalesGlobal;
     private $ivaEmpresaGlobal;
     
     function __construct(){
@@ -22,6 +23,7 @@ class Inventarios_controller extends CI_Controller {
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->proveedoresGlobal = $this->cargaDatosProveedores();
         $this->categoriasGlobal = $this->cargaDatosCategorias();
+        $this->sucursalesGlobal = $this->cargaDatosSucursales();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
         $this->ivaEmpresaGlobal = $this->sistemaGlobal[0]->{'ivaEmpresa'};
     }
@@ -86,6 +88,23 @@ class Inventarios_controller extends CI_Controller {
         $i=0;
         //Fin muestra valores de categorias
         return $datos->{'categorias'};
+    }
+
+    function cargaDatosSucursales() {
+        //muestra valores de categorias
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/sucursales/obtener_sucursales.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $sucursales;
+        $i=0;
+        //Fin muestra valores de categorias
+        return $datos->{'sucursales'};
     }
     
     function obtieneMaxIdInventario() {
@@ -299,9 +318,10 @@ class Inventarios_controller extends CI_Controller {
 
     function nuevoInventarioFromFormulario()
     {
-        if ($this->input->post('submit')){
+//        if ($this->input->post('submit')){
             //LLamadfo de WS
             $codigo = $this->input->post("codigo");
+//        echo "-->".$codigo;
             $descripcion = $this->input->post("descripcion");
             $precioCosto = $this->input->post("precioCosto");
             $precioUnitario = $this->input->post("precioUnitario");
@@ -310,6 +330,14 @@ class Inventarios_controller extends CI_Controller {
             $existenciaMinima = $this->input->post("existenciaMinima");
             $ubicacion = $this->input->post("ubicacion");
             $fechaIngreso = $this->input->post("fechaIngreso");
+            
+            //por si no se selecciona fecha
+            if ($fechaIngreso=="") {
+                $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+                $fechaIngreso = $dt->format("Y m d H:i:s"); 
+            }
+            //Fin por si no se selecciona fecha
+            
             $proveedor = $this->input->post("proveedor");
             $categoria = $this->input->post("categoria");
             $nombre_img = $_FILES['imagen']['name'];
@@ -387,7 +415,7 @@ class Inventarios_controller extends CI_Controller {
             echo $result;
             //Fin llamado WS
             redirect('/inventarios_controller/mostrarInventarios');
-        }
+//        }
     }
     //Fin llamada a webservices de usuarios
     
