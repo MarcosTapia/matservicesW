@@ -162,10 +162,10 @@ class Inventarios_controller extends CI_Controller {
         }
     }
     
-    function actualizarUsuario($idUsuario) {
-        //Obtiene usuario por id
+    function actualizarInventario($idArticulo) {
+        //Obtiene producto por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
+        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -174,94 +174,113 @@ class Inventarios_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
-            $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            $data = array('inventario'=>$datos->{'inventario'},
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'proveedores' => $this->proveedoresGlobal,
+                'categorias' => $this->categoriasGlobal,
+                'sucursales' => $this->sucursalesGlobal,
+                'ivaEmpresa' => $this->ivaEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
-            $this->load->view('usuarios/actualizaUsuario_view',$data);
+            $this->load->view('inventarios/actualizaInventario_view',$data);
             $this->load->view('layouts/pie_view',$data);
         } else {
             echo "error";
         }
     }
 
-    function actualizarUsuarioFromFormulario()
+    function actualizarInventarioFromFormulario()
     {
-        if ($this->input->post('submit')){
-            //procesado de permisos de usuario
-            $permisosUsuarioLocal = "";
-            //inventario
-            if ($this->input->post('chkInventario')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //ventas
-            if ($this->input->post('chkVentas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Compras
-            if ($this->input->post('chkCompras')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Consultas
-            if ($this->input->post('chkConsultas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Proveedores
-            if ($this->input->post('chkProveedores')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Clientes
-            if ($this->input->post('chkClientes')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Empleados
-            if ($this->input->post('chkEmpleados')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Configuracion
-            if ($this->input->post('chkConfiguracion')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //fin procesado de permisos de usuario
+            $idArticulo = $this->input->post("idArticulo");
+            $imagenAntH = $this->input->post("imagenAntH");
+            $codigo = $this->input->post("codigo");
+            $descripcion = $this->input->post("descripcion");
+            $precioCosto = $this->input->post("precioCosto");
+            $precioUnitario = $this->input->post("precioUnitario");
+            $porcentajeImpuesto = $this->input->post("porcentajeImpuesto");
+            $existencia = $this->input->post("existencia");
+            $existenciaMinima = $this->input->post("existenciaMinima");
+            $ubicacion = $this->input->post("ubicacion");
+            $fechaIngreso = $this->input->post("fechaIngreso");
             
-            //LLamadfo de WS
-            $idUsuario = $this->input->post("idUsuario");
-            $usuario = $this->input->post("usuario");
-            $clave = md5($this->input->post("clave"));
-            $permisos = $permisosUsuarioLocal;
-            $nombre = $this->input->post("nombre");
-            $apellido_paterno = $this->input->post("apellido_paterno");
-            $apellido_materno = $this->input->post("apellido_materno");
-            $telefono_casa = $this->input->post("telefono_casa");
-            $telefono_celular = $this->input->post("telefono_celular");
+            //por si no se selecciona fecha
+            if ($fechaIngreso=="") {
+                $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+                $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            }
+            //Fin por si no se selecciona fecha
             
-            $data = array("idUsuario" => $idUsuario, 
-                "usuario" => $usuario, 
-                "clave" => $clave, 
-                "permisos" => $permisos, 
-                "nombre" => $nombre, 
-                "apellido_paterno" => $apellido_paterno, 
-                "apellido_materno" => $apellido_materno, 
-                "telefono_casa" => $telefono_casa, 
-                "telefono_celular" => $telefono_celular
+            $proveedor = $this->input->post("proveedor");
+            $categoria = $this->input->post("categoria");
+            $sucursal = $this->input->post("sucursal");
+            $nombre_img = $_FILES['imagen']['name'];
+            
+            //obtiene maxId de inventario
+            $maxIdReg = $this->obtieneMaxIdInventario();
+            $maxId = 0;
+            $maxId = $maxIdReg[0]->{'idArticulo'};
+            //fin obtiene maxId de inventario
+        
+            //Verifica si no hubo cambio de imagen y ent asigna la anterior
+            if ($_FILES['imagen']['name']!="") {
+                //fin verifica si hubo cambio de imagen
+                $tipo = $_FILES['imagen']['type'];
+                $tamano = $_FILES['imagen']['size'];
+                //Si existe imagen y tiene un tamaño correcto
+                if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
+                   //indicamos los formatos que permitimos subir a nuestro servidor
+                   if (($_FILES["imagen"]["type"] == "image/jpeg")
+                   || ($_FILES["imagen"]["type"] == "image/jpg")
+                   || ($_FILES["imagen"]["type"] == "image/png"))
+                   {
+                      // Ruta donde se guardarán las imágenes que subamos
+                      //$directorio = base_url().'fotos/inventario/';
+                      $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+                      //Cambio el onombre de la imagen por producto mas id que corresponde
+                      if ($tipo=="image/png") {
+                          $nombre_img = "producto".($maxId + 1).".png";
+                      }
+                      if ($tipo=="image/jpeg") {
+                          $nombre_img = "producto".($maxId + 1).".jpeg";
+                      }
+                      if ($tipo=="image/jpg") {
+                          $nombre_img = "producto".($maxId + 1).".jpg";
+                      }
+                      // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                      move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
+                    } else {
+                       //si no cumple con el formato
+                       echo "No se puede subir una imagen con ese formato ";
+                       return;
+                    }
+                } else {
+                   //si existe la variable pero se pasa del tamaño permitido
+                   if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
+                }
+            } 
+//            else {
+//                $nombre_img = $imagenAntH;
+//            }
+            //fin falta archivo imagen
+            $observaciones = $this->input->post("observaciones");
+            $data = array("idArticulo" => $idArticulo,
+                "codigo" => $codigo, 
+                "descripcion" => $descripcion, 
+                "precioCosto" => $precioCosto, 
+                "precioUnitario" => $precioUnitario, 
+                "porcentajeImpuesto" => $porcentajeImpuesto, 
+                "existencia" => $existencia, 
+                "existenciaMinima" => $existenciaMinima, 
+                "ubicacion" => $ubicacion, 
+                "fechaIngreso" => $fechaIngreso,
+                "proveedor" => $proveedor,
+                "categoria" => $categoria,
+                "sucursal" => $sucursal,
+                "observaciones" => $observaciones,
+                "nombre_img" => $nombre_img
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/actualizar_usuario.php');
+            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/actualizar_inventario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -278,8 +297,7 @@ class Inventarios_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
-            redirect('/usuarios_controller/mostrarUsuarios');
-        }
+            redirect('/inventarios_controller/mostrarInventarios');
     }
 
     function eliminarUsuario($idUsuario) {
@@ -309,6 +327,7 @@ class Inventarios_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'proveedores' => $this->proveedoresGlobal,
             'categorias' => $this->categoriasGlobal,
+            'sucursales' => $this->sucursalesGlobal,
             'ivaEmpresa' => $this->ivaEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
@@ -334,12 +353,13 @@ class Inventarios_controller extends CI_Controller {
             //por si no se selecciona fecha
             if ($fechaIngreso=="") {
                 $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-                $fechaIngreso = $dt->format("Y m d H:i:s"); 
+                $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
             }
             //Fin por si no se selecciona fecha
             
             $proveedor = $this->input->post("proveedor");
             $categoria = $this->input->post("categoria");
+            $sucursal = $this->input->post("sucursal");
             $nombre_img = $_FILES['imagen']['name'];
             
             //obtiene maxId de inventario
@@ -394,6 +414,7 @@ class Inventarios_controller extends CI_Controller {
                 "fechaIngreso" => $fechaIngreso,
                 "proveedor" => $proveedor,
                 "categoria" => $categoria,
+                "sucursal" => $sucursal,
                 "observaciones" => $observaciones,
                 "nombre_img" => $nombre_img
                     );

@@ -121,7 +121,7 @@
                       <label class="control-label col-sm-2" for="porcentajeImpuesto">Iva:</label>
                       <div class="col-md-10 inputGroupContainer">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
-                            <input type="text" class="form-control" id="porcentajeImpuesto" name="porcentajeImpuesto" placeholder="Iva">
+                            <input type="text" class="form-control" id="porcentajeImpuesto" name="porcentajeImpuesto" placeholder="Iva" value="<?php echo $ivaEmpresa?>">
                         </div>					  
                       </div>
                     </div>  
@@ -158,7 +158,7 @@
                       <div class="col-sm-10">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
                             <select class="form-control" name="proveedor" id="proveedor">
-                              <option value="0">Selecciona uno..</option>
+                              <option value=""></option>
                               <?php foreach($proveedores as $fila) {
                                echo "<option value=".$fila->{'idProveedor'}.">".$fila->{'empresa'}."</option>";
                               } ?>
@@ -172,9 +172,23 @@
                       <div class="col-sm-10">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
                             <select class="form-control" name="categoria" id="categoria">
-                                <option value="0">Selecciona uno..</option>
+                                <option value=""></option>
                                 <?php foreach($categorias as $fila) {
                                  echo "<option value=".$fila->{'idCategoria'}.">".$fila->{'descripcionCategoria'}."</option>";
+                                } ?>
+                            </select>
+                        </div>					  
+                      </div>					  
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="sucursal">Sucursal:</label>
+                      <div class="col-sm-10">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select class="form-control" name="sucursal" id="sucursal">
+                                <option value=""></option>
+                                <?php foreach($sucursales as $fila) {
+                                 echo "<option value=".$fila->{'idSucursal'}.">".$fila->{'descripcionSucursal'}."</option>";
                                 } ?>
                             </select>
                         </div>					  
@@ -189,7 +203,7 @@
                                 <span class="add-on"><i class="icon-th"></i></span>
                                 <script type="text/javascript">
                                     $(".form_datetime").datetimepicker({
-                                        format: "yyyy mm dd - hh:ii",
+                                        format: "yyyy-mm-dd hh:ii:ss",
                                         autoclose: true,
                                         pickerPosition: "right"
                                     });
@@ -285,7 +299,7 @@
                         max: 50
                     },
                     notEmpty: {
-                        message: 'Por favor Ingresa la descripción'
+                        message: 'Por favor Ingresa la Descripción'
                     }
                 }
             },
@@ -350,10 +364,31 @@
                         max: 50
                     },
                     notEmpty: {
-                        message: 'Por favor Ingresa la ubicación'
+                        message: 'Por favor Ingresa la Ubicación del producto'
                     }
                 }
-            }
+            },
+            proveedor: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Selecciona un Proveedor.'
+                    }
+                }
+            },
+            categoria: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Selecciona una Categoria.'
+                    }
+                }
+            },
+            sucursal: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Selecciona una Sucursal.'
+                    }
+                }
+            }            
         } 
     })
 </script>

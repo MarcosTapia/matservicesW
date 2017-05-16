@@ -104,7 +104,7 @@
                             <td><?php echo $fila->{'empresa'} ?></td>
                             <td><?php echo $fila->{'descripcionCategoria'} ?></td>
 
-                            <td><a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idArticulo'} ?>">Editar</a>
+                            <td><a class="btn btn-xs btn-primary" href="actualizarInventario/<?php echo $fila->{'idArticulo'} ?>">Editar</a>
                             <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
                         </tr>
                         <?php $i++; 
