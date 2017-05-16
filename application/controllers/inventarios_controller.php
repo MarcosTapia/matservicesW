@@ -191,119 +191,92 @@ class Inventarios_controller extends CI_Controller {
 
     function actualizarInventarioFromFormulario()
     {
-            $idArticulo = $this->input->post("idArticulo");
-            $imagenAntH = $this->input->post("imagenAntH");
-            $codigo = $this->input->post("codigo");
-            $descripcion = $this->input->post("descripcion");
-            $precioCosto = $this->input->post("precioCosto");
-            $precioUnitario = $this->input->post("precioUnitario");
-            $porcentajeImpuesto = $this->input->post("porcentajeImpuesto");
-            $existencia = $this->input->post("existencia");
-            $existenciaMinima = $this->input->post("existenciaMinima");
-            $ubicacion = $this->input->post("ubicacion");
-            $fechaIngreso = $this->input->post("fechaIngreso");
-            
-            //por si no se selecciona fecha
-            if ($fechaIngreso=="") {
-                $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-                $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-            }
-            //Fin por si no se selecciona fecha
-            
-            $proveedor = $this->input->post("proveedor");
-            $categoria = $this->input->post("categoria");
-            $sucursal = $this->input->post("sucursal");
-            $nombre_img = $_FILES['imagen']['name'];
-            
-            //obtiene maxId de inventario
-            $maxIdReg = $this->obtieneMaxIdInventario();
-            $maxId = 0;
-            $maxId = $maxIdReg[0]->{'idArticulo'};
-            //fin obtiene maxId de inventario
-        
-            //Verifica si no hubo cambio de imagen y ent asigna la anterior
-            if ($_FILES['imagen']['name']!="") {
-                //fin verifica si hubo cambio de imagen
-                $tipo = $_FILES['imagen']['type'];
-                $tamano = $_FILES['imagen']['size'];
-                //Si existe imagen y tiene un tamaño correcto
-                if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
-                   //indicamos los formatos que permitimos subir a nuestro servidor
-                   if (($_FILES["imagen"]["type"] == "image/jpeg")
-                   || ($_FILES["imagen"]["type"] == "image/jpg")
-                   || ($_FILES["imagen"]["type"] == "image/png"))
-                   {
-                      // Ruta donde se guardarán las imágenes que subamos
-                      //$directorio = base_url().'fotos/inventario/';
-                      $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
-                      //Cambio el onombre de la imagen por producto mas id que corresponde
-                      if ($tipo=="image/png") {
-                          $nombre_img = "producto".($maxId + 1).".png";
-                      }
-                      if ($tipo=="image/jpeg") {
-                          $nombre_img = "producto".($maxId + 1).".jpeg";
-                      }
-                      if ($tipo=="image/jpg") {
-                          $nombre_img = "producto".($maxId + 1).".jpg";
-                      }
-                      // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
-                      move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
-                    } else {
-                       //si no cumple con el formato
-                       echo "No se puede subir una imagen con ese formato ";
-                       return;
-                    }
+        $idArticulo = $this->input->post("idArticulo");
+        $imagenAntH = $this->input->post("imagenAntH");
+        $codigo = $this->input->post("codigo");
+        $descripcion = $this->input->post("descripcion");
+        $precioCosto = $this->input->post("precioCosto");
+        $precioUnitario = $this->input->post("precioUnitario");
+        $porcentajeImpuesto = $this->input->post("porcentajeImpuesto");
+        $existencia = $this->input->post("existencia");
+        $existenciaMinima = $this->input->post("existenciaMinima");
+        $ubicacion = $this->input->post("ubicacion");
+        $fechaIngreso = $this->input->post("fechaIngreso");
+
+        //por si no se selecciona fecha
+        if ($fechaIngreso=="") {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        }
+        //Fin por si no se selecciona fecha
+
+        $proveedor = $this->input->post("proveedor");
+        $categoria = $this->input->post("categoria");
+        $sucursal = $this->input->post("sucursal");
+        $nombre_img = $_FILES['imagen']['name'];
+
+        //Verifica si no hubo cambio de imagen y ent asigna la anterior
+        if ($_FILES['imagen']['name']!="") {
+            //fin verifica si hubo cambio de imagen
+            $tipo = $_FILES['imagen']['type'];
+            $tamano = $_FILES['imagen']['size'];
+            //Si existe imagen y tiene un tamaño correcto
+            if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
+               //indicamos los formatos que permitimos subir a nuestro servidor
+               if (($_FILES["imagen"]["type"] == "image/jpeg")
+               || ($_FILES["imagen"]["type"] == "image/jpg")
+               || ($_FILES["imagen"]["type"] == "image/png"))
+               {
+                  // Ruta donde se guardarán las imágenes que subamos
+                  //$directorio = base_url().'fotos/inventario/';
+                  $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+                  //borra imagen anterior 
+                  unlink($directorio.$imagenAntH); 
+                  //Cambio el onombre de la imagen por producto mas id que corresponde
+                  if ($tipo=="image/png") {
+                      $nombre_img = "producto".$idArticulo.".png";
+                  }
+                  if ($tipo=="image/jpeg") {
+                      $nombre_img = "producto".$idArticulo.".jpeg";
+                  }
+                  if ($tipo=="image/jpg") {
+                      $nombre_img = "producto".$idArticulo.".jpg";
+                  }
+                  // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                  move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
                 } else {
-                   //si existe la variable pero se pasa del tamaño permitido
-                   if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
+                   //si no cumple con el formato
+                   echo "No se puede subir una imagen con ese formato ";
+                   return;
                 }
-            } 
+            } else {
+               //si existe la variable pero se pasa del tamaño permitido
+               if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
+            }
+        } 
 //            else {
 //                $nombre_img = $imagenAntH;
 //            }
-            //fin falta archivo imagen
-            $observaciones = $this->input->post("observaciones");
-            $data = array("idArticulo" => $idArticulo,
-                "codigo" => $codigo, 
-                "descripcion" => $descripcion, 
-                "precioCosto" => $precioCosto, 
-                "precioUnitario" => $precioUnitario, 
-                "porcentajeImpuesto" => $porcentajeImpuesto, 
-                "existencia" => $existencia, 
-                "existenciaMinima" => $existenciaMinima, 
-                "ubicacion" => $ubicacion, 
-                "fechaIngreso" => $fechaIngreso,
-                "proveedor" => $proveedor,
-                "categoria" => $categoria,
-                "sucursal" => $sucursal,
-                "observaciones" => $observaciones,
-                "nombre_img" => $nombre_img
-                    );
-            $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/actualizar_inventario.php');
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_string))
-            );
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            //execute post
-            $result = curl_exec($ch);
-            //close connection
-            curl_close($ch);
-            echo $result;
-            
-            //Fin llamado WS
-            redirect('/inventarios_controller/mostrarInventarios');
-    }
-
-    function eliminarUsuario($idUsuario) {
-        $data = array("idUsuario" => $idUsuario);
+        //fin falta archivo imagen
+        $observaciones = $this->input->post("observaciones");
+        $data = array("idArticulo" => $idArticulo,
+            "codigo" => $codigo, 
+            "descripcion" => $descripcion, 
+            "precioCosto" => $precioCosto, 
+            "precioUnitario" => $precioUnitario, 
+            "porcentajeImpuesto" => $porcentajeImpuesto, 
+            "existencia" => $existencia, 
+            "existenciaMinima" => $existenciaMinima, 
+            "ubicacion" => $ubicacion, 
+            "fechaIngreso" => $fechaIngreso,
+            "proveedor" => $proveedor,
+            "categoria" => $categoria,
+            "sucursal" => $sucursal,
+            "observaciones" => $observaciones,
+            "nombre_img" => $nombre_img
+                );
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/borrar_usuario.php');
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/actualizar_inventario.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -317,10 +290,44 @@ class Inventarios_controller extends CI_Controller {
         $result = curl_exec($ch);
         //close connection
         curl_close($ch);
-        //echo $result;
+        echo $result;
 
         //Fin llamado WS
-        redirect('/usuarios_controller/mostrarUsuarios');
+        redirect('/inventarios_controller/mostrarInventarios');
+    }
+
+    function eliminarInventario($idArticulo) {
+        echo base_url()."fotos/inventario"."/producto".$idArticulo."<br>";
+        
+//        $path = $_FILES["producto".$idArticulo][base_url()."fotos/inventario/"];
+//        $ext = pathinfo($path, PATHINFO_EXTENSION); 
+        
+        //echo filetype(base_url()."fotos/inventario"."/producto".$idArticulo);
+        
+        echo "->".file_exists(base_url()."fotos/inventario/producto".$idArticulo.".jpeg")."<br>";
+        echo "->".file_exists(base_url()."fotos/inventario/producto".$idArticulo.".jpg")."<br>";
+        echo "->".file_exists(base_url()."fotos/inventario/producto".$idArticulo.".png")."<br>";
+        //unlink(  "productos".$idArticulo)
+//        $data = array("idArticulo" => $idArticulo);
+//        $data_string = json_encode($data);
+//        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/borrar_inventario.php');
+//        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+//            'Content-Type: application/json',
+//            'Content-Length: ' . strlen($data_string))
+//        );
+//        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+//        //execute post
+//        $result = curl_exec($ch);
+//        //close connection
+//        curl_close($ch);
+//        //echo $result;
+//
+//        //Fin llamado WS
+//        redirect('/inventarios_controller/mostrarInventarios');
     }
     
     function nuevoInventario() {

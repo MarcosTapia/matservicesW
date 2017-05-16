@@ -25,7 +25,8 @@
     <script>
         function remueveImagen(){
             var imagenAct = document.getElementById("listAct");
-            imagenAct.parentNode.removeChild(imagenAct);                                  
+            imagenAct.parentNode.removeChild(imagenAct);
+            
         }
         
         function obtienePrecioUnitario(e) {
