@@ -36,8 +36,8 @@
 <div class="col-md-12">
     <p>
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
-    <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
-    <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a>
+    <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
+    <a class="btn btn-xs btn-success" href="exportarInventarioExcel">Exportar a Excel</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Edici&oacute;n M&uacute;ltiple</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Inventario</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Movimientos</a></p>
@@ -105,7 +105,7 @@
                             <td><?php echo $fila->{'descripcionCategoria'} ?></td>
 
                             <td><a class="btn btn-xs btn-primary" href="actualizarInventario/<?php echo $fila->{'idArticulo'} ?>">Editar</a>
-                            <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                            <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>/<?php echo $fila->{'fotoProducto'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
                         </tr>
                         <?php $i++; 
                     }   

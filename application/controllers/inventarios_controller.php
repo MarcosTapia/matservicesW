@@ -296,38 +296,29 @@ class Inventarios_controller extends CI_Controller {
         redirect('/inventarios_controller/mostrarInventarios');
     }
 
-    function eliminarInventario($idArticulo) {
-        echo base_url()."fotos/inventario"."/producto".$idArticulo."<br>";
-        
-//        $path = $_FILES["producto".$idArticulo][base_url()."fotos/inventario/"];
-//        $ext = pathinfo($path, PATHINFO_EXTENSION); 
-        
-        //echo filetype(base_url()."fotos/inventario"."/producto".$idArticulo);
-        
-        echo "->".file_exists(base_url()."fotos/inventario/producto".$idArticulo.".jpeg")."<br>";
-        echo "->".file_exists(base_url()."fotos/inventario/producto".$idArticulo.".jpg")."<br>";
-        echo "->".file_exists(base_url()."fotos/inventario/producto".$idArticulo.".png")."<br>";
-        //unlink(  "productos".$idArticulo)
-//        $data = array("idArticulo" => $idArticulo);
-//        $data_string = json_encode($data);
-//        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/borrar_inventario.php');
-//        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-//        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-//            'Content-Type: application/json',
-//            'Content-Length: ' . strlen($data_string))
-//        );
-//        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-//        //execute post
-//        $result = curl_exec($ch);
-//        //close connection
-//        curl_close($ch);
-//        //echo $result;
-//
-//        //Fin llamado WS
-//        redirect('/inventarios_controller/mostrarInventarios');
+    function eliminarInventario($idArticulo,$fotoProducto) {
+          //borro imagen del articulo
+        unlink("./fotos/inventario"."/".$fotoProducto);
+        $data = array("idArticulo" => $idArticulo);
+        $data_string = json_encode($data);
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/borrar_inventario.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        //echo $result;
+
+        //Fin llamado WS
+        redirect('/inventarios_controller/mostrarInventarios');
     }
     
     function nuevoInventario() {
@@ -378,36 +369,40 @@ class Inventarios_controller extends CI_Controller {
             $tipo = $_FILES['imagen']['type'];
             $tamano = $_FILES['imagen']['size'];
             //Si existe imagen y tiene un tamaño correcto
-            if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
-               //indicamos los formatos que permitimos subir a nuestro servidor
-               if (($_FILES["imagen"]["type"] == "image/jpeg")
-               || ($_FILES["imagen"]["type"] == "image/jpg")
-               || ($_FILES["imagen"]["type"] == "image/png"))
-               {
-                  // Ruta donde se guardarán las imágenes que subamos
-                  //$directorio = base_url().'fotos/inventario/';
-                  $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
-                  //Cambio el onombre de la imagen por producto mas id que corresponde
-                  if ($tipo=="image/png") {
-                      $nombre_img = "producto".($maxId + 1).".png";
-                  }
-                  if ($tipo=="image/jpeg") {
-                      $nombre_img = "producto".($maxId + 1).".jpeg";
-                  }
-                  if ($tipo=="image/jpg") {
-                      $nombre_img = "producto".($maxId + 1).".jpg";
-                  }
-                  // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
-                  move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
+            if ($_FILES['imagen']['name']!="") {
+                if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
+                   //indicamos los formatos que permitimos subir a nuestro servidor
+                   if (($_FILES["imagen"]["type"] == "image/jpeg")
+                   || ($_FILES["imagen"]["type"] == "image/jpg")
+                   || ($_FILES["imagen"]["type"] == "image/png"))
+                   {
+                      // Ruta donde se guardarán las imágenes que subamos
+                      //$directorio = base_url().'fotos/inventario/';
+                      $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+                      //Cambio el onombre de la imagen por producto mas id que corresponde
+                      if ($tipo=="image/png") {
+                          $nombre_img = "producto".($maxId + 1).".png";
+                      }
+                      if ($tipo=="image/jpeg") {
+                          $nombre_img = "producto".($maxId + 1).".jpeg";
+                      }
+                      if ($tipo=="image/jpg") {
+                          $nombre_img = "producto".($maxId + 1).".jpg";
+                      }
+                      // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                      move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
+                    } else {
+                       //si no cumple con el formato
+                       echo "No se puede subir una imagen con ese formato ";
+                       return;
+                    }
                 } else {
-                   //si no cumple con el formato
-                   echo "No se puede subir una imagen con ese formato ";
-                   return;
+                   //si existe la variable pero se pasa del tamaño permitido
+                   if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
                 }
             } else {
-               //si existe la variable pero se pasa del tamaño permitido
-               if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
-            }            
+                $nombre_img = "producto0.png";
+            }
             //fin falta archivo imagen
             $observaciones = $this->input->post("observaciones");
             $data = array("codigo" => $codigo, 
@@ -448,16 +443,16 @@ class Inventarios_controller extends CI_Controller {
     //Fin llamada a webservices de usuarios
     
     //Importar desde Excel con libreria de PHPExcel
-    public function importarUsersExcel(){
+    public function importarInventariosExcel(){
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
-        $this->load->view('usuarios/importarUsersFromExcel_view',$data);
+        $this->load->view('inventarios/importarInventariosFromExcel_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }        
 
     //Importar desde Excel con libreria de PHPExcel
-    public function importarExcel(){
+    public function importarInventarioExcel(){
         //Cargar PHPExcel library
         $this->load->library('excel');
         $name   = $_FILES['excel']['name'];
@@ -468,23 +463,27 @@ class Inventarios_controller extends CI_Controller {
         foreach ($sheetData as $index => $value) {            
             if ( $index != 1 ){
                 $arr_datos = array(
-                        'usuario' => $value['A'],
-                        'clave' => $value['B'],
-                        'permisos' => $value['C'],
-                        'nombre' => $value['D'],
-                        'apellido_paterno' => $value['E'],
-                        'apellido_materno' => $value['F'],
-                        'telefono_casa' => $value['G'],
-                        'telefono_celular' => $value['H']
+                        'codigo' => $value['A'],
+                        'descripcion' => $value['B'],
+                        'precioCosto' => $value['C'],
+                        'precioUnitario' => $value['D'],
+                        'porcentajeImpuesto' => $value['E'],
+                        'existencia' => $value['F'],
+                        'existenciaMinima' => $value['G'],
+                        'ubicacion' => $value['H'],
+                        'fechaIngreso' => $value['I'],
+                        'proveedor' => $value['J'],
+                        'categoria' => $value['K'],
+                        'sucursal' => $value['L'],
+                        'nombre_img' => $value['M'],
+                        'observaciones' => $value['N']
                 ); 
                 foreach ($arr_datos as $llave => $valor) {
                     $arr_datos[$llave] = $valor;
                 }
-                //$this->db->insert('usuarios',$arr_datos);
-                
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/insertar_inventario.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -498,18 +497,25 @@ class Inventarios_controller extends CI_Controller {
                 $result = curl_exec($ch);
                 //close connection
                 curl_close($ch);
-                //echo $result;
+//                echo $result;
+//                echo "<br>";
             } 
         }
-        $this->mostrarUsuarios();
+        redirect('/inventarios_controller/mostrarInventarios');
     }        
     //Fin Importar desde Excel con libreria de PHPExcel
     
     //Exportar datos a Excel
-    public function exportarExcel(){
+    public function exportarInventarioExcel(){
+        //hash php para incluid proveedores
+//        $fruits = array (
+//            "fruits"  => array("a" => "Orange", "b" => "Banana", "c" => "Apple"),
+//        );
+//        echo $fruits["fruits"]["b"];        
+        //fin hash para incluir proveedores
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuarios.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -519,8 +525,7 @@ class Inventarios_controller extends CI_Controller {
         curl_close($ch);
         //fin llamado de ws
         $id=$this->uri->segment(3);
-//        $nilai=$this->login_model->obtieneUsuarios();
-        $nilai=$datos->{'usuarios'};
+        $nilai=$datos->{'inventarios'};
 //        if (isset($datos->{'usuarios'})) {
 //            foreach($nilai as $h){
 //                echo "azul";
@@ -530,11 +535,11 @@ class Inventarios_controller extends CI_Controller {
         foreach($nilai as $h){
             $totn = $totn + 1;
         }
-        $heading=array('USUARIO','CLAVE','PERMISOS','NOMBRE','AP.PATERNO','AP.MATERNO','TEL.CASA','CELULAR');
+        $heading=array('SUCURSAL','CÓDIGO','DESCRIPCIÓN','PRECIO COSTO','PRECIO UNITARIO','IVA','EXISTENCIA','EXIST. MIN','UBICACIÓN','PROVEEDOR','CATEGORIA','FECHA INGRESO');
         $this->load->library('excel');
         //Create a new Object
         $objPHPExcel = new PHPExcel();
-        $objPHPExcel->getActiveSheet()->setTitle("Empleados");
+        $objPHPExcel->getActiveSheet()->setTitle("Inventario");
         //Loop Heading
         $rowNumberH = 1;
         $colH = 'A';
@@ -548,14 +553,18 @@ class Inventarios_controller extends CI_Controller {
         $row = 2;
         $no = 1;
         foreach($nilai as $n){
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'usuario'});
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,"1");
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$n->{'permisos'});
-        $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'nombre'});
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$n->{'apellido_paterno'});
-        $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'apellido_materno'});
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$n->{'telefono_casa'});
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,$n->{'telefono_celular'});
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'descripcionSucursal'});
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$n->{'codigo'});
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$n->{'descripcion'});
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'precioCosto'});
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$n->{'precioUnitario'});
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'porcentajeImpuesto'});
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$n->{'existencia'});
+            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,$n->{'existenciaMinima'});
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$n->{'ubicacion'});
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,$n->{'empresa'});
+            $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,$n->{'descripcionCategoria'});
+            $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,$n->{'fechaIngreso'});
             $row++;
             $no++;
         }
@@ -569,11 +578,11 @@ class Inventarios_controller extends CI_Controller {
                         )
                 )
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$maxrow)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:M'.$maxrow)->applyFromArray($styleArray);
         //Save as an Excel BIFF (xls) file
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Empleados.xls"');
+        header('Content-Disposition: attachment;filename="Inventario.xls"');
         header('Cache-Control: max-age=0');
         $objWriter->save('php://output');
         exit();

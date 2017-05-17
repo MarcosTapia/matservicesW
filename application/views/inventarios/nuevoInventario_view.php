@@ -27,42 +27,21 @@
     </style>
     <script>
         function obtienePrecioUnitario(e) {
-//            var code = (e.keyCode ? e.keyCode : e.which);
-//            var str = document.getElementById('precioCosto').innerHTML;
-//            alert(str);
-//            var patt1 = /[0-9]/g;
-//            var result = str.match(patt1);
-//            alert(result);
-//            if(code == 13) { //Enter keycode
-//                document.getElementById('existencia').focus();
-//            }
+            var code = (e.keyCode ? e.keyCode : e.which);
+            document.getElementById('precioUnitario').value = "";
+            if(code == 13) { 
+                var ivaDecimal = parseFloat(document.getElementById('porcentajeImpuesto').value)/100;
+                var ivaCantidad = parseFloat(document.getElementById('precioCosto').value) * ivaDecimal;
+                var precioUnitario = parseFloat(document.getElementById('precioCosto').value) + ivaCantidad;
+                document.getElementById('precioUnitario').value = "" + precioUnitario;
+            }
         }
-        function validacionFinal() {
-//            if (document.getElementById('fechaIngreso').value != "") {
-//                if (document.getElementById('proveedor').value != "0") {
-//                    if (document.getElementById('categoria').value != "0") {
-//                        if (document.getElementById('files').value != "") {
-//                            return true;                            
-//                        } else {
-//                            alert("Debes llenar todos los campos");
-//                            habilitaSubmit();
-//                            return false;
-//                        }
-//                    } else {
-//                        alert("Debes llenar todos los campos");
-//                        habilitaSubmit();
-//                        return false;
-//                    }
-//                } else {
-//                    alert("Debes llenar todos los campos");
-//                    habilitaSubmit();
-//                    return false;
-//                }
-//            } else {
-//                alert("Debes llenar todos los campos");
-//                habilitaSubmit();
-//                return false;
-//            }
+        
+        function mueveFocusAExistencia(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { 
+                document.getElementById('existencia').focus();
+            }
         }
         
         function habilitaSubmit() {
@@ -100,10 +79,19 @@
                     </div>  
 
                     <div class="form-group">
+                      <label class="control-label col-sm-2" for="porcentajeImpuesto">Iva:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+                            <input type="text" class="form-control" id="porcentajeImpuesto" name="porcentajeImpuesto" placeholder="Iva" value="<?php echo $ivaEmpresa?>">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
                       <label class="control-label col-sm-2" for="precioCosto">Precio Costo:</label>
                       <div class="col-md-10 inputGroupContainer">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-                            <input type="text" class="form-control" id="precioCosto" name="precioCosto" placeholder="Precio Costo">
+                            <input type="text" class="form-control" id="precioCosto" name="precioCosto" placeholder="Precio Costo" onkeydown="obtienePrecioUnitario(event);">
                         </div>					  
                       </div>
                     </div>  
@@ -112,16 +100,7 @@
                       <label class="control-label col-sm-2" for="precioUnitario">Precio Unitario:</label>
                       <div class="col-md-10 inputGroupContainer">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-                            <input type="text" class="form-control" id="precioUnitario" name="precioUnitario" placeholder="Precio Unitario">
-                        </div>					  
-                      </div>
-                    </div>  
-
-                    <div class="form-group">
-                      <label class="control-label col-sm-2" for="porcentajeImpuesto">Iva:</label>
-                      <div class="col-md-10 inputGroupContainer">
-                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
-                            <input type="text" class="form-control" id="porcentajeImpuesto" name="porcentajeImpuesto" placeholder="Iva" value="<?php echo $ivaEmpresa?>">
+                            <input type="text" class="form-control" id="precioUnitario" name="precioUnitario" placeholder="Precio Unitario" onkeypress="mueveFocusAExistencia(event);">
                         </div>					  
                       </div>
                     </div>  
@@ -314,17 +293,17 @@
                     }
                 }
             },
-            precioUnitario: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Ingresa un valor'
-                    },
-                    regexp: {
-                         regexp: /^[0-9]+(\.[0-9]+)?$/,
-                         message: 'Ingresa valores numéricos'
-                    }
-                }
-            },
+//            precioUnitario: {
+//                validators: {
+//                    notEmpty: {
+//                        message: 'Por favor Ingresa un valor'
+//                    },
+//                    regexp: {
+//                         regexp: /^[0-9]+(\.[0-9]+)?$/,
+//                         message: 'Ingresa valores numéricos'
+//                    }
+//                }
+//            },
             porcentajeImpuesto: {
                 validators: {
                     notEmpty: {

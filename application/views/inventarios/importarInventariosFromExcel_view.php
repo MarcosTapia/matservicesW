@@ -14,7 +14,7 @@
                             <br>
                             <h4 style="text-align: center">Importar Empleados</h4>
                             <br>
-                            <form method='post' action='importarExcel' enctype='multipart/form-data'>
+                            <form method='post' action='importarInventarioExcel' enctype='multipart/form-data'>
                                     <input type='file' name='excel' />    
                                     <input type='submit' name='enviar'  value='Importar'  />
                                     <input type='hidden' value='upload' name='action' />
@@ -22,7 +22,7 @@
                             <br><br>
                             <div class="form-group">        
                               <div class="col-sm-offset-2 col-sm-10">
-                                    <a href="<?php echo base_url();?>index.php/usuarios_controller/mostrarUsuarios">
+                                    <a href="<?php echo base_url();?>index.php/inventarios_controller/mostrarInventarios">
                                     <button type="button" class="btn btn-xs btn-danger">Regresar</button>
                                     </a>
                               </div>

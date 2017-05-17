@@ -84,7 +84,7 @@ $route['exportarSucursalExcel'] = "configuracion_controller/exportarSucursalExce
 //rutas inventarios importarInventariosExcel
 $route['mostrarinventarios'] = "inventarios_controller/mostrarInventarios";
 $route['actualizarInventario/(:num)'] = "inventarios_controller/actualizarCliente/$1";
-$route['eliminarInventario/(:num)'] = "inventarios_controller/eliminarCliente/$1";
+$route['eliminarInventario/(:num)(:num)'] = "inventarios_controller/eliminarCliente/$1/$1";
 $route['nuevoInventario'] = "inventarios_controller/nuevoInventario";
 $route['importarInventariosExcel'] = "inventarios_controller/importarClientesExcel";
 $route['exportarInventarioExcel'] = "inventarios_controller/exportarClienteExcel";
