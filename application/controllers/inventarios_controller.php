@@ -589,6 +589,10 @@ class Inventarios_controller extends CI_Controller {
     }	
     //fin exportar a excel
     
+    function edicionMultipleInventario() {
+        echo "almanza";
+    }
+
     // Manejo de sesiones
     function cerrarSesion() {            
             if ($this->sistema_model->logout()) {

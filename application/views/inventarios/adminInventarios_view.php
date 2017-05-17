@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title><?php if ($nombre_Empresa != "") { echo $nombre_Empresa; }?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="distributor" content="Global" />
     <meta itemprop="contentRating" content="General" />
     <meta name="robots" content="All" />
@@ -15,20 +15,26 @@
     <link href='http://fonts.googleapis.com/css?family=Economica' rel='stylesheet' type='text/css'>
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
-  
-                <style type="text/css" title="currentStyle">
-			@import "<?php echo base_url();?>media/css/demo_page.css";
-			@import "<?php echo base_url();?>media/css/demo_table.css";
-		</style>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				$('#example').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-		</script>
+    <style type="text/css" title="currentStyle">
+        @import "<?php echo base_url();?>media/css/demo_page.css";
+        @import "<?php echo base_url();?>media/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+                $('#example').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+    </script>
+    <script type="text/javascript" charset="utf-8">
+        function seleccionMuliple() {
+            for (var noCheck = 1; noCheck <= <?php echo sizeof($inventarios); ?>; noCheck++) {
+                alert("luego le sigo");
+            }    
+        }
+    </script>
 </head>
 <body>
 <div class="container">
@@ -38,7 +44,7 @@
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
     <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarInventarioExcel">Exportar a Excel</a>
-    <a class="btn btn-xs btn-success" href="exportarExcel">Edici&oacute;n M&uacute;ltiple</a>
+    <a class="btn btn-xs btn-success" href="edicionMultipleInventario" onclick="seleccionMuliple()">Edici&oacute;n M&uacute;ltiple</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Inventario</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Movimientos</a></p>
     <div class="table-responsive">     
@@ -84,7 +90,11 @@
                     foreach($inventarios as $fila) {
                     ?>
                         <tr id="fila-<?php echo $fila->{'idArticulo'} ?>">
-                            <td><?php echo "<div class='checkbox' name='".$fila->{'idArticulo'}."'><label><input type='checkbox'></label></div>";?></td>
+                            <td>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="<?php echo 'chk'.$fila->{'idArticulo'};?>"  id="<?php echo 'chk'.$fila->{'idArticulo'};?>">
+                                </label>
+                            </td>
                             <td>
                                 <?php if ($fila->{'existencia'} <= $fila->{'existenciaMinima'}) { ?>
                                 <img src="<?php echo base_url(); ?>/images/sistemaicons/yes.ico" alt="" />
@@ -111,6 +121,7 @@
                     }   
                 }
                 ?>
+    <input type="hidden" value="<?php echo sizeof($inventarios); ?>" name="totalInputChecks" id="totalInputChecks" />
             </tbody>
             <tfoot>
                 <tr>
