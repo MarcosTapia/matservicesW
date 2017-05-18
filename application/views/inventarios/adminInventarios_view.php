@@ -30,9 +30,27 @@
     </script>
     <script type="text/javascript" charset="utf-8">
         function seleccionMuliple() {
-            for (var noCheck = 1; noCheck <= <?php echo sizeof($inventarios); ?>; noCheck++) {
-                alert("luego le sigo");
+            var arrayIds = "";
+            var noRegistrosSeleccionados = 0;
+            <?php
+            foreach($inventarios as $fila) {
+            ?>
+                var a = <?php echo $fila->{'idArticulo'};?>;
+                if (document.getElementById(a).checked) {
+                    arrayIds = arrayIds + a + "_";
+                    noRegistrosSeleccionados++;
+                }
+            <?php        
+            }
+            ?>
+            if (arrayIds=="") {
+               alert("Debes seleccionar elemento(s) para editar");
+               return;
+            } else if (noRegistrosSeleccionados < 2) {
+               alert("Debes seleccionar al menos 2 elementos para editar");
+               return;
             }    
+            document.getElementById('ligaSeleccionMultiple').href = "edicionMultipleInventario/" + arrayIds; 
         }
     </script>
 </head>
@@ -42,29 +60,15 @@
 <div class="col-md-12">
     <p>
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
-    <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
+    <a class="btn btn-xs btn-success" href="importarInventariosExcel/<script>document.getElementById('ids').value</script>">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarInventarioExcel">Exportar a Excel</a>
-    <a class="btn btn-xs btn-success" href="edicionMultipleInventario" onclick="seleccionMuliple()">Edici&oacute;n M&uacute;ltiple</a>
+    <a class="btn btn-xs btn-success" id="ligaSeleccionMultiple" href="" onclick="seleccionMuliple();">Edici&oacute;n M&uacute;ltiple</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Inventario</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Movimientos</a></p>
     <div class="table-responsive">     
         <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
             <thead>
                 <tr>
-                    <!--
-                    codigo
-                    descripcion
-                    precioCosto
-                    precioUnitario
-                    porcentajeImpuesto
-                    existencia
-                    existenciaMinima
-                    ubicacion
-                    observaciones
-                    fechaIngreso
-                    idProveedor
-                    idCategoria
-                    -->
                     <th>Edici&oacute;n</th>
                     <th>Surtir</th>
                     <th>Sucursal</th>
@@ -84,7 +88,10 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- hidden de ids para seleccion multiple -->
+                <input type="hidden" value="" name="ids" />
                 <?php
+                $ids = "";
                 if($inventarios) {
                     $i=1;
                     foreach($inventarios as $fila) {
@@ -92,7 +99,7 @@
                         <tr id="fila-<?php echo $fila->{'idArticulo'} ?>">
                             <td>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="<?php echo 'chk'.$fila->{'idArticulo'};?>"  id="<?php echo 'chk'.$fila->{'idArticulo'};?>">
+                                    <input type="checkbox" name="<?php echo $fila->{'idArticulo'};?>"  id="<?php echo $fila->{'idArticulo'};?>">
                                 </label>
                             </td>
                             <td>
@@ -121,7 +128,6 @@
                     }   
                 }
                 ?>
-    <input type="hidden" value="<?php echo sizeof($inventarios); ?>" name="totalInputChecks" id="totalInputChecks" />
             </tbody>
             <tfoot>
                 <tr>

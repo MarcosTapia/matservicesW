@@ -589,8 +589,26 @@ class Inventarios_controller extends CI_Controller {
     }	
     //fin exportar a excel
     
-    function edicionMultipleInventario() {
-        echo "almanza";
+    function edicionMultipleInventario($ids) {
+//        $arrayIds = explode("_", $ids);
+//        // Recorrido de ids para modificacion
+//        foreach ($arrayIds as $elemento) {
+//            echo $elemento."<br>";
+//        }        
+        $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'ids' => $ids,
+            'proveedores' => $this->proveedoresGlobal,
+            'categorias' => $this->categoriasGlobal,
+            'sucursales' => $this->sucursalesGlobal,
+            'ivaEmpresa' => $this->ivaEmpresaGlobal,
+            'permisos' => $this->session->userdata('permisos'));
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('inventarios/edicionMultipleInventario_view',$data);
+        $this->load->view('layouts/pie_view',$data);
+    }
+    
+    function edicionMultipleFromFormulario() {
+        echo "cruz azul->".$this->input->post("ids").'->'.$this->input->post("descripcion");
     }
 
     // Manejo de sesiones

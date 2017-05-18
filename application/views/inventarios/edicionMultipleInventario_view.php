@@ -57,9 +57,10 @@
             </div>		
             <div class="col-sm-6">
                 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <form onsubmit="habilitaSubmit()" data-toggle="validator" id="productoForm" name="productoForm" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/inventarios_controller/nuevoInventarioFromFormulario" method="post"  enctype="multipart/form-data" >
-                    
-                    <h4 style="text-align: center">Nuevo Producto</h4><br>
+                <form onsubmit="habilitaSubmit()" data-toggle="validator" id="productoForm" name="productoForm" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/inventarios_controller/edicionMultipleFromFormulario" method="post"  enctype="multipart/form-data" >
+                    <h4 style="text-align: center">Edición Múltiple</h4>
+                    <h5>Edita sólo los campos que quieras cambiar en los productos seleccionados y que van a ser iguales.</h5><br>
+                    <input type="hidden" value="<?php echo $ids; ?>" name="ids" />
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="codigo">C&oacute;digo:</label>
                       <div class="col-md-10 inputGroupContainer">

@@ -88,7 +88,7 @@ $route['eliminarInventario/(:num)(:num)'] = "inventarios_controller/eliminarClie
 $route['nuevoInventario'] = "inventarios_controller/nuevoInventario";
 $route['importarInventariosExcel'] = "inventarios_controller/importarClientesExcel";
 $route['exportarInventarioExcel'] = "inventarios_controller/exportarClienteExcel";
-$route['edicionMultipleInventario'] = "inventarios_controller/edicionMultipleInventario";
+//$route['edicionMultipleInventario/(:any)'] = "inventarios_controller/edicionMultipleInventario/$1";
 
 
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
