@@ -50,6 +50,11 @@
         function habilitaSubmit() {
             document.getElementById('submit').disabled = false;
         }
+
+        function actualizafoto(){
+            document.write("<meta http-equiv='pragma' content='no-cache'>\n\
+                <meta http-equiv='refresh' content='0;URL=?'>");
+        }
     </script>
 </head>
 <body>      
@@ -258,6 +263,8 @@
                 </form>
                             <a href="<?php echo base_url();?>index.php/inventarios_controller/mostrarInventarios">
                             <button type="button" class="btn btn-danger">Regresar</button></a>
+                            <a href="">
+                                <button type="button" class="btn btn-success" onclick="actualizafoto()">Recargar Informaci&oacute;n</button></a>
                       </div>
                     </div>							
             </div>	

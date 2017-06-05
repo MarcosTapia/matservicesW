@@ -30,20 +30,20 @@
             var code = (e.keyCode ? e.keyCode : e.which);
             document.getElementById('precioUnitario').value = "";
             if(code == 13) { 
-                var ivaDecimal = parseFloat(document.getElementById('porcentajeImpuesto').value)/100;
+                var ivaDecimal;
+                if (document.getElementById('porcentajeImpuesto').value=="") {
+                    ivaDecimal = parseFloat(document.getElementById('ivaH').value)/100;
+                } else {
+                    ivaDecimal = parseFloat(document.getElementById('porcentajeImpuesto').value)/100;
+                }
                 var ivaCantidad = parseFloat(document.getElementById('precioCosto').value) * ivaDecimal;
                 var precioUnitario = parseFloat(document.getElementById('precioCosto').value) + ivaCantidad;
                 document.getElementById('precioUnitario').value = "" + precioUnitario;
+                document.getElementById("existencia").focus();
+                return false;
             }
         }
-        
-        function mueveFocusAExistencia(e) {
-            var code = (e.keyCode ? e.keyCode : e.which);
-            if(code == 13) { 
-                document.getElementById('existencia').focus();
-            }
-        }
-        
+//        
         function habilitaSubmit() {
             document.getElementById('submit').disabled = false;
         }
@@ -61,6 +61,7 @@
                     <h4 style="text-align: center">Edición Múltiple</h4>
                     <h5>Edita sólo los campos que quieras cambiar en los productos seleccionados y que van a ser iguales.</h5><br>
                     <input type="hidden" value="<?php echo $ids; ?>" name="ids" />
+                    <input type="hidden" value="<?php echo $ivaEmpresa; ?>" name="ivaH" id="ivaH"/>
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="codigo">C&oacute;digo:</label>
                       <div class="col-md-10 inputGroupContainer">
@@ -83,7 +84,7 @@
                       <label class="control-label col-sm-2" for="porcentajeImpuesto">Iva:</label>
                       <div class="col-md-10 inputGroupContainer">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
-                            <input type="text" class="form-control" id="porcentajeImpuesto" name="porcentajeImpuesto" placeholder="Iva" value="<?php echo $ivaEmpresa?>">
+                            <input type="text" class="form-control" id="porcentajeImpuesto" name="porcentajeImpuesto" placeholder="Iva">
                         </div>					  
                       </div>
                     </div>  
@@ -92,7 +93,7 @@
                       <label class="control-label col-sm-2" for="precioCosto">Precio Costo:</label>
                       <div class="col-md-10 inputGroupContainer">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-                            <input type="text" class="form-control" id="precioCosto" name="precioCosto" placeholder="Precio Costo" onkeydown="obtienePrecioUnitario(event);">
+                            <input type="text" class="form-control" id="precioCosto" name="precioCosto" placeholder="Precio Costo" onkeydown="javascript: return obtienePrecioUnitario(event);">
                         </div>					  
                       </div>
                     </div>  
@@ -101,7 +102,7 @@
                       <label class="control-label col-sm-2" for="precioUnitario">Precio Unitario:</label>
                       <div class="col-md-10 inputGroupContainer">
                         <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
-                            <input type="text" class="form-control" id="precioUnitario" name="precioUnitario" placeholder="Precio Unitario" onkeypress="mueveFocusAExistencia(event);">
+                            <input type="text" class="form-control" id="precioUnitario" name="precioUnitario" placeholder="Precio Unitario" >
                         </div>					  
                       </div>
                     </div>  
@@ -249,129 +250,6 @@
             </div>		
         </div>
     </div>
-    
-    
-<!--<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>-->
-<script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>-->
-<script type="text/javascript">
-    $('#productoForm').bootstrapValidator({
-        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-        feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            codigo: {
-                validators: {
-                        stringLength: {
-                            max: 40
-                        },
-                        notEmpty: {
-                            message: 'Por favor Ingresa el Código'
-                        }
-                }
-            },
-            descripcion: {
-                validators: {
-                     stringLength: {
-                        max: 50
-                    },
-                    notEmpty: {
-                        message: 'Por favor Ingresa la Descripción'
-                    }
-                }
-            },
-            precioCosto: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Ingresa un valor'
-                    },
-                    regexp: {
-                         regexp: /^[0-9]+(\.[0-9]+)?$/,
-                         message: 'Ingresa valores numéricos'
-                    }
-                }
-            },
-//            precioUnitario: {
-//                validators: {
-//                    notEmpty: {
-//                        message: 'Por favor Ingresa un valor'
-//                    },
-//                    regexp: {
-//                         regexp: /^[0-9]+(\.[0-9]+)?$/,
-//                         message: 'Ingresa valores numéricos'
-//                    }
-//                }
-//            },
-            porcentajeImpuesto: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Ingresa un valor'
-                    },
-                    regexp: {
-                         regexp: /^[0-9]/,
-                         message: 'Ingresa valores numéricos'
-                    }
-                }
-            },
-            existencia: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Ingresa un valor'
-                    },
-                    regexp: {
-                         regexp: /^[0-9]/,
-                         message: 'Ingresa valores numéricos'
-                    }
-                }
-            },
-            existenciaMinima: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Ingresa un valor'
-                    },
-                    regexp: {
-                         regexp: /^[0-9]/,
-                         message: 'Ingresa valores numéricos'
-                    }
-                }
-            },
-            ubicacion: {
-                validators: {
-                    stringLength: {
-                        max: 50
-                    },
-                    notEmpty: {
-                        message: 'Por favor Ingresa la Ubicación del producto'
-                    }
-                }
-            },
-            proveedor: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Selecciona un Proveedor.'
-                    }
-                }
-            },
-            categoria: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Selecciona una Categoria.'
-                    }
-                }
-            },
-            sucursal: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor Selecciona una Sucursal.'
-                    }
-                }
-            }            
-        } 
-    })
-</script>
     
 </body>
 </html>

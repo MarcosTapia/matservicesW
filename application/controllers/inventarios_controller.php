@@ -590,11 +590,6 @@ class Inventarios_controller extends CI_Controller {
     //fin exportar a excel
     
     function edicionMultipleInventario($ids) {
-//        $arrayIds = explode("_", $ids);
-//        // Recorrido de ids para modificacion
-//        foreach ($arrayIds as $elemento) {
-//            echo $elemento."<br>";
-//        }        
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'ids' => $ids,
             'proveedores' => $this->proveedoresGlobal,
@@ -608,7 +603,228 @@ class Inventarios_controller extends CI_Controller {
     }
     
     function edicionMultipleFromFormulario() {
-        echo "cruz azul->".$this->input->post("ids").'->'.$this->input->post("descripcion");
+        //valores iniciales de variables a actualizar
+        $codigo;
+        $descripcion;
+        $precioCosto;
+        $precioUnitario;
+        $porcentajeImpuesto;
+        $existencia;
+        $existenciaMinima;
+        $ubicacion;
+        $fechaIngreso;
+        $fechaIngreso; 
+        $proveedor;
+        $categoria;
+        $sucursal;
+        $nombre_img;
+        $img_ant = "";
+        $tipo_img_ant;
+        $observaciones;
+        $bandSubirImagen = 0;
+        //fin valores iniciales de variables a actualizar
+        $arrayIds = explode("_", $this->input->post("ids"));
+//        foreach ($arrayIds as $elemento) {
+//            echo $elemento."<br>";
+//        }
+        // Recorrido de ids para modificacion
+        foreach ($arrayIds as $elemento) {
+            if ($elemento!="") {
+                //Consulto los campos por id para comparar los que hubo cambios
+                //Obtiene producto por id
+                # An HTTP GET request example
+                $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$elemento;
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $data = curl_exec($ch);
+                $datos = json_decode($data);
+                curl_close($ch);
+                if ($datos->{'estado'}==1) {
+                    //comparo datos que vienen del formulario si vienen vacios lasigno el anterior
+                    if ($this->input->post("codigo")=="") {
+                        $codigo = $datos->{'inventario'}->{'codigo'};
+                    } else {
+                        $codigo = $this->input->post("codigo");
+                    }
+                    if ($this->input->post("descripcion")=="") {
+                        $descripcion = $datos->{'inventario'}->{'descripcion'};
+                    } else {
+                        $descripcion = $this->input->post("descripcion");
+                    }
+                    if ($this->input->post("precioCosto")=="") {
+                        $precioCosto = $datos->{'inventario'}->{'precioCosto'};
+                    } else {
+                        $precioCosto = $this->input->post("precioCosto");
+                    }
+                    if ($this->input->post("precioUnitario")=="") {
+                        $precioUnitario = $datos->{'inventario'}->{'precioUnitario'};
+                    } else {
+                        $precioUnitario = $this->input->post("precioUnitario");
+                    }
+                    if ($this->input->post("porcentajeImpuesto")=="") {
+                        $porcentajeImpuesto = $datos->{'inventario'}->{'porcentajeImpuesto'};
+                    } else {
+                        $porcentajeImpuesto = $this->input->post("porcentajeImpuesto");
+                    }
+                    if ($this->input->post("existencia")=="") {
+                        $existencia = $datos->{'inventario'}->{'existencia'};
+                    } else {
+                        $existencia = $this->input->post("existencia");
+                    }
+                    if ($this->input->post("existenciaMinima")=="") {
+                        $existenciaMinima = $datos->{'inventario'}->{'existenciaMinima'};
+                    } else {
+                        $existenciaMinima = $this->input->post("existenciaMinima");
+                    }
+                    if ($this->input->post("ubicacion")=="") {
+                        $ubicacion = $datos->{'inventario'}->{'ubicacion'};
+                    } else {
+                        $ubicacion = $this->input->post("ubicacion");
+                    }
+                    if ($this->input->post("fechaIngreso")=="") {
+                        $fechaIngreso = $datos->{'inventario'}->{'fechaIngreso'};
+                    } else {
+                        $fechaIngreso = $this->input->post("fechaIngreso");
+                    }
+                    if ($this->input->post("proveedor")=="") {
+                        $proveedor = $datos->{'inventario'}->{'idProveedor'};
+                    } else {
+                        $proveedor = $this->input->post("proveedor");
+                    }
+                    if ($this->input->post("categoria")=="") {
+                        $categoria = $datos->{'inventario'}->{'idCategoria'};
+                    } else {
+                        $categoria = $this->input->post("categoria");
+                    }
+                    if ($this->input->post("sucursal")=="") {
+                        $sucursal = $datos->{'inventario'}->{'idSucursal'};
+                    } else {
+                        $sucursal = $this->input->post("sucursal");
+                    }
+                    if ($this->input->post("observaciones")=="") {
+                        $observaciones = $datos->{'inventario'}->{'observaciones'};
+                    } else {
+                        $observaciones = $this->input->post("observaciones");
+                    }
+                    //echo "imagen->".$_FILES['imagen']['name']."<br>";
+                    if ($bandSubirImagen==0){
+                        $nombre_img = "";
+                        if ($_FILES['imagen']['name']=="") {
+                            $nombre_img = $datos->{'inventario'}->{'fotoProducto'};
+                        } else {
+//                            echo "->".$_FILES['imagen']['name']."<br>"; 
+                            //pongo la imagen que viene con el id en cuestion
+                            $tipo = $_FILES['imagen']['type'];
+                            $tamano = $_FILES['imagen']['size'];
+                            //echo "tamaño->".$tamano."->nombreimg->";
+                            if ($_FILES['imagen']['size'] <= 50000) {
+                               //indicamos los formatos que permitimos subir a nuestro servidor
+                               if (($_FILES["imagen"]["type"] == "image/jpeg")
+                               || ($_FILES["imagen"]["type"] == "image/jpg")
+                               || ($_FILES["imagen"]["type"] == "image/png"))
+                               {
+                                  // Ruta donde se guardarán las imágenes que subamos
+                                  //$directorio = base_url().'fotos/inventario/';
+                                  $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+                                  //Cambio el onombre de la imagen por producto mas id que corresponde
+                                  if ($tipo=="image/png") {
+                                      $nombre_img = "producto".$elemento.".png";
+                                  }
+                                  if ($tipo=="image/jpeg") {
+                                      $nombre_img = "producto".$elemento.".jpeg";
+                                  }
+                                  if ($tipo=="image/jpg") {
+                                      $nombre_img = "producto".$elemento.".jpg";
+                                  }
+                                  //borra imagen anterior
+                                  if (($datos->{'inventario'}->{'fotoProducto'}!="producto0.png") && (file_exists($directorio.$datos->{'inventario'}->{'fotoProducto'})==1)) {
+                                    unlink($directorio.$datos->{'inventario'}->{'fotoProducto'}); 
+                                  }
+                                  // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                                  $tipo_img_ant = $tipo;
+                                  $img_ant = $nombre_img;
+                                  move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
+                                } else {
+                                   //si no cumple con el formato
+                                   echo "No se puede subir una imagen con ese formato ";
+                                   return;
+                                }
+                            } else {
+                               //si existe la variable pero se pasa del tamaño permitido
+                               if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
+                            }
+                        }
+                        //fin comparo datos que vienen del formulario si vienen vacios lasigno el anterior
+                        $bandSubirImagen++;
+                    } else {
+                        if ($img_ant != "") {
+                            $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+                            //Cambio el onombre de la imagen por producto mas id que corresponde
+                            if ($tipo_img_ant=="image/png") {
+                                $nombre_img = "producto".$elemento.".png";
+                            }
+                            if ($tipo_img_ant=="image/jpeg") {
+                                $nombre_img = "producto".$elemento.".jpeg";
+                            }
+                            if ($tipo_img_ant=="image/jpg") {
+                                $nombre_img = "producto".$elemento.".jpg";
+                            }
+                            //borra imagen anterior
+                            if (($datos->{'inventario'}->{'fotoProducto'}!="producto0.png")
+                                    && (file_exists($directorio.$datos->{'inventario'}->{'fotoProducto'})==1)) {
+                              unlink($directorio.$datos->{'inventario'}->{'fotoProducto'}); 
+                            }
+                            // Copio la primera imagen con el nuevo nombre
+                            copy($directorio.$img_ant, $directorio.$nombre_img);
+                            //borra imagen anterior
+//                            if ($datos->{'inventario'}->{'fotoProducto'}!="producto0.png") {
+//                              unlink($directorio.$datos->{'inventario'}->{'fotoProducto'}); 
+//                            }
+                        }
+                    }
+                    //realizo actualizacion
+                    $data = array("idArticulo" => $elemento,
+                        "codigo" => $codigo, 
+                        "descripcion" => $descripcion, 
+                        "precioCosto" => $precioCosto, 
+                        "precioUnitario" => $precioUnitario, 
+                        "porcentajeImpuesto" => $porcentajeImpuesto, 
+                        "existencia" => $existencia, 
+                        "existenciaMinima" => $existenciaMinima, 
+                        "ubicacion" => $ubicacion, 
+                        "fechaIngreso" => $fechaIngreso,
+                        "proveedor" => $proveedor,
+                        "categoria" => $categoria,
+                        "sucursal" => $sucursal,
+                        "observaciones" => $observaciones,
+                        "nombre_img" => $nombre_img
+                            );
+                    $data_string = json_encode($data);
+                    $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/actualizar_inventario.php');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    //execute post
+                    $result = curl_exec($ch);
+                    //close connection
+                    curl_close($ch);
+                    //fin realizo actualización
+                } else {
+                    echo "error";
+                }
+                //echo "-->".$img_ant."<br>";
+            }
+            //Fin Consulto los campos por id para comparar los que hubo cambios
+        }         
+        redirect('/inventarios_controller/mostrarInventarios');
     }
 
     // Manejo de sesiones

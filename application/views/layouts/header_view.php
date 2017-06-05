@@ -53,7 +53,7 @@
                   <li><a href="<?php echo base_url(); ?>index.php/inventarios_controller/mostrarinventarios">Inventarios</a></li>
                     
                     <?php } if ($permisos[1] == "1") { ?>
-                  <li><a href="#">Ventas</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco">Ventas</a></li>
                     
                     <?php } if ($permisos[2] == "1") { ?>
                   <li><a href="#">Compras</a></li>
