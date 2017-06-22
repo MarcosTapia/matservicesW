@@ -106,7 +106,7 @@
                                     <td><?php echo $fila->{'noCuenta'} ?></td>                            
 
                                     <td><a class="btn btn-xs btn-primary" href="actualizarCliente/<?php echo $fila->{'idCliente'} ?>">Editar</a>
-                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarCliente/<?php echo $fila->{'idCliente'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarCliente/<?php echo $fila->{'idCliente'} ?>" onclick="javascript:return confirm('¿Deseas eliminar al cliente?')">Borrar</a></td>
                                 </tr>
                                 <?php $i++; 
                             }   

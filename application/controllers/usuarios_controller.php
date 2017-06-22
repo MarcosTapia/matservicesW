@@ -18,7 +18,22 @@ class Usuarios_controller extends CI_Controller {
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
+        
+//        $this->load->model('country_model');
     }
+    
+//	public function json_search_country()
+//	{
+////            echo "<script language='javascript'>alert('dsfdsf');</script>";
+//		$query  = $this->country_model->get();
+//        $data = array();
+//        foreach ($query as $key => $value) 
+//        {
+//            $data[] = array('id' => $value->country_id, 'name' => $value->country_name);
+//        }
+//        echo json_encode($data);
+//	}
+    
     
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa

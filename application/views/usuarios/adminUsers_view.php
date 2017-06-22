@@ -28,7 +28,17 @@
 					"sPaginationType": "full_numbers"
 				} );
 			} );
+                        
+                        function DeleteUser(id) {
+                            var conf = confirm("¿Seguro que quieres eliminar?");
+                            if (conf == false) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }                        
 		</script>
+                
 </head>
 <body>
 <div class="container">
@@ -67,7 +77,7 @@
                             <td><?php echo $fila->{'telefono_celular'} ?></td>
 
                             <td><a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idUsuario'} ?>">Editar</a>
-                            <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idUsuario'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                            <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idUsuario'} ?>" onclick="javascript:return DeleteUser('<?php echo $fila->{'idUsuario'} ?>')">Borrar</a></td>
                         </tr>
                         <?php $i++; 
                     }   

@@ -7,6 +7,8 @@ class Ventas_controller extends CI_Controller {
     private $sucursalesGlobal;
     private $ivaEmpresaGlobal;
     private $inventarioGlobal;
+    private $clientesGlobal;
+    private $busquedaInventarioGlobal;
     
     function __construct(){
         parent::__construct();
@@ -20,10 +22,12 @@ class Ventas_controller extends CI_Controller {
         $this->load->library('upload');
         $this->load->model('mupload_model');    
         
+        $this->busquedaInventarioGlobal = $this->busquedaProductoInventario();
         $this->inventarioGlobal = $this->cargaDatosInventarios();
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->proveedoresGlobal = $this->cargaDatosProveedores();
+        $this->clientesGlobal = $this->cargaDatosClientes();
         $this->categoriasGlobal = $this->cargaDatosCategorias();
         $this->sucursalesGlobal = $this->cargaDatosSucursales();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
@@ -124,6 +128,21 @@ class Ventas_controller extends CI_Controller {
         return $datos->{'inventarios'};
     }
     
+    function cargaDatosClientes() {
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/clientes/obtener_clientes.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $inventarios;
+        $i=0;
+        return $datos->{'clientes'};
+    }
+    
     function obtieneMaxIdInventario() {
         # An HTTP GET request example
         $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_maxidinventarios.php';
@@ -136,19 +155,110 @@ class Ventas_controller extends CI_Controller {
         curl_close($ch);
         return $datos->{'inventarios'};
     }
-        
+    
+    function busquedaProductoInventario() {
+        $query = "";
+        //Obtiene producto por id
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios_like_codigo.php?query='.$query;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        if ($datos->{'estado'}==1) {
+            $data = array('inventarios'=>$datos->{'inventarios'});
+        }        
+    }
+    
     function index(){
         $this->load->view('login_view');
     }
     
+    function buscaProducto() {
+        $data = array();
+        foreach ($this->inventarioGlobal as $key => $value) 
+        {
+//            $data[] = array('id' => $value->codigo, 'name' => $value->descripcion);
+            $data[] = array('id' => $value->codigo, 'name' => $value->codigo.' '.$value->descripcion);
+        }
+        echo json_encode($data);
+    }
+    
+    function buscaCliente() {
+        $data2 = array();
+        foreach ($this->clientesGlobal as $key => $value) {
+            $data2[] = array('name' => $value->nombre.' '.$value->apellidos);
+        }
+        echo json_encode($data2);
+    }
+    
     function ventaEnBlanco() {
         $data = array('inventarios'=>$this->inventarioGlobal,
+            'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('ventas/ventas_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }
+    
+    function nuevoClienteFromFormulario(){
+        //LLamadfo de WS
+        $empresa = $this->input->post("empresa");
+        $nombre = $this->input->post("nombre");
+        $apellidos = $this->input->post("apellidos");
+        $telefono_casa = $this->input->post("telefono_casa");
+        $telefono_celular = $this->input->post("telefono_celular");
+        $direccion1 = $this->input->post("direccion1");
+        $direccion2 = $this->input->post("direccion2");
+        $rfc = $this->input->post("rfc");
+        $email = $this->input->post("email");
+        $ciudad = $this->input->post("ciudad");
+        $estado = $this->input->post("estado");
+        $cp = $this->input->post("cp");
+        $pais = $this->input->post("pais");
+        $comentarios = $this->input->post("comentarios");
+        $noCuenta = $this->input->post("noCuenta");
+
+        $data = array("empresa" => $empresa, 
+            "nombre" => $nombre,
+            "apellidos" => $apellidos,
+            "telefono_casa" => $telefono_casa,
+            "telefono_celular" => $telefono_celular,
+            "direccion1" => $direccion1,
+            "direccion2" => $direccion2,
+            "rfc" => $rfc,
+            "email" => $email,
+            "ciudad" => $ciudad,
+            "estado" => $estado,
+            "cp" => $cp,
+            "pais" => $pais,
+            "comentarios" => $comentarios,
+            "noCuenta" => $noCuenta
+                );
+        $data_string = json_encode($data);
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/insertar_cliente.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        //respuesta web service
+        echo json_encode(array('okdfds'=>'ok'));
+    }
+    
+    
         //obtiene maxId de inventario
 //        $maxIdReg = $this->obtieneMaxIdInventario();
 //        $maxId = $maxIdReg[0]->{'idArticulo'};
