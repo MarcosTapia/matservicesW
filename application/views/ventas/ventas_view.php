@@ -23,80 +23,316 @@
     <!-- Fin Para ventana modal -->
     
     <script language='javascript'>
-//        function agregaProducto(e){
-//            var code = (e.keyCode ? e.keyCode : e.which);
-//            if(code == 13) { //Enter keycode
-//                var producto = document.getElementById('codigoProducto').value; 
-//                var prodCod = producto.split(" ");
-//                //alert(prodCod[0]);                
-//                //setTimeout(borraCodigo(), 1000);
-//                document.getElementById('codigoProducto').value = "";
-//                var table = document.getElementById("tblVenta");
-//                var noRenglones = table.rows.length;
-//                //alert(noRenglones);
-//                var row = table.insertRow(noRenglones-1);
-//                var cell0 = row.insertCell(0);
-//                var cell1 = row.insertCell(1);
-//                var cell2 = row.insertCell(2);
-//                var cell3 = row.insertCell(3);
-//                var cell4 = row.insertCell(4);
-//                var cell5 = row.insertCell(5);
-//                var cell6 = row.insertCell(6);
-//                var cell7 = row.insertCell(7);
-//                <?php
-//                 foreach ($inventarios as $fila) { ?>//
-//                    if (prodCod[0] == <?php echo $fila->{'codigo'}; ?>) { 
-//                        cell0.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/borrar.ico' onclick='borrarArticulo(<?php echo $fila->{'idArticulo'};?>)' />"; 
-//                        cell1.innerHTML = "<?php echo $fila->{'codigo'};?>";
-//                        cell2.innerHTML = "<?php echo $fila->{'descripcion'};?>";
-//                        var precio;
-//                        if (document.getElementById('tipoVenta').value == "2") {
-//                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' /></div></div>";
-//                            precio = <?php echo $fila->{'precioCosto'};?>;
-//                        } else {
-//                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioUnitario'};?>' /></div></div>";
-//                            precio = <?php echo $fila->{'precioUnitario'};?>;
-//                        }    
-//                        cell4.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='cantidad<?php echo $fila->{'idArticulo'};?>' id='cantidad<?php echo $fila->{'idArticulo'};?>' value='1' /></div></div>";
-//                        cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='0' /></div></div>";
-//                        var total = parseFloat(precio) * parseFloat(document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value);
-//                        var descuento = parseFloat(document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value) / 100;
-//                        var totalArtP = total - descuento;
-//                        cell6.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' disabled name='totalArt<?php echo $fila->{'idArticulo'};?>' id='totalArt<?php echo $fila->{'idArticulo'};?>' value='" + totalArtP.toFixed(2) + "' /></div></div>";
-//                        cell7.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' onclick='aumentaCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />&nbsp;&nbsp;&nbsp;<img src='<?php echo base_url();?>images/sistemaicons/prohibido.ico' onclick='disminuyeCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />"; 
-//                    }
-//               <?php  //}
-//                ?>//
-//            }
-//        }
+        var obsVacio = "";
+        var ventaJson = {'subtotalVenta':0,'ivaVenta':0,'totalVenta':0,
+            'codigoCliente':0,'tipoOperacion':1,'tipoVenta':1,'ticketVenta':0,'observaciones':'', 
+            'fecha':'0000-00-00 00:00:00','idUsuario':'',
+            detalleTemporal : [
+                {'idArticulo':'-1','codigo':'-1','precio':0,'cantidad':0,'descuento':0,'total':0}
+        ]};
+    
+	function enviarJson2() {    
+            // Armado final del json
+                //verifica si hay elementos en detalle de venta
+            if (ventaJson.detalleTemporal.length < 2) {
+                alert('No hay venta para registrar');
+                return;
+            }
+                //fib verifica si hay elementos en detalle de venta
                 
-//        function borraCodigo() {
-//            document.getElementById('codigoProducto').value = "";        
-//        }
-//        
-//        function totalArticulo(id) {
-//            var total = parseFloat(document.getElementById('precio' + id).value) * parseFloat(document.getElementById('cantidad' + id).value);
-//            var descuento = total * (parseFloat(document.getElementById('descuento' + id).value) / 100);
-//            var totalArtP = total - descuento;
-//            document.getElementById('totalArt' + id).value = "" + totalArtP.toFixed(2);
-//        }
-//        
-//        function borraArticulo(idAritculo){
-//            alert('ahhh');
-//            //document.getElementById("myTable").deleteRow(0);
-//        }
-//        
-//        function aumentaCantidadArticulo(idCantidad) {
-//            var idObjeto = 'cantidad' + idCantidad;
-//            document.getElementById(idObjeto).value = parseInt(document.getElementById(idObjeto).value) + 1;
-//            totalArticulo(idCantidad);
-//        }
-//        
-//        function disminuyeCantidadArticulo(idCantidad) {
-//            var idObjeto = 'cantidad' + idCantidad;
-//            document.getElementById(idObjeto).value = parseInt(document.getElementById(idObjeto).value) - 1;
-//            totalArticulo(idCantidad);
-//        }
+                //identifica totales
+            ventaJson.subtotalVenta = parseFloat(document.getElementById('subtotal').value);
+            ventaJson.ivaVenta = parseFloat(document.getElementById('iva').value);
+            ventaJson.totalVenta = parseFloat(document.getElementById('total').value);
+                //Fin identifica totales
+            
+                //identifica y guarda id cliente
+            var cliente = document.getElementById('clienteB').value;
+            var clienteDatos = cliente.split(" ");
+            var clienteId = clienteDatos[0];
+            if (clienteId=="") {
+                ventaJson.codigoCliente = "1";
+            } else {
+                ventaJson.codigoCliente = "" + clienteId;
+            }
+                //fin identifica y guarda id cliente
+                
+                //Identifica modoOperacion
+            ventaJson.tipoOperacion = document.getElementById('modoOperacion').value;
+                //Fin Identifica modoOperacion tipoVenta
+                
+                //Identifica tipoVenta
+            ventaJson.tipoVenta = document.getElementById('tipoVenta').value;    
+                //Fin Identifica tipoVenta 
+                
+                //Identifica ticket
+            ventaJson.ticketVenta = document.getElementById('ticket').value;              
+                //Fin Identifica ticket
+                
+                //***** Identifica observaciones
+            ventaJson.observaciones = "marcos";
+                //Fin Identifica observaciones
+                
+                //Identifica fechaVenta
+            <?php
+                $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+                $fechaVenta = $dt->format("Y-m-d H:i:s"); 
+            ?>    
+            ventaJson.fecha = '<?php echo $fechaVenta; ?>';
+                //Fin Identifica fechaVenta
+                
+                //Identifica idUsuario
+            ventaJson.idUsuario = '<?php echo $idUsuario; ?>';
+            //restringe venta si no hay usuario seleccionado
+            if (ventaJson.idUsuario=="") {
+                alert("Error, no puedes registrar venta. Debes ingresar al sistema, tu sesión a expirado");
+                return;
+            }
+            //restringe venta si no hay usuario seleccionado
+                //Fin Identifica idUsuario
+                
+            // Fin Armado final del json
+            
+            var dataString = JSON.stringify(ventaJson);
+            $.ajax({
+               url: '<?php echo base_url();?>index.php/ventas_controller/nuevoVentaFromFormulario',
+               data: {myData: dataString},
+               type: 'POST',
+               success: function(response) {
+                      alert(response);
+                      location.reload();
+               },
+               error: function(response) {
+                      console.log('Error al ejecutar la petición');
+               }
+            });	
+	}     
+
+        function recuperaVentaTemporal() {
+            var table = document.getElementById("tblVenta");
+            var noRenglones = table.rows.length;
+            for (var i=3;i < noRenglones -1; i++){
+                alert(ventaJson.detalleTemporal[i-2].idArticulo + "->" + ventaJson.detalleTemporal[i-2].codigo 
+                        + "->" + ventaJson.detalleTemporal[i-2].precio 
+                        + "->" + ventaJson.detalleTemporal[i-2].cantidad
+                        + "->" + ventaJson.detalleTemporal[i-2].descuento
+                        + "->" + ventaJson.detalleTemporal[i-2].total);
+            } 
+        }
+        
+        function pagar(e2) { //return pagar(event)
+            var tecla2 = (document.all) ? e2.keyCode : e2.which;
+            if (tecla2 == 13){  
+                var cambioVenta = parseFloat(document.getElementById('txtPago').value) - parseFloat(document.getElementById('total').value);
+                document.getElementById('txtCambio').value = cambioVenta.toFixed(2);                
+                //setTimeout(function(){ document.getElementById('txtCambio').value = ""; }, 3000);
+                document.getElementById('btnVentaOk').focus();
+            } else {
+                if (tecla2==8){
+                    document.getElementById('txtCambio').value = "";
+                    return true;
+                }
+                // Patron de entrada, en este caso solo acepta numeros
+                var patron2 = /^[0-9]*\.?[0-9]*$/;
+                var tecla_final2 = String.fromCharCode(tecla2);
+                //alert(tecla_final2);
+                var cadena2 = "" + document.getElementById('txtPago').value;
+                if (tecla_final2==".") {              
+                    if (cadena2.indexOf(tecla_final2)!=-1) {
+                        return false;
+                    }
+                }
+                return patron2.test(tecla_final2);
+            }
+       }
+       
+       function borraVentaTemporal() { //checar
+            var r = confirm("¿Realmente deseas eliminar la venta?");
+            if (r) {
+                var table = document.getElementById("tblVenta");
+                var noRenglones = table.rows.length;
+                //Borra datos de json
+                for (var i=3;i <= noRenglones; i++){
+                    ventaJson.detalleTemporal.splice(1,1);
+                } 
+                //Fin Borra datos de json
+                
+                //borra renglones de la tabla
+                while (noRenglones > 4){
+                    document.getElementById("tblVenta").deleteRow(3);
+                    noRenglones = table.rows.length;
+                }
+                //Fin borra renglones de la tabla
+                
+                totalesGenerales();
+            }
+        }
+        
+        function obtieneTotalArticulo(idArticulo){
+            //alert(""+noControl);
+//            alert(""+noControl+"->"+controlActual);
+            precio = document.getElementById('precio'+idArticulo).value;
+            var total = parseFloat(precio) * parseFloat(document.getElementById('cantidad' + idArticulo).value);
+            var descuento = total * (parseFloat(document.getElementById('descuento' + idArticulo).value) / 100);
+            var totalArtP = total - descuento;
+            document.getElementById('totalArt'+idArticulo).value = totalArtP.toFixed(2);
+            //modifica ventaJson em producto actual
+            $.each(ventaJson.detalleTemporal, function(i, v) {
+                if (v.idArticulo == idArticulo) {
+                    //alert(v.descuento);
+                    v.precio = document.getElementById('precio'+idArticulo).value;
+                    v.cantidad = document.getElementById('cantidad'+idArticulo).value;
+                    v.descuento = document.getElementById('descuento'+idArticulo).value;
+                    v.total = document.getElementById('totalArt'+idArticulo).value;
+                }
+            });          
+            //fin modifica ventaJson
+            totalesGenerales();
+        }
+        
+        function totalesGenerales() {
+            //obtiene totales generales
+            var subtotalG = 0;
+            var ivaSistema = '<?php echo $iva; ?>';
+//            alert('ivaSistema->'+ivaSistema);
+            var ivaG = 0;
+            var totalG = 0;
+            $.each(ventaJson.detalleTemporal, function(i, v) {
+                subtotalG = subtotalG + parseFloat(v.total);
+            });
+//            alert("subtotal->" + subtotalG);
+            document.getElementById('subtotal').value = subtotalG.toFixed(2);
+            ivaG = (parseFloat(ivaSistema)/100) * subtotalG;
+            document.getElementById('iva').value = ivaG.toFixed(2);
+            document.getElementById('total').value = (subtotalG + ivaG).toFixed(2);
+            //obtiene totales generales
+        }
+        
+        function validaDecimal(e,noControl,controlActual){
+            //si controlActual=1 precio, si controlActual=2 cantidad, si controlActual=3 porcentaje descuento,  
+            tecla = (document.all) ? e.keyCode : e.which;
+            //Tecla de retroceso para borrar, siempre la permite
+            if (tecla==8){
+                return true;
+            }
+            // Patron de entrada, en este caso solo acepta numeros
+            patron = /^[0-9]*\.?[0-9]*$/;
+            tecla_final = String.fromCharCode(tecla);
+            var cadena;
+            switch (controlActual) {
+                case 1: 
+                    cadena = ""+document.getElementById('precio'+noControl).value; break;
+                case 2: 
+                    cadena = ""+document.getElementById('cantidad'+noControl).value; break;
+                case 3: 
+                    cadena = ""+document.getElementById('descuento'+noControl).value; break;
+            }
+            if (tecla_final==".") {              
+                if (cadena.indexOf(tecla_final)!=-1) {
+                    return false;
+                }
+            }
+            if (tecla==13){  
+                switch (controlActual) {
+                    case 1: 
+                        document.getElementById('cantidad'+noControl).focus(); break;
+                    case 2: 
+                        document.getElementById('descuento'+noControl).focus(); break;
+                    case 3: 
+                        document.getElementById('codigoProducto').focus(); break;
+                }
+            }
+            obtieneTotalArticulo(noControl);
+            return patron.test(tecla_final);
+        }
+        
+        function verificaEnter(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { //Enter keycode
+                document.getElementById('codigoProducto').focus();
+            }
+        }
+        
+        function agregaProducto(e){
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { //Enter keycode
+                var producto = document.getElementById('codigoProducto').value; 
+                var prodCod = producto.split(" ");
+                //setTimeout(borraCodigo(), 1000);
+                document.getElementById('codigoProducto').value = "";
+                var table = document.getElementById("tblVenta");
+                var noRenglones = table.rows.length;
+                //alert(noRenglones);
+                var row = table.insertRow(noRenglones-1);
+                var cell0 = row.insertCell(0);
+                var cell1 = row.insertCell(1);
+                var cell2 = row.insertCell(2);
+                var cell3 = row.insertCell(3);
+                var cell4 = row.insertCell(4);
+                var cell5 = row.insertCell(5);
+                var cell6 = row.insertCell(6);
+                var cell7 = row.insertCell(7);
+                <?php
+                 foreach ($inventarios as $fila) { ?>//
+                    if (prodCod[0] == <?php echo $fila->{'codigo'}; ?>) { 
+                        row.id = ""+(noRenglones-1);
+                        cell0.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/borrar.ico' onclick='borraArticulo(this)' id="+ (noRenglones-1) +" name="+ (noRenglones-1) +" />"; 
+                        cell1.innerHTML = "<?php echo $fila->{'codigo'};?>";
+                        cell2.innerHTML = "<?php echo $fila->{'descripcion'};?>";
+                        var precio;
+                        if (document.getElementById('tipoVenta').value == "2") {
+                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+                            precio = <?php echo $fila->{'precioCosto'};?>;
+                        } else {
+                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioUnitario'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+                            precio = <?php echo $fila->{'precioUnitario'};?>;
+                        }    
+                        cell4.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='cantidad<?php echo $fila->{'idArticulo'};?>' id='cantidad<?php echo $fila->{'idArticulo'};?>' value='1' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,2)' /></div></div>";
+                        cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='0'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
+                        var total = parseFloat(precio) * parseFloat(document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value);
+                        var descuento = total * (parseFloat(document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value) / 100);
+                        var totalArtP = total - descuento;
+                        cell6.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' disabled name='totalArt<?php echo $fila->{'idArticulo'};?>' id='totalArt<?php echo $fila->{'idArticulo'};?>' value='" + totalArtP.toFixed(2) + "' /></div></div>";
+                        cell7.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' onclick='aumentaCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />&nbsp;&nbsp;&nbsp;<img src='<?php echo base_url();?>images/sistemaicons/prohibido.ico' onclick='disminuyeCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />"; 
+                        ventaJson.detalleTemporal.push({'idArticulo':'<?php echo $fila->{'idArticulo'};?>', 'codigo': '<?php echo $fila->{'codigo'};?>'
+                            ,'precio': document.getElementById('precio<?php echo $fila->{'idArticulo'};?>').value
+                            ,'cantidad': document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value
+                            ,'descuento': document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value
+                            ,'total': totalArtP});
+                        recuperaVentaTemporal();
+                        totalesGenerales();
+                    }
+               <?php  }
+                ?>//
+            }
+        }
+                
+        function borraCodigo() {
+            document.getElementById('codigoProducto').value = "";        
+        }
+        
+        function borraArticulo(renglonArticulo){
+            var r = confirm("¿Realmente deseas borrar?");
+            if (r) {
+                var i = renglonArticulo.parentNode.parentNode.rowIndex;
+                document.getElementById("tblVenta").deleteRow(i);
+                ventaJson.detalleTemporal.splice(i-2, 1);
+            }    
+        }
+        
+        function aumentaCantidadArticulo(idCantidad) {
+            var idObjeto = 'cantidad' + idCantidad;
+            document.getElementById(idObjeto).value = parseInt(document.getElementById(idObjeto).value) + 1;
+            //totalArticulo(idCantidad);
+            obtieneTotalArticulo(idCantidad);
+        }
+        
+        function disminuyeCantidadArticulo(idCantidad) {
+            var idObjeto = 'cantidad' + idCantidad;
+            document.getElementById(idObjeto).value = parseInt(document.getElementById(idObjeto).value) - 1;
+            //totalArticulo(idCantidad);
+            obtieneTotalArticulo(idCantidad);
+        }
     </script>
 </head>
 <body>
@@ -108,59 +344,91 @@
                     <thead>
                         <tr style="background: #00ccff">
                             <td colspan="5">
-                                <label class="control-label col-sm-4" for="cliente">Cliente (Opcional):</label>
                                 <div class="form-group">
-                                    <div class="input-group col-sm-8">
-                                        <input type="text" class="form-control col-sm-2" name="clienteB" id="clienteB" placeholder="Cliente (Opcional)" autocomplete="off" />
+                                    <label class="control-label col-sm-12" for="clienteB">Cliente (Opcional):</label>
+                                    <br>
+                                    <div class="input-group col-sm-12">
                                         <input type="hidden" class="form-control" name="cliente" id="cliente" />
+                                        <input type="text" class="form-control col-sm-2" name="clienteB" id="clienteB" placeholder="Cliente (Opcional)" autocomplete="off"  onkeypress="verificaEnter(event)" />
+                                    </div>					  
+                                    <br>
+                                    <div class="input-group col-sm-12">
+                                        <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item" />
                                     </div>					  
                                 </div>       
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <div class="input-group col-sm-4">
-                                        <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item" />
-                                    </div>					  
-                                </div>       
-                            </td>
-                            <td colspan="2">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-6" for="modoOperacion">Tipo de Registro:</label>
-                                    <div class="input-group col-sm-5">
+                                    <div class="input-group col-sm-12">
+                                        <p>Tipo de Registro:
                                         <select class="form-control col-sm-5" name="modoOperacion" id="modoOperacion">
                                             <option value="1">Venta</option>
                                             <option value="2">Regreso</option>
                                         </select>
+                                        </p>
+                                        <p>Tipo de Venta:
+                                        <select class="form-control col-sm-5" name="tipoVenta" id="tipoVenta">
+                                            <option value="1">Menudeo</option>
+                                            <option value="2">Mayoreo</option>
+                                        </select>
+                                        </p>
+                                        <p>Ticket de Venta:
+                                            <input type="text" class="form-control" name="ticket" id="ticket" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
+                                        </p>
+                                    </div>       
+                                </div>       
+                            </td>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="subtotal">Subtotal:</label>
+                                    <div class="input-group col-sm-8">
+                                        <input type="text" class="form-control" name="subtotal" id="subtotal" placeholder="Subtotal" disabled="true" />
+                                    </div>					  
+                                </div>       
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="iva">Iva:</label>
+                                    <div class="input-group col-sm-8">
+                                        <input type="text" class="form-control" name="iva" id="iva" placeholder="Iva" disabled="true" />
+                                    </div>					  
+                                </div>       
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="total">Total:</label>
+                                    <div class="input-group col-sm-8">
+                                        <input type="text" class="form-control" name="total" id="total" placeholder="Total" disabled="true" />
+                                    </div>					  
+                                </div>       
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="txtPago">Pago:</label>
+                                    <div class="input-group col-sm-8">
+                                        <input type="text" class="form-control" name="txtPago" id="txtPago" placeholder="Pago" onkeypress="return pagar(event)" />
+                                    </div>					  
+                                </div>       
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="txtCambio">Cambio:</label>
+                                    <div class="input-group col-sm-8">
+                                        <input type="text" class="form-control" disabled="true" name="txtCambio" id="txtCambio" placeholder="Cambio" />
                                     </div>					  
                                 </div>       
                             </td>
                         </tr>
                         <tr style="background: #00ccff">
-                            <td colspan="5">
+                            <td colspan="6">
                                 <div class="form-group">
-                                    <label class="control-label col-sm-3" for="codigoProducto">C&oacute;digo:</label>
-                                    <div class="input-group col-sm-9">
+                                    <label class="col-sm-2" for="codigoProducto">C&oacute;digo</label>
+                                    <div class="input-group col-sm-10">
                                         <input type="hidden" class="form-control" name="country_id" id="country_id">
-                                        <input type="text" class="form-control col-sm-2" name="codigoProducto" id="codigoProducto" placeholder="C&oacute;digo &oacute; Descripci&oacute;n" autocomplete="off" >
-                                    </div>					  
-                                </div>       
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-5" for="NoVenta">Id Venta:</label>
-                                    <div class="input-group col-sm-3">
-                                        <input type="text" class="form-control col-sm-2" name="NoVenta" id="NoVenta" disabled />
+                                        <input type="text" class="form-control" name="codigoProducto" id="codigoProducto" placeholder="C&oacute;digo &oacute; Descripci&oacute;n" autocomplete="off" onkeypress="agregaProducto(event)" />
                                     </div>					  
                                 </div>       
                             </td>
                             <td colspan="2">
                                 <div class="form-group">
-                                    <label class="control-label col-sm-6" for="tipoVenta">Tipo de Venta:</label>
-                                    <div class="input-group col-sm-5">
-                                        <select class="form-control col-sm-5" name="tipoVenta" id="tipoVenta">
-                                            <option value="1">Menudeo</option>
-                                            <option value="2">Mayoreo</option>
-                                        </select>
+                                    <div class="input-group col-sm-12">
+                                        <!-- <img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' -->
+                                        <!-- <i class="icon-user icon-white"></i> -->
+                                        <input type="button" class="btn btn-reset btn-md" value="Cancelar Venta" onclick="borraVentaTemporal()"/>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <input type="submit" class="btn btn-primary btn-md" value="Guardar Venta" id="btnVentaOk" name="btnVentaOk" onclick="enviarJson2()" />
                                     </div>					  
                                 </div>       
                             </td>
@@ -324,7 +592,6 @@
 
 <script>
  $(document).ready(function(e){
-     alert("aaaa");
         var site_url = "<?php echo site_url(); ?>";
         //alert("site_url"+site_url);
         //Para busqueda de Productos
@@ -339,7 +606,7 @@
                 var current = input.typeahead("getActive");
                 $('#country_id').val(current.id);
                 //alert('dsfds');
-                //agregaProducto(e);
+                agregaProducto(e);
         });
         //Fin Para busqueda de Productos
 
@@ -354,6 +621,7 @@
         input2.change(function(){
                 var current2 = input2.typeahead("getActive");
                 $('#cliente').val(current2.idCliente);
+                verificaEnter(e);
         });
         //Fin Para busqueda de Clientes
         

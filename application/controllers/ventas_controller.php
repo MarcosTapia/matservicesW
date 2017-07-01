@@ -156,6 +156,19 @@ class Ventas_controller extends CI_Controller {
         return $datos->{'inventarios'};
     }
     
+    function obtieneMaxIdVentas() {
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/ventas/obtener_maxidventas.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        return $datos->{'ventas'};
+    }
+    
     function busquedaProductoInventario() {
         $query = "";
         //Obtiene producto por id
@@ -190,13 +203,24 @@ class Ventas_controller extends CI_Controller {
     function buscaCliente() {
         $data2 = array();
         foreach ($this->clientesGlobal as $key => $value) {
-            $data2[] = array('name' => $value->nombre.' '.$value->apellidos);
+            $data2[] = array('id' => $value->idCliente, 'name' => $value->idCliente.' '.$value->apellidos.' '.$value->nombre);
         }
         echo json_encode($data2);
     }
     
     function ventaEnBlanco() {
-        $data = array('inventarios'=>$this->inventarioGlobal,
+        // Obtiene el idUsuario sesionado
+        $idUsuarioActual = $this->session->userdata('idUsuario');
+        // Fin Obtiene el idUsuario sesionado
+        
+        //Obtiene el no de venta que le corresponde a la venta actual
+        $maxIdReg = $this->obtieneMaxIdVentas();
+        $maxId = 0;
+        $maxId = $maxIdReg[0]->{'idVenta'};        
+        $maxId++;        
+        //Fin Obtiene el no de venta que le corresponde a la venta actual
+        
+        $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
             'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));
@@ -257,6 +281,36 @@ class Ventas_controller extends CI_Controller {
         //respuesta web service
         echo json_encode(array('okdfds'=>'ok'));
     }
+    
+    function nuevoVentaFromFormulario()
+    {
+        //echo "<script language='javascript'>alert('Estas en controler de guardao de ventas');</script>";
+        // Recibe Json
+        $obj = json_decode($_POST["myData"]);
+        // Fin Recibe Json
+    
+        //LLamado de WS de registro de venta tabla ventas
+        $data_string = json_encode($obj);
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/ventas/insertar_venta.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        //printf("%s",$result);
+        echo "Venta Registrada";
+        //Fin LLamado de WS de registro de venta tabla ventas
+        //redirect('/ventas_controller/ventaEnBlanco');
+    }
+    
     
     
         //obtiene maxId de inventario

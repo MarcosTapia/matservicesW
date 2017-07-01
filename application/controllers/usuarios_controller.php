@@ -110,6 +110,7 @@ class Usuarios_controller extends CI_Controller {
             $this->session->set_userdata('permisos', $permisos);
             $this->session->set_userdata('usuario', $usuario);					
             $this->session->set_userdata('clave', $clave);					
+            $this->session->set_userdata('idUsuario', $idUsuario);					
             //fin crea campos de sesion
             $data = array('idUsuario'=>$idUsuario,
                     'usuario'=>$usuario,'clave'=>$clave,
