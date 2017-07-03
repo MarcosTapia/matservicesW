@@ -288,7 +288,7 @@ class Ventas_controller extends CI_Controller {
         // Recibe Json
         $obj = json_decode($_POST["myData"]);
         // Fin Recibe Json
-    
+        
         //LLamado de WS de registro de venta tabla ventas
         $data_string = json_encode($obj);
         $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/ventas/insertar_venta.php');
@@ -306,8 +306,75 @@ class Ventas_controller extends CI_Controller {
         //close connection
         curl_close($ch);
         //printf("%s",$result);
-        echo "Venta Registrada";
         //Fin LLamado de WS de registro de venta tabla ventas
+        
+        
+        //Registro de detalle de venta
+        
+        //descuenta cantidad vendida desde inventario
+        $idVenta = $obj->{'ticketVenta'}; // id de enlace con ventas
+        $bandInicio = TRUE;
+            // Ciclo que barre todo el json de detalle venta
+        foreach ($obj->detalleTemporal as $fila) {
+            //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
+            if ($bandInicio) {
+                $bandInicio = FALSE;
+            } else {
+                $idArticulo = $fila->{'idArticulo'};
+                $precio = $fila->{'precio'};
+                $cantidad = $fila->{'cantidad'};
+                $descuento = $fila->{'descuento'};
+                //Arma nuevo json solo con el detalle actual y datos necesarios
+                $dataDetalleVenta = array("idVenta" => $idVenta, 
+                    "idArticulo" => $idArticulo, 
+                    "precio" => $precio, 
+                    "cantidad" => $cantidad, 
+                    "descuento" => $descuento
+                        );
+                $data_string = json_encode($dataDetalleVenta);  
+                unset($dataDetalleVenta);
+                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+
+                //LLamado de WS de registro de detalle de venta tabla detalleventas
+//                $data_string = json_encode($data_stringDetalleVenta);
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/detalleventas/insertar_detalleventa.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                printf("%s",$result);
+                curl_close($ch);
+                //Fin llaamado de WS de registro de detalle de venta tabla detalleventas
+            }
+        }
+            // Fin Ciclo que barre todo el json de detalle venta
+        echo "Venta Registrada";
+             
+            
+//            //Obtiene producto por id
+//        # An HTTP GET request example
+//        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+//        $ch = curl_init($url);
+//        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        $data = curl_exec($ch);
+//        $datos = json_decode($data);
+//        curl_close($ch);
+//        if ($datos->{'estado'}==1) {
+//            $data = array('inventario'=>$datos->{'inventario'},
+//        //Fin descuenta cantidad vendida desde inventario
+//        
+//        
+//        //Fin de Registro de detalle de venta
         //redirect('/ventas_controller/ventaEnBlanco');
     }
     
