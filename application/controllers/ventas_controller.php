@@ -313,7 +313,19 @@ class Ventas_controller extends CI_Controller {
         
         //descuenta cantidad vendida desde inventario
         $idVenta = $obj->{'ticketVenta'}; // id de enlace con ventas
+        $idUsuario = $obj->{'idUsuario'}; // id de enlace con usuarios
+        $tipoOperacion = $obj->{'tipoOperacion'}; // tipo de operacion 1.-venta 2.- Regreso
+        $tipoOperacionTexto = "";
+        $factor = -1; //si es venta 1 si es regreso
+        if ($tipoOperacion==1) {
+            $tipoOperacionTexto = "Venta";
+        } else {
+            $tipoOperacionTexto = "Regreso";
+            $factor = 1;
+        }
         $bandInicio = TRUE;
+        $cantidad = 0;
+        $fechaOperacion = $obj->{'fecha'}; // fecha de operacion
             // Ciclo que barre todo el json de detalle venta
         foreach ($obj->detalleTemporal as $fila) {
             //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
@@ -336,8 +348,37 @@ class Ventas_controller extends CI_Controller {
                 //Fin Arma nuevo json solo con el detalle actual y datos necesarios
 
                 //LLamado de WS de registro de detalle de venta tabla detalleventas
-//                $data_string = json_encode($data_stringDetalleVenta);
                 $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/detalleventas/insertar_detalleventa.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                //printf("%s",$result);
+                curl_close($ch);
+                //Fin llaamado de WS de registro de detalle de venta tabla detalleventas
+                
+                //Arma nuevo json solo con el detalle actual y datos necesarios
+                $cantidad = $fila->{'cantidad'} * $factor;
+                $dataMovimiento = array(
+                    "idArticulo" => $idArticulo, 
+                    "idUsuario" => $idUsuario, 
+                    "tipoOperacion" => $tipoOperacionTexto,
+                    "cantidad" => $cantidad, 
+                    "fechaOperacion" => $fechaOperacion
+                        );
+                $data_string = json_encode($dataMovimiento);  
+                unset($dataDetalleVenta);
+                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+                //LLamado de WS de registro de movimientos tabla movimientos
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/movimientos/insertar_movimiento.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -352,7 +393,8 @@ class Ventas_controller extends CI_Controller {
                 //close connection
                 printf("%s",$result);
                 curl_close($ch);
-                //Fin llaamado de WS de registro de detalle de venta tabla detalleventas
+                //LLamado de WS de registro de movimientos tabla movimientos
+                
             }
         }
             // Fin Ciclo que barre todo el json de detalle venta
