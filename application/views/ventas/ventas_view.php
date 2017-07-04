@@ -108,18 +108,18 @@
             });	
 	}     
 
-        function recuperaVentaTemporal() {
-            var table = document.getElementById("tblVenta");
-            var noRenglones = table.rows.length;
-            for (var i=3;i < noRenglones -1; i++){
-                alert(ventaJson.detalleTemporal[i-2].idArticulo + "->" + ventaJson.detalleTemporal[i-2].codigo 
-                        + "->" + ventaJson.detalleTemporal[i-2].precio 
-                        + "->" + ventaJson.detalleTemporal[i-2].cantidad
-                        + "->" + ventaJson.detalleTemporal[i-2].descuento
-                        + "->" + ventaJson.detalleTemporal[i-2].total);
-            } 
-        }
-        
+//        function recuperaVentaTemporal() {
+//            var table = document.getElementById("tblVenta");
+//            var noRenglones = table.rows.length;
+//            for (var i=3;i < noRenglones -1; i++){
+//                alert(ventaJson.detalleTemporal[i-2].idArticulo + "->" + ventaJson.detalleTemporal[i-2].codigo 
+//                        + "->" + ventaJson.detalleTemporal[i-2].precio 
+//                        + "->" + ventaJson.detalleTemporal[i-2].cantidad
+//                        + "->" + ventaJson.detalleTemporal[i-2].descuento
+//                        + "->" + ventaJson.detalleTemporal[i-2].total);
+//            } 
+//        }
+//        
         function pagar(e2) { //return pagar(event)
             var tecla2 = (document.all) ? e2.keyCode : e2.which;
             if (tecla2 == 13){  
@@ -299,7 +299,7 @@
                             ,'cantidad': document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value
                             ,'descuento': document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value
                             ,'total': totalArtP});
-                        recuperaVentaTemporal();
+                        //recuperaVentaTemporal();
                         totalesGenerales();
                     }
                <?php  }

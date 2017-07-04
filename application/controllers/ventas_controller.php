@@ -326,6 +326,7 @@ class Ventas_controller extends CI_Controller {
         $bandInicio = TRUE;
         $cantidad = 0;
         $fechaOperacion = $obj->{'fecha'}; // fecha de operacion
+        $existencuaInventario = 0;
             // Ciclo que barre todo el json de detalle venta
         foreach ($obj->detalleTemporal as $fila) {
             //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
@@ -391,32 +392,57 @@ class Ventas_controller extends CI_Controller {
                 //execute post
                 $result = curl_exec($ch);
                 //close connection
-                printf("%s",$result);
+                //printf("%s",$result);
                 curl_close($ch);
                 //LLamado de WS de registro de movimientos tabla movimientos
-                
+
+                // Alteracion en el inventario segun el tipo de operacion
+                    //Obtiene producto por id
+                # An HTTP GET request example
+                $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $data = curl_exec($ch);
+                $datosProd = json_decode($data);
+                curl_close($ch);
+                if ($datosProd->{'estado'}==1) {
+                    $existencuaInventario = $datosProd->{'inventario'}->{'existencia'};
+                } else {
+                    echo "Ajusta el inventario manualmente, error al consultar producto";
+                }
+                // se realiza ajuste de inventario
+                $existencuaInventario = $existencuaInventario + $cantidad;
+                $datosProd->{'inventario'}->{'existencia'} = $existencuaInventario;
+                $data = array("idArticulo" => $idArticulo,
+                    "existencia" => $existencuaInventario
+                        );
+                $data_string = json_encode($data);
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/ajusta_inventario.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                curl_close($ch);
+                    // fin se realiza ajuste de inventario
+                // Fin Alteracion en el inventario segun el tipo de operacion
+
+                //Fin de Registro de detalle de venta
             }
         }
             // Fin Ciclo que barre todo el json de detalle venta
         echo "Venta Registrada";
              
             
-//            //Obtiene producto por id
-//        # An HTTP GET request example
-//        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
-//        $ch = curl_init($url);
-//        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        $data = curl_exec($ch);
-//        $datos = json_decode($data);
-//        curl_close($ch);
-//        if ($datos->{'estado'}==1) {
-//            $data = array('inventario'=>$datos->{'inventario'},
-//        //Fin descuenta cantidad vendida desde inventario
-//        
-//        
-//        //Fin de Registro de detalle de venta
         //redirect('/ventas_controller/ventaEnBlanco');
     }
     
