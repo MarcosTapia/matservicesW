@@ -58,9 +58,12 @@
 <div class="container">
 <div class="row">
 <div class="col-md-12">
+    <!--
+    <script>document.getElementById('ids').value</script>
+    -->
     <p>
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
-    <a class="btn btn-xs btn-success" href="importarInventariosExcel/<script>document.getElementById('ids').value</script>">Importar desde Excel</a>
+    <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarInventarioExcel">Exportar a Excel</a>
     <a class="btn btn-xs btn-success" id="ligaSeleccionMultiple" href="" onclick="seleccionMuliple();">Edici&oacute;n M&uacute;ltiple</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Inventario</a>

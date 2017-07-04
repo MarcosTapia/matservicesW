@@ -47,7 +47,7 @@
                         7.- Empleados
                         8.- configuracion                  
                     -->
-                  <li class="active"><a href="#">Inicio</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/inicio">Inicio</a></li>
                     
                     <?php if ($permisos[0] == "1") { ?>
                   <li><a href="<?php echo base_url(); ?>index.php/inventarios_controller/mostrarinventarios">Inventarios</a></li>
@@ -75,7 +75,19 @@
                   <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/cerrarSesion">Salir</a></li>
                 </ul>
               </div>
-            </nav>            
+            </nav>  
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="col-md-6">
+            <p style="font-size: 12px;color: #006666">Bienvenido: <?php echo $usuarioDatos; ?></p>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <p style="font-size: 12px;color: #006666">Fecha: <?php echo $fecha; ?> </p>
+            </div>
         </div>
     </div>
             

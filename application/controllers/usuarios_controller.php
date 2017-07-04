@@ -18,22 +18,7 @@ class Usuarios_controller extends CI_Controller {
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
-        
-//        $this->load->model('country_model');
     }
-    
-//	public function json_search_country()
-//	{
-////            echo "<script language='javascript'>alert('dsfdsf');</script>";
-//		$query  = $this->country_model->get();
-//        $data = array();
-//        foreach ($query as $key => $value) 
-//        {
-//            $data[] = array('id' => $value->country_id, 'name' => $value->country_name);
-//        }
-//        echo json_encode($data);
-//	}
-    
     
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa
@@ -71,8 +56,18 @@ class Usuarios_controller extends CI_Controller {
         $this->load->view('login_view');
     }
     
-    function regresa() {
-        echo "error";
+    function inicio() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        $data = array(
+                'permisos'=>$this->session->userdata('permisos'),
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal
+            );
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('principal_view',$data);
+        $this->load->view('layouts/pie_view',$data);
     }
     
     function verificaUsuario() {
@@ -110,15 +105,21 @@ class Usuarios_controller extends CI_Controller {
             $this->session->set_userdata('permisos', $permisos);
             $this->session->set_userdata('usuario', $usuario);					
             $this->session->set_userdata('clave', $clave);					
-            $this->session->set_userdata('idUsuario', $idUsuario);					
+            $this->session->set_userdata('idUsuario', $idUsuario);
+            
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            
             //fin crea campos de sesion
             $data = array('idUsuario'=>$idUsuario,
                     'usuario'=>$usuario,'clave'=>$clave,
                     'permisos'=>$permisos,'nombre'=>$nombre,
                     'apellido_paterno'=>$apellido_paterno,
                     'apellido_materno'=>$apellido_materno,
+                    'usuarioDatos' => $this->session->userdata('nombre'),
                     'telefono_casa' => $telefono_casa,
                     'telefono_celular' => $telefono_celular,
+                    'fecha' => $fechaIngreso,
                     'nombre_Empresa'=>$this->nombreEmpresaGlobal
                 );
             $this->load->view('layouts/header_view',$data);
@@ -145,8 +146,14 @@ class Usuarios_controller extends CI_Controller {
         $i=0;
         $data;
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        
         if ($datos->{'estado'}==1) {
-            $data = array('usuarios'=>$datos->{'usuarios'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            $data = array('usuarios'=>$datos->{'usuarios'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('usuarios/adminUsers_view',$data);
@@ -159,6 +166,8 @@ class Usuarios_controller extends CI_Controller {
     }
     
     function actualizarUsuario($idUsuario) {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         //Obtiene usuario por id
         # An HTTP GET request example
         $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
@@ -171,6 +180,8 @@ class Usuarios_controller extends CI_Controller {
         curl_close($ch);
         if ($datos->{'estado'}==1) {
             $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('usuarios/actualizaUsuario_view',$data);
@@ -302,7 +313,11 @@ class Usuarios_controller extends CI_Controller {
     }
     
     function nuevoUsuario() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('usuarios/nuevoUsuario_view',$data);
@@ -410,7 +425,11 @@ class Usuarios_controller extends CI_Controller {
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarUsersExcel(){
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('usuarios/importarUsersFromExcel_view',$data);

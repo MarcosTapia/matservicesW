@@ -74,8 +74,13 @@ class Clientes_controller extends CI_Controller {
         $i=0;
         $data;
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         if ($datos->{'estado'}==1) {
-            $data = array('clientes'=>$datos->{'clientes'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            $data = array('clientes'=>$datos->{'clientes'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('clientes/adminClientes_view',$data);
@@ -88,6 +93,8 @@ class Clientes_controller extends CI_Controller {
     }
     
     function actualizarCliente($idCliente) {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         //Obtiene usuario por id
         # An HTTP GET request example
         $url = 'http://localhost/matserviceswsok/matservsthread1/clientes/obtener_cliente_por_id.php?idCliente='.$idCliente;
@@ -100,6 +107,8 @@ class Clientes_controller extends CI_Controller {
         curl_close($ch);
         if ($datos->{'estado'}==1) {
             $data = array('cliente'=>$datos->{'cliente'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('clientes/actualizaCliente_view',$data);
@@ -193,7 +202,11 @@ class Clientes_controller extends CI_Controller {
     }
     
     function nuevoCliente() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('clientes/nuevoCliente_view',$data);
@@ -261,7 +274,11 @@ class Clientes_controller extends CI_Controller {
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarClientesExcel(){
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('clientes/importarClientesFromExcel_view',$data);

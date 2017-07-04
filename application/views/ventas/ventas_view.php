@@ -106,7 +106,13 @@
                       console.log('Error al ejecutar la petición');
                }
             });	
-	}     
+	}
+        
+        function muestraAdvertencia() {
+            if (document.getElementById('modoOperacion').value=="2") {
+                alert("En ésta opción solo se regresa el producto en inventario, si hubo venta ésta permanece.");
+            }
+        }
 
 //        function recuperaVentaTemporal() {
 //            var table = document.getElementById("tblVenta");
@@ -361,7 +367,7 @@
                                 <div class="form-group">
                                     <div class="input-group col-sm-12">
                                         <p>Tipo de Registro:
-                                        <select class="form-control col-sm-5" name="modoOperacion" id="modoOperacion">
+                                            <select class="form-control col-sm-5" name="modoOperacion" id="modoOperacion" onchange="javascript: return muestraAdvertencia()" >
                                             <option value="1">Venta</option>
                                             <option value="2">Regreso</option>
                                         </select>

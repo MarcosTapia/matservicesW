@@ -147,7 +147,13 @@ class Inventarios_controller extends CI_Controller {
         $data;
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
         if ($datos->{'estado'}==1) {
+
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            //fin crea campos de sesion
             $data = array('inventarios'=>$datos->{'inventarios'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
@@ -322,7 +328,11 @@ class Inventarios_controller extends CI_Controller {
     }
     
     function nuevoInventario() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'proveedores' => $this->proveedoresGlobal,
             'categorias' => $this->categoriasGlobal,
             'sucursales' => $this->sucursalesGlobal,
@@ -444,7 +454,12 @@ class Inventarios_controller extends CI_Controller {
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarInventariosExcel(){
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('inventarios/importarInventariosFromExcel_view',$data);

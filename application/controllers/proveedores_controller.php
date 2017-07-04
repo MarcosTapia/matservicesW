@@ -77,8 +77,11 @@ class Proveedores_controller extends CI_Controller {
         $data;
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
         if ($datos->{'estado'}==1) {
-//            echo "".$this->historicoProveedoresGlobal;
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
             $data = array('proveedores'=>$datos->{'proveedores'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'),
                 'historicoPreciosProveedores' => $this->historicoProveedoresGlobal);
             $this->load->view('layouts/header_view',$data);
@@ -102,8 +105,12 @@ class Proveedores_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         if ($datos->{'estado'}==1) {
             $data = array('proveedor'=>$datos->{'proveedor'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('proveedores/actualizaProveedor_view',$data);
@@ -197,7 +204,11 @@ class Proveedores_controller extends CI_Controller {
     }
     
     function nuevoProveedor() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('proveedores/nuevoProveedor_view',$data);
@@ -265,7 +276,11 @@ class Proveedores_controller extends CI_Controller {
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarProveedoresExcel(){
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('proveedores/importarProveedoresFromExcel_view',$data);

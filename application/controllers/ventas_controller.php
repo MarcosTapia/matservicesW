@@ -209,6 +209,9 @@ class Ventas_controller extends CI_Controller {
     }
     
     function ventaEnBlanco() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        
         // Obtiene el idUsuario sesionado
         $idUsuarioActual = $this->session->userdata('idUsuario');
         // Fin Obtiene el idUsuario sesionado
@@ -221,6 +224,8 @@ class Ventas_controller extends CI_Controller {
         //Fin Obtiene el no de venta que le corresponde a la venta actual
         
         $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'));

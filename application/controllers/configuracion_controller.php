@@ -122,7 +122,11 @@ class Configuracion_controller extends CI_Controller {
     }
 
     function mostrarValores() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('categorias'=>$this->categoriasGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'sucursales'=>$this->sucursalesGlobal,
                 'datosEmpresas'=>$this->datosEmpresaGlobal,
                 'sistemas'=>$this->sistemaGlobal,
@@ -145,7 +149,11 @@ class Configuracion_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
             $data = array('categoria'=>$datos->{'categoria'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'datosEmpresas'=>$this->datosEmpresaGlobal,
                 'sistemas'=>$this->sistemaGlobal,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
@@ -170,7 +178,11 @@ class Configuracion_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
             $data = array('sucursal'=>$datos->{'sucursal'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'datosEmpresas'=>$this->datosEmpresaGlobal,
                 'sistemas'=>$this->sistemaGlobal,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
@@ -195,7 +207,11 @@ class Configuracion_controller extends CI_Controller {
         $datos2 = json_decode($data2);
         curl_close($ch2);
             
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('categorias'=>$this->categoriasGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'datosEmpresa'=>$datos2->{'datosEmpresa'},
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
             'permisos' => $this->session->userdata('permisos'));
@@ -218,7 +234,11 @@ class Configuracion_controller extends CI_Controller {
         $datos2 = json_decode($data2);
         curl_close($ch2);
             
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('categorias'=>$this->categoriasGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'sistema'=>$datos2->{'sistema'},
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
             'permisos' => $this->session->userdata('permisos'));
@@ -894,8 +914,12 @@ class Configuracion_controller extends CI_Controller {
     }
     
     function nuevoCategoria() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array(
             'datosEmpresas'=>$this->datosEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
             'permisos' => $this->session->userdata('permisos'));
@@ -905,7 +929,11 @@ class Configuracion_controller extends CI_Controller {
     }
     
     function nuevoSucursal() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array(
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'datosEmpresas'=>$this->datosEmpresaGlobal,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
@@ -975,8 +1003,12 @@ class Configuracion_controller extends CI_Controller {
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarCategoriasExcel(){
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array(
             'datosEmpresas'=>$this->datosEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
             'permisos' => $this->session->userdata('permisos'));
@@ -986,7 +1018,11 @@ class Configuracion_controller extends CI_Controller {
     }        
 
     public function importarSucursalesExcel(){
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array(
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'datosEmpresas'=>$this->datosEmpresaGlobal,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
