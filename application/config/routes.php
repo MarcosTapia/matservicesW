@@ -38,7 +38,69 @@
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "usuarios_controller";
+//rutas usuarios importarUsersExcel
+$route['verificaUsuario'] = "usuarios_controller/verificaUsuario";
+$route['mostrarusuarios'] = "usuarios_controller/mostrarUsuarios";
+$route['actualizarUsuario/(:num)'] = "usuarios_controller/actualizarUsuario/$1";
+$route['eliminarUsuario/(:num)'] = "usuarios_controller/eliminarUsuario/$1";
+$route['nuevoUsuario'] = "usuarios_controller/nuevoUsuario";
+$route['importarUsersExcel'] = "usuarios_controller/importarUsersExcel";
+
+//rutas proveedores importarProveedoresExcel
+$route['mostrarproveedores'] = "proveedores_controller/mostrarProveedores";
+$route['actualizarProveedor/(:num)'] = "proveedores_controller/actualizarProveedor/$1";
+$route['eliminarProveedor/(:num)'] = "proveedores_controller/eliminarProveedor/$1";
+$route['nuevoproveedor'] = "proveedores_controller/nuevoProveedor";
+$route['importarProveedoresExcel'] = "proveedores_controller/importarProveedoresExcel";
+$route['exportarProveedorExcel'] = "proveedores_controller/exportarProveedoresExcel";
+
+//rutas clientes importarClientesExcel
+$route['mostrarclientes'] = "clientes_controller/mostrarClientes";
+$route['actualizarCliente/(:num)'] = "clientes_controller/actualizarCliente/$1";
+$route['eliminarCliente/(:num)'] = "clientes_controller/eliminarCliente/$1";
+$route['nuevoCliente'] = "clientes_controller/nuevoCliente";
+$route['importarClientesExcel'] = "clientes_controller/importarClientesExcel";
+$route['exportarClienteExcel'] = "clientes_controller/exportarClienteExcel";
+
+//rutas categorias direccionadas a configuracion 
+$route['mostrarvalores'] = "configuracion_controller/mostrarValores";
+$route['actualizarCategoria/(:num)'] = "configuracion_controller/actualizarCategoria/$1";
+$route['eliminarCategoria/(:num)'] = "configuracion_controller/eliminarCategoria/$1";
+$route['nuevocategoria'] = "configuracion_controller/nuevoCategoria";
+$route['importarCategoriasExcel'] = "configuracion_controller/importarCategoriasExcel";
+$route['exportarCategoriaExcel'] = "configuracion_controller/exportarCategoriaExcel";
+$route['actualizarDatosEmpresa/(:num)'] = "configuracion_controller/actualizarDatosEmpresa/$1";
+$route['actualizarSistema/(:num)'] = "configuracion_controller/actualizarSistema/$1";
+
+//rutas sucursales direccionadas a configuracion 
+$route['mostrarvalores'] = "configuracion_controller/mostrarValores";
+$route['actualizarSucursal/(:num)'] = "configuracion_controller/actualizarSucursal/$1";
+$route['eliminarSucursal/(:num)'] = "configuracion_controller/eliminarSucursal/$1";
+$route['nuevosucursal'] = "configuracion_controller/nuevoSucursal";
+$route['importarSucursalesExcel'] = "configuracion_controller/importarSucursalesExcel";
+$route['exportarSucursalExcel'] = "configuracion_controller/exportarSucursalExcel";
+
+//rutas inventarios importarInventariosExcel
+$route['mostrarinventarios'] = "inventarios_controller/mostrarInventarios";
+$route['actualizarInventario/(:num)'] = "inventarios_controller/actualizarCliente/$1";
+$route['eliminarInventario/(:num)(:num)'] = "inventarios_controller/eliminarCliente/$1/$1";
+$route['nuevoInventario'] = "inventarios_controller/nuevoInventario";
+$route['importarInventariosExcel'] = "inventarios_controller/importarClientesExcel";
+$route['exportarInventarioExcel'] = "inventarios_controller/exportarClienteExcel";
+//$route['edicionMultipleInventario/(:any)'] = "inventarios_controller/edicionMultipleInventario/$1";
+
+//rutas inventarios ventas
+$route['ventaEnBlanco'] = "ventas_controller/ventaEnBlanco";
+$route['buscaProducto/(:any)'] = "ventas_controller/buscaProducto/$1";
+
+//rutas inventarios compras
+$route['compraEnBlanco'] = "compras_controller/compraEnBlanco";
+$route['buscaProducto/(:any)'] = "compras_controller/buscaProducto/$1";
+
+$route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
+
+
 $route['404_override'] = '';
 
 
