@@ -285,6 +285,7 @@ class Usuarios_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
+            $this->session->set_flashdata('correcto', 'Empleado modificado correctamente!');
             redirect('/usuarios_controller/mostrarUsuarios');
         }
     }
@@ -309,6 +310,7 @@ class Usuarios_controller extends CI_Controller {
         //echo $result;
 
         //Fin llamado WS
+        $this->session->set_flashdata('correcto', 'Empleado eliminado correctamente!');
         redirect('/usuarios_controller/mostrarUsuarios');
     }
     
@@ -418,6 +420,7 @@ class Usuarios_controller extends CI_Controller {
             echo $result;
             
             //Fin llamado WS
+            $this->session->set_flashdata('correcto', 'Empleado registrado correctamente!');
             redirect('/usuarios_controller/mostrarUsuarios');
         }
     }
@@ -481,7 +484,8 @@ class Usuarios_controller extends CI_Controller {
                 //echo $result;
             } 
         }
-        $this->mostrarUsuarios();
+        $this->session->set_flashdata('correcto', 'Importación realizada exitosamente!');
+        redirect('/usuarios_controller/mostrarUsuarios');
     }        
     //Fin Importar desde Excel con libreria de PHPExcel
     

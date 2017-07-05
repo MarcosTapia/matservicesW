@@ -16,34 +16,45 @@
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
   
-                <style type="text/css" title="currentStyle">
-			@import "<?php echo base_url();?>media/css/demo_page.css";
-			@import "<?php echo base_url();?>media/css/demo_table.css";
-		</style>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				$('#example').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-                        
-                        function DeleteUser(id) {
-                            var conf = confirm("¿Seguro que quieres eliminar?");
-                            if (conf == false) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }                        
-		</script>
+    <style type="text/css" title="currentStyle">
+            @import "<?php echo base_url();?>media/css/demo_page.css";
+            @import "<?php echo base_url();?>media/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+                $('#example').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+
+        function DeleteUser(id) {
+            var conf = confirm("¿Seguro que quieres eliminar?");
+            if (conf == false) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        
+        function mensaje() {
+            if (document.getElementById('registroCorrecto').innerHTML != "") {
+                setTimeout(function(){ location.reload(); }, 1000);
+            }
+        }
+    </script>
                 
 </head>
-<body>
+<body onload="mensaje()">
 <div class="container">
 <div class="row">
 <div class="col-md-12">
+    <?php 
+        $correcto = $this->session->flashdata('correcto');
+        if ($correcto) { ?>
+    <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span>
+    <?php } ?>
     <p><a class="btn btn-xs btn-success" href="nuevoUsuario">Nuevo Empleado</a>
     <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a></p>
