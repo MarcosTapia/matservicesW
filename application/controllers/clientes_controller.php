@@ -81,7 +81,9 @@ class Clientes_controller extends CI_Controller {
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'permisos' => $this->session->userdata('permisos'));
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '6'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('clientes/adminClientes_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -107,8 +109,9 @@ class Clientes_controller extends CI_Controller {
         curl_close($ch);
         if ($datos->{'estado'}==1) {
             $data = array('cliente'=>$datos->{'cliente'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'opcionClickeada' => '6',                  
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('clientes/actualizaCliente_view',$data);
@@ -207,7 +210,9 @@ class Clientes_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '6'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('clientes/nuevoCliente_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -279,7 +284,9 @@ class Clientes_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '6'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('clientes/importarClientesFromExcel_view',$data);
         $this->load->view('layouts/pie_view',$data);

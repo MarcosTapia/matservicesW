@@ -63,7 +63,8 @@ class Usuarios_controller extends CI_Controller {
                 'permisos'=>$this->session->userdata('permisos'),
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
-                'nombre_Empresa'=>$this->nombreEmpresaGlobal
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'opcionClickeada' => '0'
             );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('principal_view',$data);
@@ -120,7 +121,8 @@ class Usuarios_controller extends CI_Controller {
                     'telefono_casa' => $telefono_casa,
                     'telefono_celular' => $telefono_celular,
                     'fecha' => $fechaIngreso,
-                    'nombre_Empresa'=>$this->nombreEmpresaGlobal
+                    'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                    'opcionClickeada' => '0'
                 );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('principal_view',$data);
@@ -154,7 +156,9 @@ class Usuarios_controller extends CI_Controller {
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'permisos' => $this->session->userdata('permisos'));
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '7'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('usuarios/adminUsers_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -182,7 +186,9 @@ class Usuarios_controller extends CI_Controller {
             $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
-                'permisos' => $this->session->userdata('permisos'));
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '7'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('usuarios/actualizaUsuario_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -320,7 +326,9 @@ class Usuarios_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '7'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('usuarios/nuevoUsuario_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -433,7 +441,9 @@ class Usuarios_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '7'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('usuarios/importarUsersFromExcel_view',$data);
         $this->load->view('layouts/pie_view',$data);

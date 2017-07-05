@@ -155,7 +155,9 @@ class Inventarios_controller extends CI_Controller {
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'permisos' => $this->session->userdata('permisos'));
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '1'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('inventarios/adminInventarios_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -180,13 +182,19 @@ class Inventarios_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
             $data = array('inventario'=>$datos->{'inventario'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'proveedores' => $this->proveedoresGlobal,
                 'categorias' => $this->categoriasGlobal,
                 'sucursales' => $this->sucursalesGlobal,
                 'ivaEmpresa' => $this->ivaEmpresaGlobal,
-                'permisos' => $this->session->userdata('permisos'));
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '1'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('inventarios/actualizaInventario_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -337,7 +345,9 @@ class Inventarios_controller extends CI_Controller {
             'categorias' => $this->categoriasGlobal,
             'sucursales' => $this->sucursalesGlobal,
             'ivaEmpresa' => $this->ivaEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '1'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('inventarios/nuevoInventario_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -460,7 +470,9 @@ class Inventarios_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '1'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('inventarios/importarInventariosFromExcel_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -605,13 +617,19 @@ class Inventarios_controller extends CI_Controller {
     //fin exportar a excel
     
     function edicionMultipleInventario($ids) {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
             'ids' => $ids,
             'proveedores' => $this->proveedoresGlobal,
             'categorias' => $this->categoriasGlobal,
             'sucursales' => $this->sucursalesGlobal,
             'ivaEmpresa' => $this->ivaEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '1'
+                );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('inventarios/edicionMultipleInventario_view',$data);
         $this->load->view('layouts/pie_view',$data);

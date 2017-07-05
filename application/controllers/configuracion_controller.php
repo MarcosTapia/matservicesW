@@ -131,7 +131,8 @@ class Configuracion_controller extends CI_Controller {
                 'datosEmpresas'=>$this->datosEmpresaGlobal,
                 'sistemas'=>$this->sistemaGlobal,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
-            'permisos' => $this->session->userdata('permisos'));
+                'opcionClickeada' => '8',
+                'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/adminConfiguracion_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -157,6 +158,7 @@ class Configuracion_controller extends CI_Controller {
                 'datosEmpresas'=>$this->datosEmpresaGlobal,
                 'sistemas'=>$this->sistemaGlobal,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+                'opcionClickeada' => '8',
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('configuracion/actualizaCategoria_view',$data);
@@ -186,6 +188,7 @@ class Configuracion_controller extends CI_Controller {
                 'datosEmpresas'=>$this->datosEmpresaGlobal,
                 'sistemas'=>$this->sistemaGlobal,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+                'opcionClickeada' => '8',
                 'permisos' => $this->session->userdata('permisos'));
             $this->load->view('layouts/header_view',$data);
             $this->load->view('configuracion/actualizaSucursal_view',$data);
@@ -214,6 +217,7 @@ class Configuracion_controller extends CI_Controller {
             'fecha' => $fechaIngreso,
             'datosEmpresa'=>$datos2->{'datosEmpresa'},
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'opcionClickeada' => '8',
             'permisos' => $this->session->userdata('permisos'));
             
             
@@ -241,6 +245,7 @@ class Configuracion_controller extends CI_Controller {
             'fecha' => $fechaIngreso,
             'sistema'=>$datos2->{'sistema'},
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'opcionClickeada' => '8',
             'permisos' => $this->session->userdata('permisos'));
             
             
@@ -922,6 +927,7 @@ class Configuracion_controller extends CI_Controller {
             'fecha' => $fechaIngreso,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'opcionClickeada' => '8',
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/nuevoCategoria_view',$data);
@@ -937,6 +943,7 @@ class Configuracion_controller extends CI_Controller {
             'datosEmpresas'=>$this->datosEmpresaGlobal,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'opcionClickeada' => '8',
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/nuevoSucursal_view',$data);
@@ -1011,6 +1018,7 @@ class Configuracion_controller extends CI_Controller {
             'fecha' => $fechaIngreso,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'opcionClickeada' => '8',
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/importarCategoriasFromExcel_view',$data);
@@ -1026,6 +1034,7 @@ class Configuracion_controller extends CI_Controller {
             'datosEmpresas'=>$this->datosEmpresaGlobal,
             'sistemas'=>$this->sistemaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal->{'nombreEmpresa'},
+            'opcionClickeada' => '8',
             'permisos' => $this->session->userdata('permisos'));
         $this->load->view('layouts/header_view',$data);
         $this->load->view('configuracion/importarSucursalesFromExcel_view',$data);

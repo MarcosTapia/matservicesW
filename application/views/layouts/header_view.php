@@ -47,31 +47,91 @@
                         7.- Empleados
                         8.- configuracion                  
                     -->
+                    <!-- Para leer opcion clickeada
+                        0.- inicio
+                        1.- inventario
+                        2.- ventas
+                        3.- compras
+                        4.- consultas
+                        5.- proveedores
+                        6.- clientes
+                        7.- Empleados
+                        8.- configuracion                  
+                    -->
+                    
+                    <!-- Verifica si opcion inicio esta seleccionada -->
+                    <?php if ($opcionClickeada=="0") { ?> 
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/usuarios_controller/inicio">Inicio</a></li>
+                    <?php } else {  ?> 
                   <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/inicio">Inicio</a></li>
-                    
-                    <?php if ($permisos[0] == "1") { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/inventarios_controller/mostrarinventarios">Inventarios</a></li>
-                    
-                    <?php } if ($permisos[1] == "1") { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco">Ventas</a></li>
-                    
-                    <?php } if ($permisos[2] == "1") { ?>
-                  <li><a href="#">Compras</a></li>
-                    
-                    <?php } if ($permisos[3] == "1") { ?>
-                  <li><a href="#">Consultas</a></li>
-                    
-                    <?php } if ($permisos[4] == "1") { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/proveedores_controller/mostrarproveedores">Proveedores</a></li>
-                    
-                    <?php } if ($permisos[5] == "1") { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/clientes_controller/mostrarclientes">Clientes</a></li>
-                    
-                    <?php } if ($permisos[6] == "1") { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/mostrarusuarios">Empleados</a></li>
-                    <?php } if ($permisos[7] == "1") { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/configuracion_controller/mostrarvalores">Configuraci&oacute;n</a></li>
                     <?php } ?>
+                    <!-- Fin Verifica si opcion inicio esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion inventario esta seleccionada -->
+                    <?php if ($permisos[0] == "1") { 
+                        if ($opcionClickeada=="1") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/inventarios_controller/mostrarinventarios">Inventarios</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/inventarios_controller/mostrarinventarios">Inventarios</a></li>
+                    <!-- Fin Verifica permiso y si opcion inventario esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion ventas esta seleccionada -->
+                    <?php } } if ($permisos[1] == "1") { 
+                        if ($opcionClickeada=="2") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco">Ventas</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco">Ventas</a></li>
+                    <!-- Fin Verifica permiso y si opcion ventas esta seleccionada -->
+
+                    <!-- Verifica permiso y si opcion compras esta seleccionada -->
+                    <?php } } if ($permisos[2] == "1") { 
+                        if ($opcionClickeada=="3") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/compras_controller/compraEnBlanco">Compras</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/compras_controller/compraEnBlanco">Compras</a></li>
+                    <!-- Verifica permiso y si opcion compras esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion consultas esta seleccionada -->
+                    <?php } } if ($permisos[3] == "1") { 
+                        if ($opcionClickeada=="4") { ?>
+                  <li class="active"><a href="#">Consultas</a></li>
+                        <?php } else { ?>
+                  <li><a href="#">Consultas</a></li>
+                    <!-- Verifica permiso y si opcion consultas esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion proveedores esta seleccionada -->
+                    <?php } } if ($permisos[4] == "1") { 
+                        if ($opcionClickeada=="5") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/proveedores_controller/mostrarproveedores">Proveedores</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/proveedores_controller/mostrarproveedores">Proveedores</a></li>
+                    <!-- Verifica permiso y si opcion proveedores esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion clientes esta seleccionada -->
+                    <?php } } if ($permisos[5] == "1") { 
+                        if ($opcionClickeada=="6") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/clientes_controller/mostrarclientes">Clientes</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/clientes_controller/mostrarclientes">Clientes</a></li>
+                    <!-- Verifica permiso y si opcion clientes esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion empleados(usuarios) esta seleccionada -->
+                    <?php } } if ($permisos[6] == "1") { 
+                        if ($opcionClickeada=="7") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/usuarios_controller/mostrarusuarios">Empleados</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/mostrarusuarios">Empleados</a></li>
+                    <!-- Verifica permiso y si opcion empleados(usuarios) esta seleccionada -->
+                    
+                    <!-- Verifica permiso y si opcion configuracion esta seleccionada -->
+                    <?php } } if ($permisos[7] == "1") { 
+                        if ($opcionClickeada=="8") { ?>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/configuracion_controller/mostrarvalores">Configuraci&oacute;n</a></li>
+                        <?php } else { ?>
+                  <li><a href="<?php echo base_url(); ?>index.php/configuracion_controller/mostrarvalores">Configuraci&oacute;n</a></li>
+                    <!-- Verifica permiso y si opcion configuracion esta seleccionada -->
+
+                    <?php } } ?>
                   <li><a href="<?php echo base_url(); ?>index.php/usuarios_controller/cerrarSesion">Salir</a></li>
                 </ul>
               </div>

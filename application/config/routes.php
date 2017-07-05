@@ -90,9 +90,13 @@ $route['importarInventariosExcel'] = "inventarios_controller/importarClientesExc
 $route['exportarInventarioExcel'] = "inventarios_controller/exportarClienteExcel";
 //$route['edicionMultipleInventario/(:any)'] = "inventarios_controller/edicionMultipleInventario/$1";
 
-//rutas inventarios importarInventariosExcel
+//rutas inventarios ventas
 $route['ventaEnBlanco'] = "ventas_controller/ventaEnBlanco";
 $route['buscaProducto/(:any)'] = "ventas_controller/buscaProducto/$1";
+
+//rutas inventarios compras
+$route['compraEnBlanco'] = "compras_controller/compraEnBlanco";
+$route['buscaProducto/(:any)'] = "compras_controller/buscaProducto/$1";
 
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 

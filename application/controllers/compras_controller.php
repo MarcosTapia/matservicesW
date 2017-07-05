@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Ventas_controller extends CI_Controller {
+class Compras_controller extends CI_Controller {
     private $datosEmpresaGlobal;
     private $nombreEmpresaGlobal;
     private $proveedoresGlobal;
@@ -156,9 +156,9 @@ class Ventas_controller extends CI_Controller {
         return $datos->{'inventarios'};
     }
     
-    function obtieneMaxIdVentas() {
+    function obtieneMaxIdCompras() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/ventas/obtener_maxidventas.php';
+        $url = 'http://localhost/matserviceswsok/matservsthread1/compras/obtener_maxidcompras.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -166,7 +166,7 @@ class Ventas_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
-        return $datos->{'ventas'};
+        return $datos->{'compras'};
     }
     
     function busquedaProductoInventario() {
@@ -208,7 +208,7 @@ class Ventas_controller extends CI_Controller {
         echo json_encode($data2);
     }
     
-    function ventaEnBlanco() {
+    function compraEnBlanco() {
         $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
         $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         
@@ -217,9 +217,9 @@ class Ventas_controller extends CI_Controller {
         // Fin Obtiene el idUsuario sesionado
         
         //Obtiene el no de venta que le corresponde a la venta actual
-        $maxIdReg = $this->obtieneMaxIdVentas();
+        $maxIdReg = $this->obtieneMaxIdCompras();
         $maxId = 0;
-        $maxId = $maxIdReg[0]->{'idVenta'};        
+        $maxId = $maxIdReg[0]->{'idCompra'};        
         $maxId++;        
         //Fin Obtiene el no de venta que le corresponde a la venta actual
         
@@ -229,10 +229,10 @@ class Ventas_controller extends CI_Controller {
             'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '2'
+            'opcionClickeada' => '3'
             );
         $this->load->view('layouts/header_view',$data);
-        $this->load->view('ventas/ventas_view',$data);
+        $this->load->view('compras/compras_view',$data);
         $this->load->view('layouts/pie_view',$data);
     }
     

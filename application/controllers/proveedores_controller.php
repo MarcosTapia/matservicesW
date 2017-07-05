@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+    <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Proveedores_controller extends CI_Controller {
     private $datosEmpresaGlobal;
     private $nombreEmpresaGlobal;
@@ -83,7 +83,9 @@ class Proveedores_controller extends CI_Controller {
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'),
-                'historicoPreciosProveedores' => $this->historicoProveedoresGlobal);
+                'historicoPreciosProveedores' => $this->historicoProveedoresGlobal,
+                'opcionClickeada' => '5'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('proveedores/adminProveedores_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -111,7 +113,9 @@ class Proveedores_controller extends CI_Controller {
             $data = array('proveedor'=>$datos->{'proveedor'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
-                'permisos' => $this->session->userdata('permisos'));
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '5'
+                    );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('proveedores/actualizaProveedor_view',$data);
             $this->load->view('layouts/pie_view',$data);
@@ -209,7 +213,9 @@ class Proveedores_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '5'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('proveedores/nuevoProveedor_view',$data);
         $this->load->view('layouts/pie_view',$data);
@@ -281,7 +287,9 @@ class Proveedores_controller extends CI_Controller {
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'));
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '5'
+            );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('proveedores/importarProveedoresFromExcel_view',$data);
         $this->load->view('layouts/pie_view',$data);
