@@ -182,6 +182,7 @@ class Clientes_controller extends CI_Controller {
     }
 
     function eliminarCliente($idCliente) {
+//        echo $idCliente;
         $data = array("idCliente" => $idCliente);
         $data_string = json_encode($data);
         $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/borrar_cliente.php');
@@ -197,8 +198,16 @@ class Clientes_controller extends CI_Controller {
         //execute post
         $result = curl_exec($ch);
         //close connection
-        curl_close($ch);
-        //echo $result;
+        //curl_close($ch);
+        // Decodifica json de respuesta para imprimir resultado de eliminacion
+        $resultado = json_decode($result, true);
+        if ($resultado) {
+            printf("%s",$resultado['mensaje']);
+            $this->session->set_flashdata('correcto', $resultado['mensaje']."<br>");
+        } else {
+            printf("Hubo un error");
+            $this->session->set_flashdata('correcto', "No se elimino el registro<br>");
+        }
 
         //Fin llamado WS
         redirect('/clientes_controller/mostrarClientes');

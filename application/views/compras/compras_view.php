@@ -25,7 +25,7 @@
     <script language='javascript'>
         var obsVacio = "";
         var ventaJson = {'subtotalVenta':0,'ivaVenta':0,'totalVenta':0,
-            'codigoCliente':0,'tipoOperacion':1,'tipoVenta':1,'ticketVenta':0,'observaciones':'', 
+            'codigoProveedor':0,'tipoOperacion':1,'tipoVenta':1,'ticketVenta':0,'observaciones':'', 
             'fecha':'0000-00-00 00:00:00','idUsuario':'',
             detalleTemporal : [
                 {'idArticulo':'-1','codigo':'-1','precio':0,'cantidad':0,'descuento':0,'total':0}
@@ -46,16 +46,16 @@
             ventaJson.totalVenta = parseFloat(document.getElementById('total').value);
                 //Fin identifica totales
             
-                //identifica y guarda id cliente
-            var cliente = document.getElementById('clienteB').value;
-            var clienteDatos = cliente.split(" ");
-            var clienteId = clienteDatos[0];
-            if (clienteId=="") {
-                ventaJson.codigoCliente = "1";
+                //identifica y guarda id proveedor
+            var proveedor = document.getElementById('proveedorB').value;
+            var proveedorDatos = proveedor.split(" ");
+            var proveedorId = proveedorDatos[0];
+            if (proveedorId=="") {
+                ventaJson.codigoProveedor = "1";
             } else {
-                ventaJson.codigoCliente = "" + clienteId;
+                ventaJson.codigoProveedor = "" + proveedorId;
             }
-                //fin identifica y guarda id cliente
+                //fin identifica y guarda id proveedor
                 
                 //Identifica modoOperacion
             ventaJson.tipoOperacion = document.getElementById('modoOperacion').value;
@@ -351,15 +351,15 @@
                         <tr style="background: #ffcccc">
                             <td colspan="5">
                                 <div class="form-group">
-                                    <label class="control-label col-sm-12" for="clienteB">Proveedor (Opcional):</label>
+                                    <label class="control-label col-sm-12" for="proveedorB">Proveedor (Opcional):</label>
                                     <br>
                                     <div class="input-group col-sm-12">
-                                        <input type="hidden" class="form-control" name="cliente" id="cliente" />
-                                        <input type="text" class="form-control col-sm-2" name="clienteB" id="clienteB" placeholder="Cliente (Opcional)" autocomplete="off"  onkeypress="verificaEnter(event)" />
+                                        <input type="hidden" class="form-control" name="proveedor" id="proveedor" />
+                                        <input type="text" class="form-control col-sm-2" name="proveedorB" id="proveedorB" placeholder="Proveedor (Opcional)" autocomplete="off"  onkeypress="verificaEnter(event)" />
                                     </div>					  
                                     <br>
                                     <div class="input-group col-sm-12">
-                                        <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item" />
+                                        <input type="button" class="btn btn-success" value="Nuevo Proveedor" data-toggle="modal" data-target="#create-item" />
                                     </div>					  
                                 </div>       
                             </td>
@@ -468,16 +468,16 @@
     </div> <!-- / renglon-->
 </div> <!-- /container -->
 
-<!-- Modal cliente -->
+<!-- Modal proveedor -->
 <div class="modal fade" id="create-item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Nuevo Cliente</h4>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Proveedor</h4>
             </div>
             <div class="modal-body">
-                <form data-toggle="validator" class="form-horizontal" action="<?php echo base_url();?>index.php/ventas_controller/nuevoClienteFromFormulario" method="post">
+                <form data-toggle="validator" class="form-horizontal" action="<?php echo base_url();?>index.php/compras_controller/nuevoProveedorFromFormulario" method="post">
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="empresa">Empresa:</label>
                       <div class="col-sm-10">
@@ -594,7 +594,7 @@
         </div>
     </div>
 </div>
-<!-- Fin Modal cliente -->
+<!-- Fin Modal proveedor -->
 
 <script>
  $(document).ready(function(e){
@@ -616,9 +616,9 @@
         });
         //Fin Para busqueda de Productos
 
-        //Para busqueda de Clientes
-        var input2 = $("input[name=clienteB]");
-        $.get(site_url+'index.php/ventas_controller/buscaCliente', function(data2){
+        //Para busqueda de Proveedores
+        var input2 = $("input[name=proveedorB]");
+        $.get(site_url+'index.php/compras_controller/buscaProveedor', function(data2){
                                 input2.typeahead({
                                     source: data2,
                                     minLength: 1,
@@ -626,12 +626,12 @@
         }, 'json');
         input2.change(function(){
                 var current2 = input2.typeahead("getActive");
-                $('#cliente').val(current2.idCliente);
+                $('#proveedor').val(current2.idProveedor);
                 verificaEnter(e);
         });
-        //Fin Para busqueda de Clientes
+        //Fin Para busqueda de Proveedores
         
-        //para guardar cliente sin salir ventas
+        //para guardar proveedor sin salir ventas
         $(".crud-submit").click(function(e){
             e.preventDefault();
             var form_action = $("#create-item").find("form").attr("action");
@@ -645,10 +645,10 @@
                 data:{empresa:empresa, nombre:nombre}
             }).done(function(data){
                 $(".modal").modal('hide');
-                //toastr.success('Cliente agregado correctamente.', 'Success Alert', {timeOut: 5000});
+                //toastr.success('Proveedor agregado correctamente.', 'Success Alert', {timeOut: 5000});
             });
         });
-        //fin para guardar cliente sin salir ventas
+        //fin para guardar Proveedor sin salir ventas
 });
 </script>
 </body>	

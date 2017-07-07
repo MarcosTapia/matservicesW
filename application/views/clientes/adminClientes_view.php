@@ -16,29 +16,40 @@
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
   
-                <style type="text/css" title="currentStyle">
-			@import "<?php echo base_url();?>media/css/demo_page.css";
-			@import "<?php echo base_url();?>media/css/demo_table.css";
-		</style>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				$('#example').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-			$(document).ready(function() {
-				$('#example2').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-		</script>
+    <style type="text/css" title="currentStyle">
+            @import "<?php echo base_url();?>media/css/demo_page.css";
+            @import "<?php echo base_url();?>media/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+                $('#example').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+        $(document).ready(function() {
+                $('#example2').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+        function mensaje() {
+            if (document.getElementById('registroCorrecto').innerHTML != "") {
+                setTimeout(function(){ location.reload(); }, 1000);
+            }
+        }        
+    </script>
 </head>
-<body>
+<body onload="mensaje()">
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <?php 
+                $correcto = $this->session->flashdata('correcto');
+                if ($correcto) { ?>
+            <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span>
+            <?php } ?>
+            <br>
             <p><a class="btn btn-xs btn-success" href="nuevocliente">Nuevo Cliente</a>
             <a class="btn btn-xs btn-success" href="importarClientesExcel">Importar desde Excel</a>
             <a class="btn btn-xs btn-success" href="exportarClienteExcel">Exportar a Excel</a></p>

@@ -200,10 +200,10 @@ class Compras_controller extends CI_Controller {
         echo json_encode($data);
     }
     
-    function buscaCliente() {
+    function buscaProveedor() {
         $data2 = array();
-        foreach ($this->clientesGlobal as $key => $value) {
-            $data2[] = array('id' => $value->idCliente, 'name' => $value->idCliente.' '.$value->apellidos.' '.$value->nombre);
+        foreach ($this->proveedoresGlobal as $key => $value) {
+            $data2[] = array('id' => $value->idProveedor, 'name' => $value->idProveedor.' '.$value->apellidos.' '.$value->nombre);
         }
         echo json_encode($data2);
     }

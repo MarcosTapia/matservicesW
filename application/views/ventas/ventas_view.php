@@ -114,18 +114,6 @@
             }
         }
 
-//        function recuperaVentaTemporal() {
-//            var table = document.getElementById("tblVenta");
-//            var noRenglones = table.rows.length;
-//            for (var i=3;i < noRenglones -1; i++){
-//                alert(ventaJson.detalleTemporal[i-2].idArticulo + "->" + ventaJson.detalleTemporal[i-2].codigo 
-//                        + "->" + ventaJson.detalleTemporal[i-2].precio 
-//                        + "->" + ventaJson.detalleTemporal[i-2].cantidad
-//                        + "->" + ventaJson.detalleTemporal[i-2].descuento
-//                        + "->" + ventaJson.detalleTemporal[i-2].total);
-//            } 
-//        }
-//        
         function pagar(e2) { //return pagar(event)
             var tecla2 = (document.all) ? e2.keyCode : e2.which;
             if (tecla2 == 13){  
@@ -637,12 +625,30 @@
             var form_action = $("#create-item").find("form").attr("action");
             var empresa = $("#create-item").find("input[name='empresa']").val();
             var nombre = $("#create-item").find("input[name='nombre']").val();
+            var apellidos = $("#create-item").find("input[name='apellidos']").val();
+            var telefono_casa = $("#create-item").find("input[name='telefono_casa']").val();
+            var telefono_celular = $("#create-item").find("input[name='telefono_celular']").val();
+            var direccion1 = $("#create-item").find("input[name='direccion1']").val();
+            var direccion2 = $("#create-item").find("input[name='direccion2']").val();
+            var rfc = $("#create-item").find("input[name='rfc']").val();
+            var email = $("#create-item").find("input[name='email']").val();
+            var ciudad = $("#create-item").find("input[name='ciudad']").val();
+            var estado = $("#create-item").find("input[name='estado']").val();
+            var cp = $("#create-item").find("input[name='cp']").val();
+            var pais = $("#create-item").find("input[name='pais']").val();
+            var comentarios = $("#create-item").find("input[name='comentarios']").val();
+            var noCuenta = $("#create-item").find("input[name='noCuenta']").val();
             $.ajax({
                 dataType: 'json',
                 type:'POST',
                 //url: url + form_action,
                 url: form_action,
-                data:{empresa:empresa, nombre:nombre}
+                data:{empresa:empresa, nombre:nombre, apellidos:apellidos,
+                    telefono_casa:telefono_casa,telefono_celular:telefono_celular,
+                    direccion1:direccion1,direccion2:direccion2,rfc:rfc,
+                    email:email,ciudad:ciudad,estado:estado,cp:cp,pais:pais,
+                    comentarios:comentarios,noCuenta:noCuenta
+                    }
             }).done(function(data){
                 $(".modal").modal('hide');
                 //toastr.success('Cliente agregado correctamente.', 'Success Alert', {timeOut: 5000});
