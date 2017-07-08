@@ -24,8 +24,8 @@
     
     <script language='javascript'>
         var obsVacio = "";
-        var ventaJson = {'subtotalVenta':0,'ivaVenta':0,'totalVenta':0,
-            'codigoProveedor':0,'tipoOperacion':1,'tipoVenta':1,'ticketVenta':0,'observaciones':'', 
+        var compraJson = {'subtotalCompra':0,'ivaCompra':0,'totalCompra':0,
+            'codigoProveedor':0,'tipoOperacion':1,'tipoCompra':1,'idCompra':0,'observaciones':'', 
             'fecha':'0000-00-00 00:00:00','idUsuario':'',
             detalleTemporal : [
                 {'idArticulo':'-1','codigo':'-1','precio':0,'cantidad':0,'descuento':0,'total':0}
@@ -34,16 +34,16 @@
 	function enviarJson2() {    
             // Armado final del json
                 //verifica si hay elementos en detalle de venta
-            if (ventaJson.detalleTemporal.length < 2) {
-                alert('No hay venta para registrar');
+            if (compraJson.detalleTemporal.length < 2) {
+                alert('No hay compra para registrar');
                 return;
             }
                 //fib verifica si hay elementos en detalle de venta
                 
                 //identifica totales
-            ventaJson.subtotalVenta = parseFloat(document.getElementById('subtotal').value);
-            ventaJson.ivaVenta = parseFloat(document.getElementById('iva').value);
-            ventaJson.totalVenta = parseFloat(document.getElementById('total').value);
+            compraJson.subtotalCompra = parseFloat(document.getElementById('subtotal').value);
+            compraJson.ivaCompra = parseFloat(document.getElementById('iva').value);
+            compraJson.totalCompra = parseFloat(document.getElementById('total').value);
                 //Fin identifica totales
             
                 //identifica y guarda id proveedor
@@ -51,26 +51,26 @@
             var proveedorDatos = proveedor.split(" ");
             var proveedorId = proveedorDatos[0];
             if (proveedorId=="") {
-                ventaJson.codigoProveedor = "1";
+                compraJson.codigoProveedor = "1";
             } else {
-                ventaJson.codigoProveedor = "" + proveedorId;
+                compraJson.codigoProveedor = "" + proveedorId;
             }
                 //fin identifica y guarda id proveedor
                 
                 //Identifica modoOperacion
-            ventaJson.tipoOperacion = document.getElementById('modoOperacion').value;
-                //Fin Identifica modoOperacion tipoVenta
+            compraJson.tipoOperacion = document.getElementById('modoOperacion').value;
+                //Fin Identifica modoOperacion tipoCompra
                 
-                //Identifica tipoVenta
-            ventaJson.tipoVenta = document.getElementById('tipoVenta').value;    
-                //Fin Identifica tipoVenta 
+                //Identifica tipoCompra
+            compraJson.tipoCompra = document.getElementById('tipoCompra').value;    
+                //Fin Identifica tipoCompra 
                 
-                //Identifica ticket
-            ventaJson.ticketVenta = document.getElementById('ticket').value;              
-                //Fin Identifica ticket
+                //Identifica idCompra
+            compraJson.idCompra = document.getElementById('idCompra').value;              
+                //Fin Identifica idCompra
                 
                 //***** Identifica observaciones
-            ventaJson.observaciones = "marcos";
+            compraJson.observaciones = "marcos";
                 //Fin Identifica observaciones
                 
                 //Identifica fechaVenta
@@ -78,13 +78,13 @@
                 $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
                 $fechaVenta = $dt->format("Y-m-d H:i:s"); 
             ?>    
-            ventaJson.fecha = '<?php echo $fechaVenta; ?>';
+            compraJson.fecha = '<?php echo $fechaVenta; ?>';
                 //Fin Identifica fechaVenta
                 
                 //Identifica idUsuario
-            ventaJson.idUsuario = '<?php echo $idUsuario; ?>';
+            compraJson.idUsuario = '<?php echo $idUsuario; ?>';
             //restringe venta si no hay usuario seleccionado
-            if (ventaJson.idUsuario=="") {
+            if (compraJson.idUsuario=="") {
                 alert("Error, no puedes registrar venta. Debes ingresar al sistema, tu sesión a expirado");
                 return;
             }
@@ -93,9 +93,9 @@
                 
             // Fin Armado final del json
             
-            var dataString = JSON.stringify(ventaJson);
+            var dataString = JSON.stringify(compraJson);
             $.ajax({
-               url: '<?php echo base_url();?>index.php/ventas_controller/nuevoVentaFromFormulario',
+               url: '<?php echo base_url();?>index.php/compras_controller/nuevoCompraFromFormulario',
                data: {myData: dataString},
                type: 'POST',
                success: function(response) {
@@ -118,11 +118,11 @@
 //            var table = document.getElementById("tblVenta");
 //            var noRenglones = table.rows.length;
 //            for (var i=3;i < noRenglones -1; i++){
-//                alert(ventaJson.detalleTemporal[i-2].idArticulo + "->" + ventaJson.detalleTemporal[i-2].codigo 
-//                        + "->" + ventaJson.detalleTemporal[i-2].precio 
-//                        + "->" + ventaJson.detalleTemporal[i-2].cantidad
-//                        + "->" + ventaJson.detalleTemporal[i-2].descuento
-//                        + "->" + ventaJson.detalleTemporal[i-2].total);
+//                alert(compraJson.detalleTemporal[i-2].idArticulo + "->" + compraJson.detalleTemporal[i-2].codigo 
+//                        + "->" + compraJson.detalleTemporal[i-2].precio 
+//                        + "->" + compraJson.detalleTemporal[i-2].cantidad
+//                        + "->" + compraJson.detalleTemporal[i-2].descuento
+//                        + "->" + compraJson.detalleTemporal[i-2].total);
 //            } 
 //        }
 //        
@@ -132,7 +132,7 @@
                 var cambioVenta = parseFloat(document.getElementById('txtPago').value) - parseFloat(document.getElementById('total').value);
                 document.getElementById('txtCambio').value = cambioVenta.toFixed(2);                
                 //setTimeout(function(){ document.getElementById('txtCambio').value = ""; }, 3000);
-                document.getElementById('btnVentaOk').focus();
+                document.getElementById('btnCompraOk').focus();
             } else {
                 if (tecla2==8){
                     document.getElementById('txtCambio').value = "";
@@ -159,7 +159,7 @@
                 var noRenglones = table.rows.length;
                 //Borra datos de json
                 for (var i=3;i <= noRenglones; i++){
-                    ventaJson.detalleTemporal.splice(1,1);
+                    compraJson.detalleTemporal.splice(1,1);
                 } 
                 //Fin Borra datos de json
                 
@@ -182,8 +182,8 @@
             var descuento = total * (parseFloat(document.getElementById('descuento' + idArticulo).value) / 100);
             var totalArtP = total - descuento;
             document.getElementById('totalArt'+idArticulo).value = totalArtP.toFixed(2);
-            //modifica ventaJson em producto actual
-            $.each(ventaJson.detalleTemporal, function(i, v) {
+            //modifica compraJson em producto actual
+            $.each(compraJson.detalleTemporal, function(i, v) {
                 if (v.idArticulo == idArticulo) {
                     //alert(v.descuento);
                     v.precio = document.getElementById('precio'+idArticulo).value;
@@ -192,7 +192,7 @@
                     v.total = document.getElementById('totalArt'+idArticulo).value;
                 }
             });          
-            //fin modifica ventaJson
+            //fin modifica compraJson
             totalesGenerales();
         }
         
@@ -203,7 +203,7 @@
 //            alert('ivaSistema->'+ivaSistema);
             var ivaG = 0;
             var totalG = 0;
-            $.each(ventaJson.detalleTemporal, function(i, v) {
+            $.each(compraJson.detalleTemporal, function(i, v) {
                 subtotalG = subtotalG + parseFloat(v.total);
             });
 //            alert("subtotal->" + subtotalG);
@@ -286,7 +286,7 @@
                         cell1.innerHTML = "<?php echo $fila->{'codigo'};?>";
                         cell2.innerHTML = "<?php echo $fila->{'descripcion'};?>";
                         var precio;
-                        if (document.getElementById('tipoVenta').value == "2") {
+                        if (document.getElementById('tipoCompra').value == "2") {
                             cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
                             precio = <?php echo $fila->{'precioCosto'};?>;
                         } else {
@@ -300,7 +300,7 @@
                         var totalArtP = total - descuento;
                         cell6.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' disabled name='totalArt<?php echo $fila->{'idArticulo'};?>' id='totalArt<?php echo $fila->{'idArticulo'};?>' value='" + totalArtP.toFixed(2) + "' /></div></div>";
                         cell7.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' onclick='aumentaCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />&nbsp;&nbsp;&nbsp;<img src='<?php echo base_url();?>images/sistemaicons/prohibido.ico' onclick='disminuyeCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />"; 
-                        ventaJson.detalleTemporal.push({'idArticulo':'<?php echo $fila->{'idArticulo'};?>', 'codigo': '<?php echo $fila->{'codigo'};?>'
+                        compraJson.detalleTemporal.push({'idArticulo':'<?php echo $fila->{'idArticulo'};?>', 'codigo': '<?php echo $fila->{'codigo'};?>'
                             ,'precio': document.getElementById('precio<?php echo $fila->{'idArticulo'};?>').value
                             ,'cantidad': document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value
                             ,'descuento': document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value
@@ -322,7 +322,7 @@
             if (r) {
                 var i = renglonArticulo.parentNode.parentNode.rowIndex;
                 document.getElementById("tblVenta").deleteRow(i);
-                ventaJson.detalleTemporal.splice(i-2, 1);
+                compraJson.detalleTemporal.splice(i-2, 1);
             }    
         }
         
@@ -372,14 +372,14 @@
                                             <option value="2">Regreso</option>
                                         </select>
                                         </p>
-                                        <p>Tipo de Compra:
-                                        <select class="form-control col-sm-5" name="tipoVenta" id="tipoVenta">
+                                        <p style="display:none">Tipo de Compra:
+                                        <select class="form-control col-sm-5" name="tipoCompra" id="tipoCompra">
                                             <option value="1">Menudeo</option>
                                             <option value="2">Mayoreo</option>
                                         </select>
                                         </p>
                                         <p>No. de Compra:
-                                            <input type="text" class="form-control" name="ticket" id="ticket" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
+                                            <input type="text" class="form-control" name="idCompra" id="idCompra" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
                                         </p>
                                     </div>       
                                 </div>       
@@ -434,7 +434,7 @@
                                         <!-- <i class="icon-user icon-white"></i> -->
                                         <input type="button" class="btn btn-reset btn-md" value="Cancelar Compra" onclick="borraVentaTemporal()"/>
                                         &nbsp;&nbsp;&nbsp;
-                                        <input type="submit" class="btn btn-primary btn-md" value="Guardar Compra" id="btnVentaOk" name="btnVentaOk" onclick="enviarJson2()" />
+                                        <input type="submit" class="btn btn-primary btn-md" value="Guardar Compra" id="btnCompraOk" name="btnCompraOk" onclick="enviarJson2()" />
                                     </div>					  
                                 </div>       
                             </td>
@@ -590,6 +590,7 @@
                 //echo form_submit($submitBtn);                 
                 ?>
                 <button type="submit" class="btn crud-submit btn-success">Submit</button>
+                </form>
             </div>
         </div>
     </div>
@@ -637,12 +638,30 @@
             var form_action = $("#create-item").find("form").attr("action");
             var empresa = $("#create-item").find("input[name='empresa']").val();
             var nombre = $("#create-item").find("input[name='nombre']").val();
+            var apellidos = $("#create-item").find("input[name='apellidos']").val();
+            var telefono_casa = $("#create-item").find("input[name='telefono_casa']").val();
+            var telefono_celular = $("#create-item").find("input[name='telefono_celular']").val();
+            var direccion1 = $("#create-item").find("input[name='direccion1']").val();
+            var direccion2 = $("#create-item").find("input[name='direccion2']").val();
+            var rfc = $("#create-item").find("input[name='rfc']").val();
+            var email = $("#create-item").find("input[name='email']").val();
+            var ciudad = $("#create-item").find("input[name='ciudad']").val();
+            var estado = $("#create-item").find("input[name='estado']").val();
+            var cp = $("#create-item").find("input[name='cp']").val();
+            var pais = $("#create-item").find("input[name='pais']").val();
+            var comentarios = $("#create-item").find("input[name='comentarios']").val();
+            var noCuenta = $("#create-item").find("input[name='noCuenta']").val();
             $.ajax({
                 dataType: 'json',
                 type:'POST',
                 //url: url + form_action,
                 url: form_action,
-                data:{empresa:empresa, nombre:nombre}
+                data:{empresa:empresa, nombre:nombre, apellidos:apellidos,
+                    telefono_casa:telefono_casa,telefono_celular:telefono_celular,
+                    direccion1:direccion1,direccion2:direccion2,rfc:rfc,
+                    email:email,ciudad:ciudad,estado:estado,cp:cp,pais:pais,
+                    comentarios:comentarios,noCuenta:noCuenta
+                    }
             }).done(function(data){
                 $(".modal").modal('hide');
                 //toastr.success('Proveedor agregado correctamente.', 'Success Alert', {timeOut: 5000});

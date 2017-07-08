@@ -80,11 +80,11 @@
                     <th>Precio Costo</th>
                     <th>precio Unit.</th>
                     <th>IVA</th>
-                    <th>Existencia</th>
+                    <th>Exist.</th>
                     <th>Exist. M&iacute;nima</th>
                     <th>Ubicaci&oacute;n</th>
                     <th>Observ.</th>
-                    <th>FechaIngreso</th>
+                    <th>F.Ingreso</th>
                     <th>Proveed.</th>
                     <th>Categor&iacute;a</th>
                     <th></th>
@@ -142,11 +142,11 @@
                     <th>Precio Costo</th>
                     <th>precio Unit.</th>
                     <th>IVA</th>
-                    <th>Existencia</th>
+                    <th>Exist.</th>
                     <th>Exist. M&iacute;nima</th>
                     <th>Ubicaci&oacute;n</th>
                     <th>Observ.</th>
-                    <th>FechaIngreso</th>
+                    <th>F.Ingreso</th>
                     <th>Proveed.</th>
                     <th>Categor&iacute;a</th>
                     <th></th>
