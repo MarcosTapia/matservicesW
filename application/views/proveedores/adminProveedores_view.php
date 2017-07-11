@@ -16,24 +16,34 @@
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
   
-                <style type="text/css" title="currentStyle">
-			@import "<?php echo base_url();?>media/css/demo_page.css";
-			@import "<?php echo base_url();?>media/css/demo_table.css";
-		</style>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				$('#example').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-			$(document).ready(function() {
-				$('#example2').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-		</script>
+    <style type="text/css" title="currentStyle">
+            @import "<?php echo base_url();?>media/css/demo_page.css";
+            @import "<?php echo base_url();?>media/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+                $('#example').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+        $(document).ready(function() {
+                $('#example2').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+        
+        function preguntar() {
+            r = confirm("¿Realmente deseas eliminar?");
+            if (r) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+            
+    </script>
 </head>
 <body>
 <div class="container">
@@ -106,7 +116,7 @@
                                     <td><?php echo $fila->{'noCuenta'} ?></td>                            
 
                                     <td><a class="btn btn-xs btn-primary" href="actualizarProveedor/<?php echo $fila->{'idProveedor'} ?>">Editar</a>
-                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarProveedor/<?php echo $fila->{'idProveedor'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarProveedor/<?php echo $fila->{'idProveedor'} ?>" onclick="return preguntar()">Borrar</a></td>
                                 </tr>
                                 <?php $i++; 
                             }   
@@ -139,6 +149,7 @@
     </div> <!-- / renglon-->
     
     <?php 
+    $historicoPreciosProveedores=""; //quitar esta linea cuando quiera activar historico proveedores
     if ($historicoPreciosProveedores) {
         if ($historicoPreciosProveedores == "1") {
     ?>    

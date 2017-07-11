@@ -9,6 +9,7 @@ class Compras_controller extends CI_Controller {
     private $inventarioGlobal;
     private $clientesGlobal;
     private $busquedaInventarioGlobal;
+    private $temporalVtaCompras;
     
     function __construct(){
         parent::__construct();
@@ -32,6 +33,7 @@ class Compras_controller extends CI_Controller {
         $this->sucursalesGlobal = $this->cargaDatosSucursales();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
         $this->ivaEmpresaGlobal = $this->sistemaGlobal[0]->{'ivaEmpresa'};
+        $this->temporalVtaCompras = $this->obtieneDatosTemporalVtaCompra();
     }
     
     function cargaDatosEmpresa() {
@@ -200,12 +202,27 @@ class Compras_controller extends CI_Controller {
         echo json_encode($data);
     }
     
-    function buscaProveedor() {
+    function refrescaDatosProveedores() {
+        $this->proveedoresGlobal = $this->cargaDatosProveedores();
         $data2 = array();
         foreach ($this->proveedoresGlobal as $key => $value) {
             $data2[] = array('id' => $value->idProveedor, 'name' => $value->idProveedor.' '.$value->apellidos.' '.$value->nombre);
         }
+        //printf("%s",$data2);
         echo json_encode($data2);
+    }
+    
+    function buscaProveedor() {
+        //echo "<script language='javascript'>alert('aaa');</script>";
+        //refrescaDatosProveedores();
+        //$this->proveedoresGlobal = $this->cargaDatosProveedores();
+        $data2 = array();
+        foreach ($this->proveedoresGlobal as $key => $value) {
+            $data2[] = array('id' => $value->idProveedor, 'name' => $value->idProveedor.' '.$value->apellidos.' '.$value->nombre);
+        }
+        //printf("%s",$data2);
+        echo json_encode($data2);
+        //unset($data2);
     }
     
     function compraEnBlanco() {
@@ -229,7 +246,8 @@ class Compras_controller extends CI_Controller {
             'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '3'
+            'opcionClickeada' => '3',
+            'temporalVtaCompras' => $this->temporalVtaCompras
             );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('compras/compras_view',$data);
@@ -285,8 +303,10 @@ class Compras_controller extends CI_Controller {
         $result = curl_exec($ch);
         //close connection
         curl_close($ch);
+        $this->proveedoresGlobal = $this->cargaDatosProveedores();
 //        //respuesta web service
-        echo json_encode(array('okdfds'=>'ok'));
+        //echo json_encode(array('okdfds'=>'ok'));
+        //printf("felicidad");
     }
     
     function nuevoCompraFromFormulario()
@@ -296,7 +316,7 @@ class Compras_controller extends CI_Controller {
         $obj = json_decode($_POST["myData"]);
         // Fin Recibe Json
         
-        //LLamado de WS de registro de venta tabla ventas
+        //LLamado de WS de registro de venta tabla compras
         $data_string = json_encode($obj);
         $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/compras/insertar_compra.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -313,7 +333,7 @@ class Compras_controller extends CI_Controller {
         //close connection
         curl_close($ch);
         //printf("%s",$result);
-        //Fin LLamado de WS de registro de venta tabla ventas
+        //Fin LLamado de WS de registro de venta tabla compras
         
         
         //Registro de detalle de compra
@@ -369,7 +389,7 @@ class Compras_controller extends CI_Controller {
                 //execute post
                 $result = curl_exec($ch);
                 //close connection
-                printf("%s",$result);
+                //printf("%s",$result);
                 curl_close($ch);
                 //Fin llaamado de WS de registro de detalle de venta tabla detallecompras
                 
@@ -422,11 +442,20 @@ class Compras_controller extends CI_Controller {
                 // se realiza ajuste de inventario
                 $existencuaInventario = $existencuaInventario + $cantidad;
                 $datosProd->{'inventario'}->{'existencia'} = $existencuaInventario;
+                $datosProd->{'inventario'}->{'precioCosto'} = $precio;
+                $datosProd->{'inventario'}->{'porcentajeImpuesto'} = $descuento;
+                $datosProd->{'inventario'}->{'precioUnitario'} = $precio + ($precio * 
+                        ($descuento / 100));
+                $precioUnitario = $precio + ($precio * 
+                        ($descuento / 100));
                 $data = array("idArticulo" => $idArticulo,
-                    "existencia" => $existencuaInventario
+                    "existencia" => $existencuaInventario,
+                    "precioCosto" => $precio,
+                    "porcentajeImpuesto" => $descuento,
+                    "precioUnitario" => $precioUnitario
                         );
                 $data_string = json_encode($data);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/ajusta_inventario.php');
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/ajusta_inventarioFromCompras.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -453,6 +482,104 @@ class Compras_controller extends CI_Controller {
         //redirect('/ventas_controller/ventaEnBlanco');
     }
     
+    function borraCompraTemporal() {
+        //borra datos anteriores de temporalVtaCompra
+        $data = array("idUsuario" => 0);
+        $data_string = json_encode($data);
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/compras/borrar_compratemporal.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        //echo $result;
+        //Fin borra datos anteriores de temporalVtaCompra
+    }
+
+    function guardaCompraTemporal()
+    {
+        $this->borraCompraTemporal();
+        // Recibe Json
+        $obj = json_decode($_POST["myData"]);
+        // Fin Recibe Json
+        
+        //Registro de detalle de compra
+        $bandInicio = TRUE;
+            // Ciclo que barre todo el json de detalle compra
+        foreach ($obj->detalleTemporal as $fila) {
+            //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
+            if ($bandInicio) {
+                $bandInicio = FALSE;
+            } else {
+                $idArticulo = $fila->{'idArticulo'};
+                $codigo = $fila->{'codigo'};
+                $precio = $fila->{'precio'};
+                $cantidad = $fila->{'cantidad'};
+                $descuento = $fila->{'descuento'};
+                $total = $precio * $cantidad;
+                $totalF = $total - ($total * ($descuento/100));
+                //Arma nuevo json solo con el detalle actual y datos necesarios
+                $dataDetalleCompra = array("idCompra" => $idCompra, 
+                    "idArticulo" => $idArticulo, 
+                    "codigo" => $codigo,
+                    "precio" => $precio, 
+                    "cantidad" => $cantidad, 
+                    "descuento" => $descuento,
+                    "total" => $totalF
+                        );
+                $data_string = json_encode($dataDetalleCompra);  
+                unset($dataDetalleCompra);
+                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+
+                //LLamado de WS de registro de detalle de compra tabla detallecompras
+                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/compras/guardatemporalvtacompra.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                //printf("%s",$result);
+                curl_close($ch);
+                //Fin llamado de WS de registro de detalle de venta tabla detallecompras
+//                //Fin de Registro de detalle de compra
+            }
+        }
+            // Fin Ciclo que barre todo el json de detalle compra
+    }
+    
+    function obtieneDatosTemporalVtaCompra() {
+        # An HTTP GET request example
+        $url = 'http://localhost/matserviceswsok/matservsthread1/compras/obtener_temporalvtacompra.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+//        printf("%d",$datos->{'estado'});
+        curl_close($ch);
+        if ($datos->{'estado'}==2) {
+            return null;            
+        }
+        return $datos->{'temporalVtaCompras'};
+    }
+    
+    
     // Manejo de sesiones
     function cerrarSesion() {            
             if ($this->sistema_model->logout()) {
@@ -462,7 +589,6 @@ class Compras_controller extends CI_Controller {
     }
     
     //Fin Manejo de sesiones
-    
     
 }
 

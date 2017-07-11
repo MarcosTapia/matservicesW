@@ -21,9 +21,25 @@
     <script type="text/javascript" src="<?php echo base_url();?>bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/script.js"></script>
     <!-- Fin Para ventana modal -->
-    
+   
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css" rel="stylesheet"> 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css.map" rel="stylesheet"> -->
+
     <script language='javascript'>
-        var obsVacio = "";
+//        var inputT = $("input[name=proveedorB]");
+//        var site_url = "<?php echo site_url(); ?>";
+//        var opciones;
+//        $.get(site_url+'index.php/compras_controller/buscaProveedor', function(data, status){
+////            alert("Data: " + data + "\nStatus: " + status);
+//            opciones = data;
+//            alert(opciones);
+//        });                                
+//        alert("***********->"+opciones);
+        // Variable que recoge el resultado de la consulta sobre la tabla Provincias, Jquery trabajará sobre este resultado para dinamizar el funcionamiento.
+//        var availableTags = JSON.parse(opciones);
+//        $("#buscador").autocomplete({source: availableTags});
+
         var compraJson = {'subtotalCompra':0,'ivaCompra':0,'totalCompra':0,
             'codigoProveedor':0,'tipoOperacion':1,'tipoCompra':1,'idCompra':0,'observaciones':'', 
             'fecha':'0000-00-00 00:00:00','idUsuario':'',
@@ -114,18 +130,77 @@
             }
         }
 
-//        function recuperaVentaTemporal() {
-//            var table = document.getElementById("tblVenta");
-//            var noRenglones = table.rows.length;
-//            for (var i=3;i < noRenglones -1; i++){
-//                alert(compraJson.detalleTemporal[i-2].idArticulo + "->" + compraJson.detalleTemporal[i-2].codigo 
-//                        + "->" + compraJson.detalleTemporal[i-2].precio 
-//                        + "->" + compraJson.detalleTemporal[i-2].cantidad
-//                        + "->" + compraJson.detalleTemporal[i-2].descuento
-//                        + "->" + compraJson.detalleTemporal[i-2].total);
-//            } 
-//        }
-//        
+        function recuperaCompraTemporal() {
+            <?php 
+            //Verifica que haya datos en temporalVtaCompra
+            if (isset($temporalVtaCompras)) {
+                //ciclo para recorrer el json de temporalventacompra
+                foreach ($temporalVtaCompras as $fila) { 
+                   //ciclo para comparar el codigo y sacar la descripcion del producto 
+                   foreach ($inventarios as $filaInv) { ?>
+                        // Verifica si existe coincidencia emtre codigo con algun producto
+                        if (<?php echo $fila->{'codigo'}; ?> == <?php echo $filaInv->{'codigo'}; ?>) { 
+                            var table = document.getElementById("tblVenta");
+                            var noRenglones = table.rows.length;
+                            //alert(noRenglones);
+                            var row = table.insertRow(noRenglones-1);
+                            var cell0 = row.insertCell(0);
+                            var cell1 = row.insertCell(1);
+                            var cell2 = row.insertCell(2);
+                            var cell3 = row.insertCell(3);
+                            var cell4 = row.insertCell(4);
+                            var cell5 = row.insertCell(5);
+                            var cell6 = row.insertCell(6);
+                            var cell7 = row.insertCell(7);
+                            row.id = ""+(noRenglones-1);
+                            cell0.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/borrar.ico' onclick='borraArticulo(this)' id="+ (noRenglones-1) +" name="+ (noRenglones-1) +" />"; 
+                            cell1.innerHTML = "<?php echo $fila->{'codigo'};?>";
+                            cell2.innerHTML = "<?php echo $filaInv->{'descripcion'};?>";
+                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precio'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+                            cell4.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='cantidad<?php echo $fila->{'idArticulo'};?>' id='cantidad<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'cantidad'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,2)' /></div></div>";
+                            cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'descuento'};?>'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
+                            cell6.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' disabled name='totalArt<?php echo $fila->{'idArticulo'};?>' id='totalArt<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'total'};?>' /></div></div>";
+                            cell7.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' onclick='aumentaCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />&nbsp;&nbsp;&nbsp;<img src='<?php echo base_url();?>images/sistemaicons/prohibido.ico' onclick='disminuyeCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />"; 
+                            compraJson.detalleTemporal.push({'idArticulo':'<?php echo $fila->{'idArticulo'};?>'
+                                ,'codigo': '<?php echo $fila->{'codigo'};?>'
+                                ,'precio': document.getElementById('precio<?php echo $fila->{'idArticulo'};?>').value
+                                ,'cantidad': document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value
+                                ,'descuento': document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value
+                                ,'total': document.getElementById('totalArt<?php echo $fila->{'idArticulo'};?>').value});
+                            totalesGenerales();
+                        } // Fin Verifica si existe coincidencia emtre codigo con algun producto
+            <?php  } // Fin ciclo para comparar el codigo y sacar la descripcion del producto 
+                } //Fin ciclo para recorrer el json de temporalventacompra
+            } //Fin Verifica que haya datos en temporalVtaCompra
+                ?>
+            //fin funcion para recuperar venta temporal
+            
+            //borra venta temporal
+            var site_url = "<?php echo site_url(); ?>";
+            $.get(site_url+'index.php/compras_controller/borraCompraTemporal', function(data, status){
+                var opciones = data;
+            });       
+            //fin borra venta temporal
+        }
+        
+        function guardaCompraTemporal() {
+            //borra y guarda compra en temporalVtaCompra
+            var dataString = JSON.stringify(compraJson);
+            $.ajax({
+               url: '<?php echo base_url();?>index.php/compras_controller/guardaCompraTemporal',
+               data: {myData: dataString},
+               type: 'POST',
+               success: function(response) {
+//                      alert(response);
+//                      location.reload();
+               },
+               error: function(response) {
+//                      console.log('Error al ejecutar la petición');
+               }
+            });	
+            //Fin borra y guarda compra en temporalVtaCompra
+        }    
+        
         function pagar(e2) { //return pagar(event)
             var tecla2 = (document.all) ? e2.keyCode : e2.which;
             if (tecla2 == 13){  
@@ -252,11 +327,12 @@
             return patron.test(tecla_final);
         }
         
+        var dataTemp;
         function verificaEnter(e) {
             var code = (e.keyCode ? e.keyCode : e.which);
             if(code == 13) { //Enter keycode
                 document.getElementById('codigoProducto').focus();
-            }
+            }     
         }
         
         function agregaProducto(e){
@@ -286,15 +362,17 @@
                         cell1.innerHTML = "<?php echo $fila->{'codigo'};?>";
                         cell2.innerHTML = "<?php echo $fila->{'descripcion'};?>";
                         var precio;
-                        if (document.getElementById('tipoCompra').value == "2") {
-                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
-                            precio = <?php echo $fila->{'precioCosto'};?>;
-                        } else {
-                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioUnitario'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
-                            precio = <?php echo $fila->{'precioUnitario'};?>;
-                        }    
+//                        if (document.getElementById('tipoCompra').value == "2") {
+//                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+//                            precio = <?php echo $fila->{'precioCosto'};?>;
+//                        } else {
+//                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioUnitario'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+//                            precio = <?php echo $fila->{'precioUnitario'};?>;
+//                        }    
+                        cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+                        precio = <?php echo $fila->{'precioCosto'};?>;
                         cell4.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='cantidad<?php echo $fila->{'idArticulo'};?>' id='cantidad<?php echo $fila->{'idArticulo'};?>' value='1' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,2)' /></div></div>";
-                        cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='0'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
+                        cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='<?php echo $iva;?>'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
                         var total = parseFloat(precio) * parseFloat(document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value);
                         var descuento = total * (parseFloat(document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value) / 100);
                         var totalArtP = total - descuento;
@@ -341,7 +419,7 @@
         }
     </script>
 </head>
-<body>
+<body onload="recuperaCompraTemporal()">
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -359,7 +437,9 @@
                                     </div>					  
                                     <br>
                                     <div class="input-group col-sm-12">
-                                        <input type="button" class="btn btn-success" value="Nuevo Proveedor" data-toggle="modal" data-target="#create-item" />
+                                        <input type="button" class="btn btn-success" value="Nuevo Proveedor" data-toggle="modal" data-target="#create-item" onclick="guardaCompraTemporal();"/>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <input type="button" class="btn btn-success" value="Nuevo Producto" data-toggle="modal" data-target="#create-item2" />
                                     </div>					  
                                 </div>       
                             </td>
@@ -443,9 +523,9 @@
                             <th><img src='<?php echo base_url();?>images/sistemaicons/borrarok.ico' /></th>
                             <th>C&oacute;digo</th>
                             <th>Descripci&oacute;n</th>
-                            <th>Precio</th>
+                            <th>Precio Costo</th>
                             <th>Cant.</th>
-                            <th>Desc %</th>
+                            <th>%Imp.</th>
                             <th>Total</th>
                             <th>Editar Cantidad</th>
                         </tr>
@@ -456,9 +536,9 @@
                         <th><img src='<?php echo base_url();?>images/sistemaicons/borrarok.ico' /></th>
                         <th>C&oacute;digo</th>
                         <th>Descripci&oacute;n</th>
-                        <th>Precio</th>
+                        <th>Precio Costo</th>
                         <th>Cant.</th>
-                        <th>Desc %</th>
+                        <th>%Imp.</th>
                         <th>Total</th>
                         <th>Editar Cantidad</th>
                     </tfoot>
@@ -589,7 +669,7 @@
                 //$submitBtn = array('class' => 'btn btn-primary data-dismiss="modal"','value' => 'Agregar', 'name'=>'submit'); 
                 //echo form_submit($submitBtn);                 
                 ?>
-                <button type="submit" class="btn crud-submit btn-success">Submit</button>
+                <button type="submit" class="btn crud-submit btn-success" >Guardar</button>
                 </form>
             </div>
         </div>
@@ -619,7 +699,13 @@
 
         //Para busqueda de Proveedores
         var input2 = $("input[name=proveedorB]");
-        $.get(site_url+'index.php/compras_controller/buscaProveedor', function(data2){
+//        $.get(site_url+'index.php/compras_controller/refrescaDatosProveedores', function(data2){
+//                                input2.typeahead({
+//                                    source: data2,
+//                                    minLength: 1,
+//                                });
+//           });
+        $.get(site_url+'index.php/compras_controller/buscaProveedor', function(data2){                                
                                 input2.typeahead({
                                     source: data2,
                                     minLength: 1,
@@ -663,9 +749,13 @@
                     comentarios:comentarios,noCuenta:noCuenta
                     }
             }).done(function(data){
-                $(".modal").modal('hide');
+                //$(".modal").modal('hide');
                 //toastr.success('Proveedor agregado correctamente.', 'Success Alert', {timeOut: 5000});
             });
+//            recuperaCompraTemporal();
+            //alert("sad");
+            $(".modal").modal('hide');
+            location.reload();
         });
         //fin para guardar Proveedor sin salir ventas
 });
