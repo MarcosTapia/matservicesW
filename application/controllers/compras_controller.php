@@ -241,6 +241,9 @@ class Compras_controller extends CI_Controller {
         //Fin Obtiene el no de venta que le corresponde a la venta actual
         
         $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
+            'proveedores'=>$this->proveedoresGlobal,
+            'categorias'=>$this->categoriasGlobal,
+            'sucursales'=>$this->sucursalesGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
             'iva' => $this->ivaEmpresaGlobal,
@@ -579,6 +582,111 @@ class Compras_controller extends CI_Controller {
         return $datos->{'temporalVtaCompras'};
     }
     
+    function nuevoInventarioFromFormulario()
+    {
+        $obj = json_decode($_POST["myData"]);
+        
+        $codigo = $obj->{'codigoInv'};
+        $descripcion = $obj->{'descripcionInv'};
+        $porcentajeImpuesto = $obj->{'porcentajeImpuestoInv'};
+        $precioCosto = $obj->{'precioCostoInv'};
+        $precioUnitario = $obj->{'precioUnitarioInv'};
+        $existencia = $obj->{'existenciaInv'};
+        $existenciaMinima = $obj->{'existenciaMinimaInv'};
+        $ubicacion = $obj->{'ubicacionInv'};
+        $fechaIngreso = $obj->{'fechaIngresoInv'};
+
+        //por si no se selecciona fecha
+        if ($fechaIngreso=="") {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        }
+        //Fin por si no se selecciona fecha
+
+        $proveedor = $obj->{'proveedorInv'};
+        $categoria = $obj->{'categoriaInv'};
+        $sucursal = $obj->{'sucursalInv'};
+//        $nombre_img = $_FILES['imagen']['name'];
+
+        //obtiene maxId de inventario
+        $maxIdReg = $this->obtieneMaxIdInventario();
+        $maxId = 0;
+        $maxId = $maxIdReg[0]->{'idArticulo'};
+        //fin obtiene maxId de inventario
+
+//        $tipo = //$_FILES['imagen']['type'];
+//        $tamano = $_FILES['imagen']['size'];
+//        //Si existe imagen y tiene un tamaño correcto
+//        if ($_FILES['imagen']['name']!="") {
+//            if (($nombre_img == !NULL) && ($_FILES['imagen']['size'] <= 50000)) {
+//               //indicamos los formatos que permitimos subir a nuestro servidor
+//               if (($_FILES["imagen"]["type"] == "image/jpeg")
+//               || ($_FILES["imagen"]["type"] == "image/jpg")
+//               || ($_FILES["imagen"]["type"] == "image/png"))
+//               {
+//                  // Ruta donde se guardarán las imágenes que subamos
+//                  //$directorio = base_url().'fotos/inventario/';
+                  $directorio = $_SERVER['DOCUMENT_ROOT'] . 'matservices/fotos/inventario/';
+//                  //Cambio el onombre de la imagen por producto mas id que corresponde
+//                  if ($tipo=="image/png") {
+                      $nombre_img = "producto".($maxId + 1).".png";
+//                  }
+//                  if ($tipo=="image/jpeg") {
+//                      $nombre_img = "producto".($maxId + 1).".jpeg";
+//                  }
+//                  if ($tipo=="image/jpg") {
+//                      $nombre_img = "producto".($maxId + 1).".jpg";
+//                  }
+//                  // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+//                  move_uploaded_file($_FILES['imagen']['tmp_name'],$directorio.$nombre_img);
+//                } else {
+//                   //si no cumple con el formato
+//                   echo "No se puede subir una imagen con ese formato ";
+//                   return;
+//                }
+//            } else {
+//               //si existe la variable pero se pasa del tamaño permitido
+//               if($nombre_img == !NULL) echo "La imagen es demasiado grande "; 
+//            }
+//        } else {
+            $nombre_img = "producto0.png";
+//        }
+//        //fin falta archivo imagen
+        $observaciones = $obj->{'observacionesInv'};
+
+        $data = array("codigo" => $codigo, 
+            "descripcion" => $descripcion, 
+            "precioCosto" => $precioCosto, 
+            "precioUnitario" => $precioUnitario, 
+            "porcentajeImpuesto" => $porcentajeImpuesto, 
+            "existencia" => $existencia, 
+            "existenciaMinima" => $existenciaMinima, 
+            "ubicacion" => $ubicacion, 
+            "fechaIngreso" => $fechaIngreso,
+            "proveedor" => $proveedor,
+            "categoria" => $categoria,
+            "sucursal" => $sucursal,
+            "observaciones" => $observaciones,
+            "nombre_img" => $nombre_img
+                );
+        $data_string = json_encode($data);
+        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/insertar_inventario.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        //printf("%s",$result);
+        //Fin llamado WS
+    }
     
     // Manejo de sesiones
     function cerrarSesion() {            

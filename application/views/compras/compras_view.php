@@ -22,24 +22,20 @@
     <script type="text/javascript" src="<?php echo base_url();?>js/script.js"></script>
     <!-- Fin Para ventana modal -->
    
-<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css" rel="stylesheet"> 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css.map" rel="stylesheet"> -->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css" rel="stylesheet"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css.map" rel="stylesheet"> -->
+
+    <link href="<?php echo base_url();?>css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="<?php echo base_url();?>css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="<?php echo base_url();?>css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url();?>css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>js/jquery-3.2.1.min"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>js/bootstrap-datetimepicker.min.js"></script>
+
 
     <script language='javascript'>
-//        var inputT = $("input[name=proveedorB]");
-//        var site_url = "<?php echo site_url(); ?>";
-//        var opciones;
-//        $.get(site_url+'index.php/compras_controller/buscaProveedor', function(data, status){
-////            alert("Data: " + data + "\nStatus: " + status);
-//            opciones = data;
-//            alert(opciones);
-//        });                                
-//        alert("***********->"+opciones);
-        // Variable que recoge el resultado de la consulta sobre la tabla Provincias, Jquery trabajará sobre este resultado para dinamizar el funcionamiento.
-//        var availableTags = JSON.parse(opciones);
-//        $("#buscador").autocomplete({source: availableTags});
-
         var compraJson = {'subtotalCompra':0,'ivaCompra':0,'totalCompra':0,
             'codigoProveedor':0,'tipoOperacion':1,'tipoCompra':1,'idCompra':0,'observaciones':'', 
             'fecha':'0000-00-00 00:00:00','idUsuario':'',
@@ -417,6 +413,90 @@
             //totalArticulo(idCantidad);
             obtieneTotalArticulo(idCantidad);
         }
+        
+        
+        //Para nuevo Inventario 
+        function obtienePrecioUnitario(e) {
+//                validaEnter(e,6);
+// alert("fdsfsd");
+            var code = (e.keyCode ? e.keyCode : e.which);
+            document.getElementById('precioUnitarioInv').value = "";
+            if(code == 13) { 
+//                alert("fdsfsd");
+                var ivaDecimal = parseFloat(document.getElementById('porcentajeImpuestoInv').value)/100;
+                var ivaCantidad = parseFloat(document.getElementById('precioCostoInv').value) * ivaDecimal;
+                var precioUnitario = parseFloat(document.getElementById('precioCostoInv').value) + ivaCantidad;
+                document.getElementById('precioUnitarioInv').value = "" + precioUnitario;
+                document.getElementById('existenciaInv').focus();
+                return false;
+            }
+        }
+        
+        function mueveFocusAExistencia(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { 
+                document.getElementById('existenciaInv').focus();
+            }
+        }
+        
+        function habilitaSubmit() {
+            //alert("cruz azul");
+            document.getElementById('submit2').disabled = false;
+        }
+        
+        function validaEnter(e,control) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if(code == 13) { 
+                switch (control) {
+                    case 1: document.getElementById('descripcionInv').focus(); break;
+                    case 2: document.getElementById('precioCostoInv').focus(); break;
+                    case 3: document.getElementById('existenciaMinimaInv').focus(); break;
+                    case 4: document.getElementById('ubicacionInv').focus(); break;
+                    case 5: document.getElementById('proveedorInv').focus(); break;
+                }
+                return false;
+            }
+        }
+        //fin para nuevo inventario
+        
+        function enviaProdInv() {
+            //e.preventDefault();
+//            var form_action2 = $("#create-item2").find("form").attr("action");
+            var codigoInv = $("#create-item2").find("input[name='codigoInv']").val();
+            var descripcionInv = $("#create-item2").find("input[name='descripcionInv']").val();
+            var porcentajeImpuestoInv = $("#create-item2").find("input[name='porcentajeImpuestoInv']").val();
+            var precioCostoInv = $("#create-item2").find("input[name='precioCostoInv']").val();
+            var precioUnitarioInv = $("#create-item2").find("input[name='precioUnitarioInv']").val();
+            var existenciaInv = $("#create-item2").find("input[name='existenciaInv']").val();
+            var existenciaMinimaInv = $("#create-item2").find("input[name='existenciaMinimaInv']").val();
+            var ubicacionInv = $("#create-item2").find("input[name='ubicacionInv']").val();
+            var proveedorInv = $("#create-item2").find("select[name='proveedorInv']").val();
+            var categoriaInv = $("#create-item2").find("select[name='categoriaInv']").val();
+            var sucursalInv = $("#create-item2").find("select[name='sucursalInv']").val();
+            var fechaIngresoInv = $("#create-item2").find("input[name='fechaIngresoInv']").val();
+            //var imagen = $("#create-item2").find("file[name='imagen']").val();
+//            var observacionesInv = $("#create-item2").find("input[name='observacionesInv']").val();
+            var observacionesInv = document.getElementById('observacionesInv').value;
+            dataInv = {codigoInv:codigoInv, descripcionInv:descripcionInv, porcentajeImpuestoInv:porcentajeImpuestoInv,
+                precioCostoInv:precioCostoInv,precioUnitarioInv:precioUnitarioInv,existenciaInv:existenciaInv,
+                existenciaMinimaInv:existenciaMinimaInv,ubicacionInv:ubicacionInv,
+                proveedorInv:proveedorInv,categoriaInv:categoriaInv,sucursalInv:sucursalInv,
+                fechaIngresoInv:fechaIngresoInv,observacionesInv:observacionesInv};
+            //var dataString = dataInv; compraJson
+            var dataString = JSON.stringify(dataInv);
+            $.ajax({
+               url: '<?php echo base_url();?>index.php/compras_controller/nuevoInventarioFromFormulario',
+               data: {myData: dataString},
+               type: 'POST',
+               success: function(response) {
+                    $(".modal").modal('hide');
+                    location.reload();               
+               },
+               error: function(response) {
+               }
+            });	
+        }
+        
     </script>
 </head>
 <body onload="recuperaCompraTemporal()">
@@ -439,7 +519,7 @@
                                     <div class="input-group col-sm-12">
                                         <input type="button" class="btn btn-success" value="Nuevo Proveedor" data-toggle="modal" data-target="#create-item" onclick="guardaCompraTemporal();"/>
                                         &nbsp;&nbsp;&nbsp;
-                                        <input type="button" class="btn btn-success" value="Nuevo Producto" data-toggle="modal" data-target="#create-item2" />
+                                        <input type="button" class="btn btn-success" value="Nuevo Producto" data-toggle="modal" data-target="#create-item2" onclick="guardaCompraTemporal();"/>
                                     </div>					  
                                 </div>       
                             </td>
@@ -664,18 +744,210 @@
                     </div>  
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <?php 
-                //$submitBtn = array('class' => 'btn btn-primary data-dismiss="modal"','value' => 'Agregar', 'name'=>'submit'); 
-                //echo form_submit($submitBtn);                 
-                ?>
-                <button type="submit" class="btn crud-submit btn-success" >Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn crud-submit btn-success" >Guardar</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <!-- Fin Modal proveedor -->
+
+<!-- Modal Inventario -->
+<div class="modal fade" id="create-item2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Producto</h4>
+            </div>
+            <div class="modal-body">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <form data-toggle="validator" id="productoForm" name="productoForm" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/compras_controller/nuevoInventarioFromFormulario" method="post"  enctype="multipart/form-data" >
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="codigoInv">C&oacute;digo:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+                            <input type="text" class="form-control" id="codigoInv" name="codigoInv" placeholder="C&oacute;digo" onkeypress="javascript: return validaEnter(event,1)">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="descripcionInv">Descripci&oacute;n:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                            <input type="text" class="form-control" id="descripcionInv" name="descripcionInv" placeholder="Descripci&oacute;n" onkeypress="javascript: return validaEnter(event,2)">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="porcentajeImpuestoInv">Iva:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-cog"></i></span>
+                            <input type="text" class="form-control" id="porcentajeImpuestoInv" name="porcentajeImpuestoInv" placeholder="Iva" value="<?php echo $iva?>">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="precioCostoInv">Precio Costo:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                            <input type="text" class="form-control" id="precioCostoInv" name="precioCostoInv" placeholder="Precio Costo" onkeydown="javascript: return obtienePrecioUnitario(event);">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="precioUnitarioInv">Precio Unitario:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                            <input type="text" class="form-control" id="precioUnitarioInv" name="precioUnitarioInv" placeholder="Precio Unitario" value="0" onkeypress="mueveFocusAExistencia(event)">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="existenciaInv">Existencia:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-check"></i></span>
+                            <input type="text" class="form-control" id="existenciaInv" name="existenciaInv" placeholder="Existencia" onkeypress="javascript: return validaEnter(event,3)">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="existenciaMinimaInv">Existencia M&iacute;nima:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-check"></i></span>
+                            <input type="text" class="form-control" id="existenciaMinimaInv" name="existenciaMinimaInv" placeholder="Existencia M&iacute;nima" onkeypress="javascript: return validaEnter(event,4)">
+                        </div>					  
+                      </div>
+                    </div>  
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="ubicacionInv">Ubicaci&oacute;n:</label>
+                      <div class="col-md-10 inputGroupContainer">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                            <input type="text" class="form-control" id="ubicacionInv" name="ubicacionInv" placeholder="Ubicaci&oacute;n" onkeypress="javascript: return validaEnter(event,5)">
+                        </div>					  
+                      </div>
+                    </div>  
+                    
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="proveedorInv">Proveedor:</label>
+                      <div class="col-sm-10">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select class="form-control" name="proveedorInv" id="proveedorInv">
+                              <option value=""></option>
+                              <?php foreach($proveedores as $filaP) {
+                               echo "<option value=".$filaP->{'idProveedor'}.">".$filaP->{'empresa'}."</option>";
+                              } ?>
+                            </select>
+                        </div>					  
+                      </div>					  
+                    </div>  
+                    
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="categoriaInv">Categor&iacute;a:</label>
+                      <div class="col-sm-10">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select class="form-control" name="categoriaInv" id="categoriaInv">
+                                <option value=""></option>
+                                <?php foreach($categorias as $fila) {
+                                 echo "<option value=".$fila->{'idCategoria'}.">".$fila->{'descripcionCategoria'}."</option>";
+                                } ?>
+                            </select>
+                        </div>					  
+                      </div>					  
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="sucursalInv">Sucursal:</label>
+                      <div class="col-sm-10">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select class="form-control" name="sucursalInv" id="sucursalInv">
+                                <option value=""></option>
+                                <?php foreach($sucursales as $fila) {
+                                 echo "<option value=".$fila->{'idSucursal'}.">".$fila->{'descripcionSucursal'}."</option>";
+                                } ?>
+                            </select>
+                        </div>					  
+                      </div>					  
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="fechaIngresoInv">FechaIngreso: </label>
+                        <div class="col-md-9 inputGroupContainer">
+                            <div class="input-append date form_datetime"  class="input-group"> 
+                                <input type="text" value="" name="fechaIngresoInv" id="fechaIngresoInv" readonly>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                                <script type="text/javascript">
+                                    $(".form_datetime").datetimepicker({
+                                        format: "yyyy-mm-dd hh:ii:ss",
+                                        autoclose: true,
+                                        pickerPosition: "right"
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>                    
+                    
+<!--                    <div class="form-group">
+                        <div class="col-sm-5">	
+                            <p>Tamaño Imagen 100 x 100</p>
+                            <input type="file" id="files" name="imagen"/>
+                            <output id="list"></output>-->
+
+                            <script>
+//                                  function archivo(evt) {
+//                                      var files = evt.target.files; // FileList object
+//
+//                                      // Obtenemos la imagen del campo "file".
+//                                      for (var i = 0, f; f = files[i]; i++) {
+//                                        //Solo admitimos imágenes.
+//                                        if (!f.type.match('image.*')) {
+//                                            continue;
+//                                        }
+//
+//                                        var reader = new FileReader();
+//
+//                                        reader.onload = (function(theFile) {
+//                                            return function(e) {
+//                                              // Insertamos la imagen
+//                                             document.getElementById("list").innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
+//                                            };
+//                                        })(f);
+//
+//                                        reader.readAsDataURL(f);
+//                                      }
+//                                  }
+//                                  document.getElementById('files').addEventListener('change', archivo, false);
+                           </script>                        
+<!--                        </div>		
+                    </div>-->
+
+                    <div class="form-group">
+                      <label class="control-label col-sm-3" for="observacionesInv">Observaciones:</label>
+                      <div class="col-sm-9">
+                          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                              <textarea class="form-control" rows="5" id="observacionesInv" name="observacionesInv"></textarea>
+                          </div>					  
+                      </div>					  
+                    </div>  
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" id="submitInv" onclick="enviaProdInv()" >Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fin Modal  Inventario -->
 
 <script>
  $(document).ready(function(e){
@@ -718,7 +990,7 @@
         });
         //Fin Para busqueda de Proveedores
         
-        //para guardar proveedor sin salir ventas
+        //para guardar proveedor sin salir compras
         $(".crud-submit").click(function(e){
             e.preventDefault();
             var form_action = $("#create-item").find("form").attr("action");
@@ -757,9 +1029,132 @@
             $(".modal").modal('hide');
             location.reload();
         });
-        //fin para guardar Proveedor sin salir ventas
+        //fin para guardar Proveedor sin salir compras
+        
 });
 </script>
+<!--<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>-->
+<script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>-->
+<script type="text/javascript">
+    $('#create-item2').bootstrapValidator({
+        // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            codigoInv: {
+                validators: {
+                        stringLength: {
+                            max: 40
+                        },
+                        notEmpty: {
+                            message: 'Por favor Ingresa el Código'
+                        }
+                }
+            },
+            descripcionInv: {
+                validators: {
+                     stringLength: {
+                        max: 50
+                    },
+                    notEmpty: {
+                        message: 'Por favor Ingresa la Descripción'
+                    }
+                }
+            },
+            precioCostoInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Ingresa un valor'
+                    },
+                    regexp: {
+                         regexp: /^[0-9]+(\.[0-9]+)?$/,
+                         message: 'Ingresa valores numéricos'
+                    }
+                }
+            },
+//            precioUnitario: {
+//                validators: {
+//                    notEmpty: {
+//                        message: 'Por favor Ingresa un valor'
+//                    },
+//                    regexp: {
+//                         regexp: /^[0-9]+(\.[0-9]+)?$/,
+//                         message: 'Ingresa valores numéricos'
+//                    }
+//                }
+//            },
+            porcentajeImpuestoInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Ingresa un valor'
+                    },
+                    regexp: {
+                         regexp: /^[0-9]/,
+                         message: 'Ingresa valores numéricos'
+                    }
+                }
+            },
+            existenciaInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Ingresa un valor'
+                    },
+                    regexp: {
+                         regexp: /^[0-9]/,
+                         message: 'Ingresa valores numéricos'
+                    }
+                }
+            },
+            existenciaMinimaInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Ingresa un valor'
+                    },
+                    regexp: {
+                         regexp: /^[0-9]/,
+                         message: 'Ingresa valores numéricos'
+                    }
+                }
+            },
+            ubicacionInv: {
+                validators: {
+                    stringLength: {
+                        max: 50
+                    },
+                    notEmpty: {
+                        message: 'Por favor Ingresa la Ubicación del producto'
+                    }
+                }
+            },
+            proveedorInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Selecciona un Proveedor.'
+                    }
+                }
+            },
+            categoriaInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Selecciona una Categoria.'
+                    }
+                }
+            },
+            sucursalInv: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor Selecciona una Sucursal.'
+                    }
+                }
+            }            
+        } 
+    })
+</script>
+
 </body>	
 </html>
 

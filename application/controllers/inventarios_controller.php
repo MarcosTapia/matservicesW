@@ -460,7 +460,6 @@ class Inventarios_controller extends CI_Controller {
             redirect('/inventarios_controller/mostrarInventarios');
 //        }
     }
-    //Fin llamada a webservices de usuarios
     
     //Importar desde Excel con libreria de PHPExcel
     public function importarInventariosExcel(){
