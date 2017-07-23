@@ -37,7 +37,7 @@ class Ventas_controller extends CI_Controller {
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresas.php';
+        $url2 = RUTAWS.'datosempresa/obtener_datosempresas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -53,7 +53,7 @@ class Ventas_controller extends CI_Controller {
     function cargaDatosSistema() {
         //muestra valores de datos del Sistema
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistemas.php';
+        $url2 = RUTAWS.'sistema/obtener_sistemas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -68,7 +68,7 @@ class Ventas_controller extends CI_Controller {
     
     function cargaDatosProveedores() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = RUTAWS.'proveedores/obtener_proveedores.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -82,7 +82,7 @@ class Ventas_controller extends CI_Controller {
     function cargaDatosCategorias() {
         //muestra valores de categorias
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
+        $url = RUTAWS.'categorias/obtener_categorias.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -99,7 +99,7 @@ class Ventas_controller extends CI_Controller {
     function cargaDatosSucursales() {
         //muestra valores de categorias
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/sucursales/obtener_sucursales.php';
+        $url = RUTAWS.'sucursales/obtener_sucursales.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -115,7 +115,7 @@ class Ventas_controller extends CI_Controller {
     
     function cargaDatosInventarios() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios.php';
+        $url = RUTAWS.'inventarios/obtener_inventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -130,7 +130,7 @@ class Ventas_controller extends CI_Controller {
     
     function cargaDatosClientes() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/clientes/obtener_clientes.php';
+        $url = RUTAWS.'clientes/obtener_clientes.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -145,7 +145,7 @@ class Ventas_controller extends CI_Controller {
     
     function obtieneMaxIdInventario() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_maxidinventarios.php';
+        $url = RUTAWS.'inventarios/obtener_maxidinventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -158,7 +158,7 @@ class Ventas_controller extends CI_Controller {
     
     function obtieneMaxIdVentas() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/ventas/obtener_maxidventas.php';
+        $url = RUTAWS.'ventas/obtener_maxidventas.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -173,7 +173,7 @@ class Ventas_controller extends CI_Controller {
         $query = "";
         //Obtiene producto por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios_like_codigo.php?query='.$query;
+        $url = RUTAWS.'inventarios/obtener_inventarios_like_codigo.php?query='.$query;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -271,7 +271,7 @@ class Ventas_controller extends CI_Controller {
             "noCuenta" => $noCuenta
                 );
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/clientes/insertar_cliente.php');
+        $ch = curl_init(RUTAWS.'clientes/insertar_cliente.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -298,7 +298,7 @@ class Ventas_controller extends CI_Controller {
         
         //LLamado de WS de registro de venta tabla ventas
         $data_string = json_encode($obj);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/ventas/insertar_venta.php');
+        $ch = curl_init(RUTAWS.'ventas/insertar_venta.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -356,7 +356,7 @@ class Ventas_controller extends CI_Controller {
                 //Fin Arma nuevo json solo con el detalle actual y datos necesarios
 
                 //LLamado de WS de registro de detalle de venta tabla detalleventas
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/detalleventas/insertar_detalleventa.php');
+                $ch = curl_init(RUTAWS.'detalleventas/insertar_detalleventa.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -386,7 +386,7 @@ class Ventas_controller extends CI_Controller {
                 unset($dataDetalleVenta);
                 //Fin Arma nuevo json solo con el detalle actual y datos necesarios
                 //LLamado de WS de registro de movimientos tabla movimientos
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/movimientos/insertar_movimiento.php');
+                $ch = curl_init(RUTAWS.'movimientos/insertar_movimiento.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -406,7 +406,7 @@ class Ventas_controller extends CI_Controller {
                 // Alteracion en el inventario segun el tipo de operacion
                     //Obtiene producto por id
                 # An HTTP GET request example
-                $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+                $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 5);
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -426,7 +426,7 @@ class Ventas_controller extends CI_Controller {
                     "existencia" => $existencuaInventario
                         );
                 $data_string = json_encode($data);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/ajusta_inventario.php');
+                $ch = curl_init(RUTAWS.'inventarios/ajusta_inventario.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

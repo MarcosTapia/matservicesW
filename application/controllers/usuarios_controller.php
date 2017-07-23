@@ -23,7 +23,7 @@ class Usuarios_controller extends CI_Controller {
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresas.php';
+        $url2 = RUTAWS.'datosempresa/obtener_datosempresas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -39,7 +39,7 @@ class Usuarios_controller extends CI_Controller {
     function cargaDatosSistema() {
         //muestra valores de datos del Sistema
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistemas.php';
+        $url2 = RUTAWS.'sistema/obtener_sistemas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -74,7 +74,7 @@ class Usuarios_controller extends CI_Controller {
     function verificaUsuario() {
         //Llamada a Webservices de Usuarios
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/verifica_usuario.php?usuario='.$_POST['usuario'].'&clave='.$_POST['clave'];
+        $url = RUTAWS.'usuarios/verifica_usuario.php?usuario='.$_POST['usuario'].'&clave='.$_POST['clave'];
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -136,7 +136,7 @@ class Usuarios_controller extends CI_Controller {
     
     function mostrarUsuarios() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuarios.php';
+        $url = RUTAWS.'usuarios/obtener_usuarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -174,7 +174,7 @@ class Usuarios_controller extends CI_Controller {
         $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         //Obtiene usuario por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
+        $url = RUTAWS.'usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -274,7 +274,7 @@ class Usuarios_controller extends CI_Controller {
                 "telefono_celular" => $telefono_celular
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/actualizar_usuario.php');
+            $ch = curl_init(RUTAWS.'usuarios/actualizar_usuario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -299,7 +299,7 @@ class Usuarios_controller extends CI_Controller {
     function eliminarUsuario($idUsuario) {
         $data = array("idUsuario" => $idUsuario);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/borrar_usuario.php');
+        $ch = curl_init(RUTAWS.'usuarios/borrar_usuario.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -411,7 +411,7 @@ class Usuarios_controller extends CI_Controller {
                 "telefono_celular" => $telefono_celular
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
+            $ch = curl_init(RUTAWS.'usuarios/insertar_usuario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -477,7 +477,7 @@ class Usuarios_controller extends CI_Controller {
                 
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/usuarios/insertar_usuario.php');
+                $ch = curl_init(RUTAWS.'usuarios/insertar_usuario.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -503,7 +503,7 @@ class Usuarios_controller extends CI_Controller {
     public function exportarExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/usuarios/obtener_usuarios.php';
+        $url = RUTAWS.'usuarios/obtener_usuarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);

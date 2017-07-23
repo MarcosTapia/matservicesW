@@ -31,7 +31,7 @@ class Inventarios_controller extends CI_Controller {
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresas.php';
+        $url2 = RUTAWS.'datosempresa/obtener_datosempresas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -47,7 +47,7 @@ class Inventarios_controller extends CI_Controller {
     function cargaDatosSistema() {
         //muestra valores de datos del Sistema
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistemas.php';
+        $url2 = RUTAWS.'sistema/obtener_sistemas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -62,7 +62,7 @@ class Inventarios_controller extends CI_Controller {
     
     function cargaDatosProveedores() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = RUTAWS.'proveedores/obtener_proveedores.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -76,7 +76,7 @@ class Inventarios_controller extends CI_Controller {
     function cargaDatosCategorias() {
         //muestra valores de categorias
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
+        $url = RUTAWS.'categorias/obtener_categorias.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -93,7 +93,7 @@ class Inventarios_controller extends CI_Controller {
     function cargaDatosSucursales() {
         //muestra valores de categorias
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/sucursales/obtener_sucursales.php';
+        $url = RUTAWS.'sucursales/obtener_sucursales.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -109,7 +109,7 @@ class Inventarios_controller extends CI_Controller {
     
     function obtieneMaxIdInventario() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_maxidinventarios.php';
+        $url = RUTAWS.'inventarios/obtener_maxidinventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -134,7 +134,7 @@ class Inventarios_controller extends CI_Controller {
     
     function mostrarInventarios() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios.php';
+        $url = RUTAWS.'inventarios/obtener_inventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -173,7 +173,7 @@ class Inventarios_controller extends CI_Controller {
     function actualizarInventario($idArticulo) {
         //Obtiene producto por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+        $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -290,7 +290,7 @@ class Inventarios_controller extends CI_Controller {
             "nombre_img" => $nombre_img
                 );
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/actualizar_inventario.php');
+        $ch = curl_init(RUTAWS.'inventarios/actualizar_inventario.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -315,7 +315,7 @@ class Inventarios_controller extends CI_Controller {
         unlink("./fotos/inventario"."/".$fotoProducto);
         $data = array("idArticulo" => $idArticulo);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/borrar_inventario.php');
+        $ch = curl_init(RUTAWS.'inventarios/borrar_inventario.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -441,7 +441,7 @@ class Inventarios_controller extends CI_Controller {
                 "nombre_img" => $nombre_img
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/insertar_inventario.php');
+            $ch = curl_init(RUTAWS.'inventarios/insertar_inventario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -509,7 +509,7 @@ class Inventarios_controller extends CI_Controller {
                 }
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/insertar_inventario.php');
+                $ch = curl_init(RUTAWS.'inventarios/insertar_inventario.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -541,7 +541,7 @@ class Inventarios_controller extends CI_Controller {
         //fin hash para incluir proveedores
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventarios.php';
+        $url = RUTAWS.'inventarios/obtener_inventarios.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -665,7 +665,7 @@ class Inventarios_controller extends CI_Controller {
                 //Consulto los campos por id para comparar los que hubo cambios
                 //Obtiene producto por id
                 # An HTTP GET request example
-                $url = 'http://localhost/matserviceswsok/matservsthread1/inventarios/obtener_inventario_por_id.php?idArticulo='.$elemento;
+                $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$elemento;
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 5);
                 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -834,7 +834,7 @@ class Inventarios_controller extends CI_Controller {
                         "nombre_img" => $nombre_img
                             );
                     $data_string = json_encode($data);
-                    $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/inventarios/actualizar_inventario.php');
+                    $ch = curl_init(RUTAWS.'inventarios/actualizar_inventario.php');
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

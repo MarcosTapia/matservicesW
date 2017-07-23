@@ -98,6 +98,9 @@ $route['buscaProducto/(:any)'] = "ventas_controller/buscaProducto/$1";
 $route['compraEnBlanco'] = "compras_controller/compraEnBlanco";
 $route['buscaProducto/(:any)'] = "compras_controller/buscaProducto/$1";
 
+//rutas consultas
+$route['inicioconsultas'] = "consultas_controller/inicioConsultas";
+
 $route['cerrarSesion'] = "usuarios_controller/cerrarSesion";
 
 

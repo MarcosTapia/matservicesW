@@ -94,9 +94,9 @@
                     <!-- Verifica permiso y si opcion consultas esta seleccionada -->
                     <?php } } if ($permisos[3] == "1") { 
                         if ($opcionClickeada=="4") { ?>
-                  <li class="active"><a href="#">Consultas</a></li>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/consultas_controller/inicioconsultas">Consultas</a></li>
                         <?php } else { ?>
-                  <li><a href="#">Consultas</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/consultas_controller/inicioconsultas">Consultas</a></li>
                     <!-- Verifica permiso y si opcion consultas esta seleccionada -->
                     
                     <!-- Verifica permiso y si opcion proveedores esta seleccionada -->

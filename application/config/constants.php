@@ -39,3 +39,8 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
+
+// Constantes del Sistema
+define('CONSTPRUEBA', 'DIOS ES COMPASIVO');
+
+define('RUTAWS','http://localhost/matserviceswsok/matservsthread1/');

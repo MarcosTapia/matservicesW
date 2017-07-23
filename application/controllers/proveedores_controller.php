@@ -33,7 +33,7 @@ class Proveedores_controller extends CI_Controller {
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresas.php';
+        $url2 = RUTAWS.'datosempresa/obtener_datosempresas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -49,7 +49,7 @@ class Proveedores_controller extends CI_Controller {
     function cargaDatosSistema() {
         //muestra valores de datos del Sistema
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistemas.php';
+        $url2 = RUTAWS.'sistema/obtener_sistemas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -64,7 +64,7 @@ class Proveedores_controller extends CI_Controller {
     
     function mostrarProveedores() {
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = RUTAWS.'proveedores/obtener_proveedores.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -99,7 +99,7 @@ class Proveedores_controller extends CI_Controller {
     function actualizarProveedor($idProveedor) {
         //Obtiene usuario por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedor_por_id.php?idProveedor='.$idProveedor;
+        $url = RUTAWS.'proveedores/obtener_proveedor_por_id.php?idProveedor='.$idProveedor;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -163,7 +163,7 @@ class Proveedores_controller extends CI_Controller {
                 "noCuenta" => $noCuenta
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/actualizar_proveedor.php');
+            $ch = curl_init(RUTAWS.'proveedores/actualizar_proveedor.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -187,7 +187,7 @@ class Proveedores_controller extends CI_Controller {
     function eliminarProveedor($idProveedor) {
         $data = array("idProveedor" => $idProveedor);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/borrar_proveedor.php');
+        $ch = curl_init(RUTAWS.'proveedores/borrar_proveedor.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -258,7 +258,7 @@ class Proveedores_controller extends CI_Controller {
                 "noCuenta" => $noCuenta
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/insertar_proveedor.php');
+            $ch = curl_init(RUTAWS.'proveedores/insertar_proveedor.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -330,7 +330,7 @@ class Proveedores_controller extends CI_Controller {
                 
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/proveedores/insertar_proveedor.php');
+                $ch = curl_init(RUTAWS.'proveedores/insertar_proveedor.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -355,7 +355,7 @@ class Proveedores_controller extends CI_Controller {
     public function exportarProveedorExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/proveedores/obtener_proveedores.php';
+        $url = RUTAWS.'proveedores/obtener_proveedores.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);

@@ -58,7 +58,7 @@ class Configuracion_controller extends CI_Controller {
     function cargaCategorias() {
         //muestra valores de categorias
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
+        $url = RUTAWS.'categorias/obtener_categorias.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -75,7 +75,7 @@ class Configuracion_controller extends CI_Controller {
     function cargaSucursales() {
         //muestra valores de sucursales
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/sucursales/obtener_sucursales.php';
+        $url = RUTAWS.'sucursales/obtener_sucursales.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -92,7 +92,7 @@ class Configuracion_controller extends CI_Controller {
     function cargaDatosEmpresa() {
         //muestra valores de datos de Empresa
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresas.php';
+        $url2 = RUTAWS.'datosempresa/obtener_datosempresas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -108,7 +108,7 @@ class Configuracion_controller extends CI_Controller {
     function cargaDatosSistema() {
         //muestra valores de datos del Sistema
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistemas.php';
+        $url2 = RUTAWS.'sistema/obtener_sistemas.php';
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -141,7 +141,7 @@ class Configuracion_controller extends CI_Controller {
     function actualizarCategoria($idCategoria) {
         //Obtiene categoria por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categoria_por_id.php?idCategoria='.$idCategoria;
+        $url = RUTAWS.'categorias/obtener_categoria_por_id.php?idCategoria='.$idCategoria;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -171,7 +171,7 @@ class Configuracion_controller extends CI_Controller {
     function actualizarSucursal($idSucursal) {
         //Obtiene sucursal por id
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/sucursales/obtener_sucursal_por_id.php?idSucursal='.$idSucursal;
+        $url = RUTAWS.'sucursales/obtener_sucursal_por_id.php?idSucursal='.$idSucursal;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -201,7 +201,7 @@ class Configuracion_controller extends CI_Controller {
     function actualizarDatosEmpresa($idEmpresa) {
         //Obtiene categoria por id
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/datosempresa/obtener_datosempresa_por_id.php?idEmpresa='.$idEmpresa;
+        $url2 = RUTAWS.'datosempresa/obtener_datosempresa_por_id.php?idEmpresa='.$idEmpresa;
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -229,7 +229,7 @@ class Configuracion_controller extends CI_Controller {
     function actualizarSistema($idSistema) {
         //Obtiene categoria por id
         # An HTTP GET request example
-        $url2 = 'http://localhost/matserviceswsok/matservsthread1/sistema/obtener_sistema_por_id.php?idSistema='.$idSistema;
+        $url2 = RUTAWS.'sistema/obtener_sistema_por_id.php?idSistema='.$idSistema;
         $ch2 = curl_init($url2);
         curl_setopt($ch2, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
@@ -263,7 +263,7 @@ class Configuracion_controller extends CI_Controller {
             $data = array("idCategoria" => $idCategoria, 
                 "descripcionCategoria" => $descripcionCategoria);
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/categorias/actualizar_categoria.php');
+            $ch = curl_init(RUTAWS.'categorias/actualizar_categoria.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -293,7 +293,7 @@ class Configuracion_controller extends CI_Controller {
             $data = array("idSucursal" => $idSucursal, 
                 "descripcionSucursal" => $descripcionSucursal);
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/sucursales/actualizar_sucursal.php');
+            $ch = curl_init(RUTAWS.'sucursales/actualizar_sucursal.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -340,7 +340,7 @@ class Configuracion_controller extends CI_Controller {
             "paisEmpresa" => $paisEmpresa
                     );
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/datosempresa/actualizar_datosempresa.php');
+            $ch = curl_init(RUTAWS.'datosempresa/actualizar_datosempresa.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -849,7 +849,7 @@ class Configuracion_controller extends CI_Controller {
 //                    $camposEmpleados."-->".$camposEmpresa;
             
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/sistema/actualizar_sistema.php');
+            $ch = curl_init(RUTAWS.'sistema/actualizar_sistema.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -873,7 +873,7 @@ class Configuracion_controller extends CI_Controller {
     function eliminarCategoria($idCategoria) {
         $data = array("idCategoria" => $idCategoria);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/categorias/borrar_categoria.php');
+        $ch = curl_init(RUTAWS.'categorias/borrar_categoria.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -897,7 +897,7 @@ class Configuracion_controller extends CI_Controller {
     function eliminarSucursal($idSucursal) {
         $data = array("idSucursal" => $idSucursal);
         $data_string = json_encode($data);
-        $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/sucursales/borrar_sucursal.php');
+        $ch = curl_init(RUTAWS.'sucursales/borrar_sucursal.php');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -957,7 +957,7 @@ class Configuracion_controller extends CI_Controller {
             
             $data = array("descripcionCategoria" => $descripcionCategoria);
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/categorias/insertar_categoria.php');
+            $ch = curl_init(RUTAWS.'categorias/insertar_categoria.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -986,7 +986,7 @@ class Configuracion_controller extends CI_Controller {
             
             $data = array("descripcionSucursal" => $descripcionSucursal);
             $data_string = json_encode($data);
-            $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/sucursales/insertar_sucursal.php');
+            $ch = curl_init(RUTAWS.'sucursales/insertar_sucursal.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1062,7 +1062,7 @@ class Configuracion_controller extends CI_Controller {
                 
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/categorias/insertar_categoria.php');
+                $ch = curl_init(RUTAWS.'categorias/insertar_categoria.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1102,7 +1102,7 @@ class Configuracion_controller extends CI_Controller {
                 
                 //Llamada de ws para insertar
                 $data_string = json_encode($arr_datos);
-                $ch = curl_init('http://localhost/matserviceswsok/matservsthread1/sucursales/insertar_sucursal.php');
+                $ch = curl_init(RUTAWS.'sucursales/insertar_sucursal.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1128,7 +1128,7 @@ class Configuracion_controller extends CI_Controller {
     public function exportarCategoriaExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/categorias/obtener_categorias.php';
+        $url = RUTAWS.'categorias/obtener_categorias.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -1198,7 +1198,7 @@ class Configuracion_controller extends CI_Controller {
     public function exportarSucursalExcel(){
         //llamadod de ws
         # An HTTP GET request example
-        $url = 'http://localhost/matserviceswsok/matservsthread1/sucursales/obtener_sucursales.php';
+        $url = RUTAWS.'sucursales/obtener_sucursales.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
