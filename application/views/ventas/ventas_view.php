@@ -327,9 +327,81 @@
             //totalArticulo(idCantidad);
             obtieneTotalArticulo(idCantidad);
         }
+        
+        function recuperaVentaTemporal() {
+            <?php 
+            //Verifica que haya datos en temporalVtaCompra
+            if (isset($temporalVtaCompras)) {
+                //ciclo para recorrer el json de temporalventacompra
+                foreach ($temporalVtaCompras as $fila) { 
+                   //ciclo para comparar el codigo y sacar la descripcion del producto 
+                   foreach ($inventarios as $filaInv) { ?>
+                        // Verifica si existe coincidencia emtre codigo con algun producto
+                        if (<?php echo $fila->{'codigo'}; ?> == <?php echo $filaInv->{'codigo'}; ?>) { 
+                            var table = document.getElementById("tblVenta");
+                            var noRenglones = table.rows.length;
+                            //alert(noRenglones);
+                            var row = table.insertRow(noRenglones-1);
+                            var cell0 = row.insertCell(0);
+                            var cell1 = row.insertCell(1);
+                            var cell2 = row.insertCell(2);
+                            var cell3 = row.insertCell(3);
+                            var cell4 = row.insertCell(4);
+                            var cell5 = row.insertCell(5);
+                            var cell6 = row.insertCell(6);
+                            var cell7 = row.insertCell(7);
+                            row.id = ""+(noRenglones-1);
+                            cell0.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/borrar.ico' onclick='borraArticulo(this)' id="+ (noRenglones-1) +" name="+ (noRenglones-1) +" />"; 
+                            cell1.innerHTML = "<?php echo $fila->{'codigo'};?>";
+                            cell2.innerHTML = "<?php echo $filaInv->{'descripcion'};?>";
+                            cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precio'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
+                            cell4.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='cantidad<?php echo $fila->{'idArticulo'};?>' id='cantidad<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'cantidad'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,2)' /></div></div>";
+                            cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'descuento'};?>'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
+                            cell6.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' disabled name='totalArt<?php echo $fila->{'idArticulo'};?>' id='totalArt<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'total'};?>' /></div></div>";
+                            cell7.innerHTML = "<img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' onclick='aumentaCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />&nbsp;&nbsp;&nbsp;<img src='<?php echo base_url();?>images/sistemaicons/prohibido.ico' onclick='disminuyeCantidadArticulo(<?php echo $fila->{'idArticulo'};?>)' />"; 
+                            ventaJson.detalleTemporal.push({'idArticulo':'<?php echo $fila->{'idArticulo'};?>'
+                                ,'codigo': '<?php echo $fila->{'codigo'};?>'
+                                ,'precio': document.getElementById('precio<?php echo $fila->{'idArticulo'};?>').value
+                                ,'cantidad': document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value
+                                ,'descuento': document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value
+                                ,'total': document.getElementById('totalArt<?php echo $fila->{'idArticulo'};?>').value});
+                            totalesGenerales();
+                        } // Fin Verifica si existe coincidencia emtre codigo con algun producto
+            <?php  } // Fin ciclo para comparar el codigo y sacar la descripcion del producto 
+                } //Fin ciclo para recorrer el json de temporalventacompra
+            } //Fin Verifica que haya datos en temporalVtaCompra
+                ?>
+            //fin funcion para recuperar venta temporal
+            
+            //borra venta temporal
+            var site_url = "<?php echo site_url(); ?>";
+            $.get(site_url+'index.php/ventas_controller/borraVentaTemporal', function(data, status){
+                var opciones = data;
+            });       
+            //fin borra venta temporal
+        }
+        
+        function guardaVentaTemporal() {
+            //borra y guarda compra en temporalVtaCompra
+            var dataString = JSON.stringify(ventaJson);
+            $.ajax({
+               url: '<?php echo base_url();?>index.php/ventas_controller/guardaVentaTemporal',
+               data: {myData: dataString},
+               type: 'POST',
+               success: function(response) {
+//                      alert(response);
+//                      location.reload();
+               },
+               error: function(response) {
+//                      console.log('Error al ejecutar la petición');
+               }
+            });	
+            //Fin borra y guarda compra en temporalVtaCompra
+        }    
+        
     </script>
 </head>
-<body>
+<body onload="recuperaVentaTemporal()">
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -347,7 +419,7 @@
                                     </div>					  
                                     <br>
                                     <div class="input-group col-sm-12">
-                                        <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item" />
+                                        <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item"  onclick="guardaVentaTemporal();"/>
                                     </div>					  
                                 </div>       
                             </td>
@@ -650,9 +722,11 @@
                     comentarios:comentarios,noCuenta:noCuenta
                     }
             }).done(function(data){
-                $(".modal").modal('hide');
+                //$(".modal").modal('hide');
                 //toastr.success('Cliente agregado correctamente.', 'Success Alert', {timeOut: 5000});
             });
+            $(".modal").modal('hide');
+            location.reload();
         });
         //fin para guardar cliente sin salir ventas
 });

@@ -9,6 +9,8 @@ class Consultas_controller extends CI_Controller {
     private $inventarioGlobal;
     private $clientesGlobal;
     private $busquedaInventarioGlobal;
+    private $movimientosGlobal;
+    private $vtasGralGlobal;
     
     function __construct(){
         parent::__construct();
@@ -32,6 +34,8 @@ class Consultas_controller extends CI_Controller {
         $this->sucursalesGlobal = $this->cargaDatosSucursales();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
         $this->ivaEmpresaGlobal = $this->sistemaGlobal[0]->{'ivaEmpresa'};
+        $this->movimientosGlobal = $this->cargaDatosMovimientos();
+        $this->vtasGralGlobal = $this->cargaDatosVtasGralGlobal();
     }
     
     function cargaDatosEmpresa() {
@@ -155,6 +159,41 @@ class Consultas_controller extends CI_Controller {
         curl_close($ch);
         return $datos->{'inventarios'};
     }
+
+    function cargaDatosMovimientos() {
+        //muestra valores de categorias
+        # An HTTP GET request example
+        $url = RUTAWS.'movimientos/obtener_movimientos.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $movimientos;
+        $i=0;
+        //Fin muestra valores de categorias
+        return $datos->{'movimientos'};
+    }
+    
+    function cargaDatosVtasGralGlobal() {
+        //muestra valores de categorias
+        # An HTTP GET request example
+        $url = RUTAWS.'ventas/obtener_ventas.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $ventas;
+        $i=0;
+        //Fin muestra valores de categorias
+        return $datos->{'ventas'};
+    }
+    
     
 //    function obtieneMaxIdCompras() {
 //        # An HTTP GET request example
@@ -685,7 +724,7 @@ class Consultas_controller extends CI_Controller {
 //        //printf("%s",$result);
 //        //Fin llamado WS
 //    }
-    
+
     function inicioConsultas() {
         $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
         $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
@@ -703,7 +742,62 @@ class Consultas_controller extends CI_Controller {
             'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
             'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4'
+            'opcionClickeada' => '4',
+            'eleccion' => 0
+            );
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('consultas/adminConsultas_view',$data);
+        $this->load->view('layouts/pie_view',$data);
+    }
+
+    function movInventario() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        
+        // Obtiene el idUsuario sesionado
+        $idUsuarioActual = $this->session->userdata('idUsuario');
+        // Fin Obtiene el idUsuario sesionado
+        
+        $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+            'proveedores'=>$this->proveedoresGlobal,
+            'movimientos'=>$this->movimientosGlobal,
+            'vtasGral'=>NULL,
+            'categorias'=>$this->categoriasGlobal,
+            'sucursales'=>$this->sucursalesGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
+            'iva' => $this->ivaEmpresaGlobal,
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '4',
+            'eleccion' => 1
+            );
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('consultas/adminConsultas_view',$data);
+        $this->load->view('layouts/pie_view',$data);
+    }
+
+    function vtasGral() {
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        
+        // Obtiene el idUsuario sesionado
+        $idUsuarioActual = $this->session->userdata('idUsuario');
+        // Fin Obtiene el idUsuario sesionado
+        
+        $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+            'proveedores'=>$this->proveedoresGlobal,
+            'movimientos'=>NULL,
+            'vtasGral'=>$this->vtasGralGlobal,
+            'categorias'=>$this->categoriasGlobal,
+            'sucursales'=>$this->sucursalesGlobal,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
+            'iva' => $this->ivaEmpresaGlobal,
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '4',
+            'eleccion' => 2
             );
         $this->load->view('layouts/header_view',$data);
         $this->load->view('consultas/adminConsultas_view',$data);
