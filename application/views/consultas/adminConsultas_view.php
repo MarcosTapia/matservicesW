@@ -40,7 +40,12 @@
                 } );
         } );
         $(document).ready(function() {
-                $('#tblSucursal').dataTable( {
+                $('#example3').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );            
+        $(document).ready(function() {
+                $('#example4').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
@@ -62,8 +67,24 @@
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido2").style.display = "block";
                          break;
+                case '3' : $('#vtas1').toggle(200);
+                         document.getElementById("vtas1_1").className = "seleccion";
+                         document.getElementById("contenido3").style.display = "block";
+                         break;
+                case '4' : $('#vtas1').toggle(200);
+                         document.getElementById("vtas1_1").className = "seleccion";
+                         document.getElementById("contenido4").style.display = "block";
+                         break;
             }
         }
+        
+        function verificaFechas() {
+            if ((document.getElementById('fIni').value == "") || (document.getElementById('fFin').value == "")) {
+                alert('Deben estar ambas fechas establecidas');
+                return false;
+            } 
+            return true;
+        }    
     </script>
     
 </head>
@@ -84,11 +105,6 @@
                             <li><label class="tree-toggle nav-list">Ventas</label>
                                 <ul class="nav nav-list tree" id="vtas1">
                                     <li id="vtas1_1"><a href="<?php echo base_url(); ?>index.php/consultas_controller/vtasGral">General</a></li>
-                                    <li><a href="#">Por Fecha</a></li>
-                                    <li><a href="#">Por Producto</a></li>
-                                    <li><a href="#">Por Empleado</a></li>
-                                    <li><a href="#">Por Proveedor</a></li>
-                                    <li><a href="#">Por Cliente</a></li>
                                 </ul>
                             </li>
                             <li><label class="tree-toggle nav-list">Compras</label>
@@ -184,16 +200,29 @@
             
             <div id="contenido2" style="display:none;"> <!-- Div Ventas -->
                 <br>
-                <h4 style="text-align: center">Ventas en General</h4>
+                <table>
+                    <tr>
+                        <td><h4>Ventas en General</h4></td>
+                        <td style="width: 150px;"></td>
+                        <td>
+                            <form onsubmit="javascript: return verificaFechas()" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaVentasPorFechas" method="post">
+                                F.Inicial: <input type="date" name="fIni" id="fIni" style="height: 25px;width: 100px;">
+                                F.Final: <input type="date" name="fFin" id="fFin" style="height: 25px;width: 100px;">
+                                <input type="submit" id="submit" name="submit" class="btn btn-xs btn-success" value="Buscar" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
                 <br>
                 <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example2">
                     <thead>
                         <tr>
                             <th>idVenta</th>
-                            <th>fecha</th>
-                            <th>idCliente</th>
-                            <th>observaciones</th>
-                            <th>idUsuario</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,9 +234,10 @@
                                 <tr id="fila-<?php echo $fila->{'idVenta'} ?>">
                                     <td><?php echo $fila->{'idVenta'} ?></td>
                                     <td><?php echo $fila->{'fecha'} ?></td>
-                                    <td><?php echo $fila->{'idCliente'} ?></td>
+                                    <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
+                                    <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
                                     <td><?php echo $fila->{'observaciones'} ?></td>
-                                    <td><?php echo $fila->{'idUsuario'} ?></td>
+                                    <td><a class="btn btn-xs btn-primary" href="consultaDetalle/<?php echo $fila->{'idVenta'} ?>">Ver Detalle</a>
                                 </tr>
                                 <?php $i++; 
                             }   
@@ -217,21 +247,121 @@
                     <tfoot>
                         <tr>
                             <th>idVenta</th>
-                            <th>fecha</th>
-                            <th>idCliente</th>
-                            <th>observaciones</th>
-                            <th>idUsuario</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
                 <br><br><br><br>
             </div>  <!-- Fin Div Ventas -->
-            <div id="contenido3" style="display:none;">
-                Contenido 3
-            </div>
-            <div id="contenido4" style="display:none;">
-                Contenido 4
-            </div>
+            
+            <div id="contenido3" style="display:none;">  <!-- Inicio Div DetalleVenta -->
+                <br>
+                <h4 style="text-align: center">Detalle Venta</h4>
+                <br>
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example3">
+                    <thead>
+                        <tr>
+                            <th>idVenta</th>
+                            <th>Articulo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($detalleVenta) {
+                            $i=1;
+                            foreach($detalleVenta as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idDetalleVenta'} ?>">
+                                    <td><?php echo $fila->{'idVenta'} ?></td>
+                                    <td><?php echo $fila->{'descripcion'} ?></td>
+                                    <td><?php echo $fila->{'precio'} ?></td>
+                                    <td><?php echo $fila->{'cantidad'} ?></td>
+                                    <td><?php echo $fila->{'descuento'} ?></a>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>idVenta</th>
+                            <th>Articulo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br><br><br><br>
+            </div> <!-- Fin Div DetalleVenta -->            
+            
+            <div id="contenido4" style="display:none;"> <!-- Div consulta Venta por fechas -->
+                <br>
+                <table>
+                    <tr>
+                        <td><h4>Ventas por Fechas</h4></td>
+                        <td style="width: 150px;"></td>
+                        <td>
+                            <form onsubmit="javascript: return verificaFechas()"  class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaVentasPorFechas" method="post">
+                                F.Inicial: <input type="date" name="fIni" style="height: 25px;width: 100px;">
+                                F.Final: <input type="date" name="fFin" style="height: 25px;width: 100px;">
+                                <input type="submit" id="submit" name="submit" class="btn btn-xs btn-success" value="Buscar" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example4">
+                    <thead>
+                        <tr>
+                            <th>idVenta</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($ventasPorFecha) {
+                            $i=1;
+                            foreach($ventasPorFecha as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idVenta'} ?>">
+                                    <td><?php echo $fila->{'idVenta'} ?></td>
+                                    <td><?php echo $fila->{'fecha'} ?></td>
+                                    <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
+                                    <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
+                                    <td><?php echo $fila->{'observaciones'} ?></td>
+                                    <td><a class="btn btn-xs btn-primary" href="consultaDetalle/<?php echo $fila->{'idVenta'} ?>">Ver Detalle</a>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>idVenta</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br><br><br><br>
+            </div>  <!-- Fin Div consulta Venta por fechas -->
             <div id="contenido5" style="display:none;">
                 Contenido 5
             </div>
