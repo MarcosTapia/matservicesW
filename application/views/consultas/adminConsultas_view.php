@@ -49,6 +49,21 @@
                         "sPaginationType": "full_numbers"
                 } );
         } );            
+        $(document).ready(function() {
+                $('#example5').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );            
+        $(document).ready(function() {
+                $('#example6').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );            
+        $(document).ready(function() {
+                $('#example7').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );            
     </script>
     <script language="javascript">
         function verificaSeleccion() {
@@ -63,17 +78,29 @@
                          document.getElementById("movInv1_1_1").className = "seleccion";
                          document.getElementById("contenido1").style.display = "block";
                          break;
-                case '2' : $('#vtas1').toggle(200);
+                case '2' : $('#vtas1').toggle(2);
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido2").style.display = "block";
                          break;
-                case '3' : $('#vtas1').toggle(200);
+                case '3' : $('#vtas1').toggle(2);
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido3").style.display = "block";
                          break;
-                case '4' : $('#vtas1').toggle(200);
+                case '4' : $('#vtas1').toggle(2);
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido4").style.display = "block";
+                         break;
+                case '5' : $('#compras1').toggle(2);
+                         document.getElementById("compras1_1").className = "seleccion";
+                         document.getElementById("contenido5").style.display = "block";
+                         break;
+                case '6' : $('#compras1').toggle(2);
+                         document.getElementById("compras1_1").className = "seleccion";
+                         document.getElementById("contenido6").style.display = "block";
+                         break;
+                case '7' : $('#compras1').toggle(2);
+                         document.getElementById("compras1_1").className = "seleccion";
+                         document.getElementById("contenido7").style.display = "block";
                          break;
             }
         }
@@ -85,6 +112,31 @@
             } 
             return true;
         }    
+
+        function verificaFechas2() {
+            if ((document.getElementById('fIni2').value == "") || (document.getElementById('fFin2').value == "")) {
+                alert('Deben estar ambas fechas establecidas');
+                return false;
+            } 
+            return true;
+        }    
+
+        function verificaFechasCompras() {
+            if ((document.getElementById('fIniC').value == "") || (document.getElementById('fFinC').value == "")) {
+                alert('Deben estar ambas fechas establecidas');
+                return false;
+            } 
+            return true;
+        }    
+
+        function verificaFechasCompras2() {
+            if ((document.getElementById('fIniC2').value == "") || (document.getElementById('fFinC2').value == "")) {
+                alert('Deben estar ambas fechas establecidas');
+                return false;
+            } 
+            return true;
+        }    
+
     </script>
     
 </head>
@@ -108,32 +160,8 @@
                                 </ul>
                             </li>
                             <li><label class="tree-toggle nav-list">Compras</label>
-                                <ul class="nav nav-list tree">
-                                    <li><a href="#">General</a></li>
-                                    <li><a href="#">Por Fecha</a></li>
-                                    <li><a href="#">Por Producto</a></li>
-                                    <li><a href="#">Por Empleado</a></li>
-                                    <li><a href="#">Por Proveedor</a></li>
-                                    <li><a href="#">Por Cliente</a></li>
-                                </ul>
-                            </li>
-                            <li><label class="tree-toggle nav-list">Proveedores</label>
-                                <ul class="nav nav-list tree">
-                                    <li><a href="#">Movimientos</a></li>
-                                </ul>
-                            </li>
-                            <li><label class="tree-toggle nav-list">Clientes</label>
-                                <ul class="nav nav-list tree">
-                                    <li><a href="#">Movimientos</a></li>
-                                </ul>
-                            </li>
-                            <li><label class="tree-toggle nav-list">Empleados</label>
-                                <ul class="nav nav-list tree">
-                                    <li><a href="#">General</a></li>
-                                    <li><a href="#">Por Fecha</a></li>
-                                    <li><a href="#">Por Producto</a></li>
-                                    <li><a href="#">Compras</a></li>
-                                    <li><a href="#">Ventas</a></li>
+                                <ul class="nav nav-list tree" id="compras1">
+                                    <li id="compras1_1"><a href="<?php echo base_url(); ?>index.php/consultas_controller/comprasGral">General</a></li>
                                 </ul>
                             </li>
                         </ul> <!-- menu principal -->
@@ -142,12 +170,12 @@
             </div> <!-- div span3 -->
         </div> <!-- Fin Menu-->
         <div class="col-md-9">
-            <div id="contenido0" style="display:none;"> <!-- Div Inicio -->
+            <div id="contenido0" style="display:none;" align="center"> <!-- Div Inicio -->
+                <br>
+                <img src="<?php echo base_url(); ?>/images/seccionconsultas.png" />
                 <br><br><br><br>
                 <p style="font-style: oblique;font-size: 50px;text-align: center">Secci&oacute;n de Consultas</p>
-                <br><br><br><br>
-                <br><br><br><br>
-                <br><br><br><br>
+                <br><br>
             </div> <!-- Fin Div Inicio -->
             
             <div id="contenido1" style="display:none;" class="table-responsive"> <!-- Div Movimientos -->
@@ -258,7 +286,7 @@
                 <br><br><br><br>
             </div>  <!-- Fin Div Ventas -->
             
-            <div id="contenido3" style="display:none;">  <!-- Inicio Div DetalleVenta -->
+            <div id="contenido3" style="display:none;">  <!-- Div DetalleVenta -->
                 <br>
                 <h4 style="text-align: center">Detalle Venta</h4>
                 <br>
@@ -310,9 +338,9 @@
                         <td><h4>Ventas por Fechas</h4></td>
                         <td style="width: 150px;"></td>
                         <td>
-                            <form onsubmit="javascript: return verificaFechas()"  class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaVentasPorFechas" method="post">
-                                F.Inicial: <input type="date" name="fIni" style="height: 25px;width: 100px;">
-                                F.Final: <input type="date" name="fFin" style="height: 25px;width: 100px;">
+                            <form onsubmit="javascript: return verificaFechas2()"  class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaVentasPorFechas" method="post">
+                                F.Inicial: <input type="date" name="fIni2" id="fIni2" style="height: 25px;width: 100px;">
+                                F.Final: <input type="date" name="fFin2" id="fFin2" style="height: 25px;width: 100px;">
                                 <input type="submit" id="submit" name="submit" class="btn btn-xs btn-success" value="Buscar" />
                             </form>
                         </td>
@@ -362,15 +390,173 @@
                 </table>
                 <br><br><br><br>
             </div>  <!-- Fin Div consulta Venta por fechas -->
-            <div id="contenido5" style="display:none;">
-                Contenido 5
-            </div>
-            <div id="contenido6" style="display:none;">
-                Contenido 6
-            </div>
-            <div id="contenido7" style="display:none;">
-                Contenido 7
-            </div>
+            
+            <div id="contenido5" style="display:none;">  <!-- Div consulta Compras -->
+                <br>
+                <table>
+                    <tr>
+                        <td><h4>Compras en General</h4></td>
+                        <td style="width: 150px;"></td>
+                        <td>
+                            <form onsubmit="javascript: return verificaFechasCompras()" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaComprasPorFechas" method="post">
+                                F.Inicial: <input type="date" name="fIniC" id="fIniC" style="height: 25px;width: 100px;">
+                                F.Final: <input type="date" name="fFinC" id="fFinC" style="height: 25px;width: 100px;">
+                                <input type="submit" id="submit" name="submit" class="btn btn-xs btn-success" value="Buscar" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example5">
+                    <thead>
+                        <tr>
+                            <th>idCompra</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($comprasGral) {
+                            $i=1;
+                            foreach($comprasGral as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idCompra'} ?>">
+                                    <td><?php echo $fila->{'idCompra'} ?></td>
+                                    <td><?php echo $fila->{'fecha'} ?></td>
+                                    <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
+                                    <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
+                                    <td><?php echo $fila->{'observaciones'} ?></td>
+                                    <td><a class="btn btn-xs btn-primary" href="consultaDetalleCompra/<?php echo $fila->{'idCompra'} ?>">Ver Detalle</a>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>idCompra</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br><br><br><br>
+            </div>  <!-- Fin Div consulta Compras -->
+            
+            <div id="contenido6" style="display:none;"> <!-- Div detalleCompra -->
+                <br>
+                <h4 style="text-align: center">Detalle Compra</h4>
+                <br>
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example6">
+                    <thead>
+                        <tr>
+                            <th>idCompra</th>
+                            <th>Articulo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($detalleCompra) {
+                            $i=1;
+                            foreach($detalleCompra as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idDetalleCompra'} ?>">
+                                    <td><?php echo $fila->{'idCompra'} ?></td>
+                                    <td><?php echo $fila->{'descripcion'} ?></td>
+                                    <td><?php echo $fila->{'precio'} ?></td>
+                                    <td><?php echo $fila->{'cantidad'} ?></td>
+                                    <td><?php echo $fila->{'descuento'} ?></a>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>idCompra</th>
+                            <th>Articulo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br><br><br><br>
+            </div> <!-- Fin Div detalleCompra -->
+            
+            <div id="contenido7" style="display:none;"> <!-- Div consulta Compras por Fechas -->
+                <br>
+                <table>
+                    <tr>
+                        <td><h4>Compras por Fechas</h4></td>
+                        <td style="width: 150px;"></td>
+                        <td>
+                            <form onsubmit="javascript: return verificaFechasCompras2()"  class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaComprasPorFechas" method="post">
+                                F.Inicial: <input type="date" name="fIniC2" id="fIniC2" style="height: 25px;width: 100px;">
+                                F.Final: <input type="date" name="fFinC2" id="fIniC2" style="height: 25px;width: 100px;">
+                                <input type="submit" id="submit" name="submit" class="btn btn-xs btn-success" value="Buscar" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example7">
+                    <thead>
+                        <tr>
+                            <th>idCompra</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($comprasPorFecha) {
+                            $i=1;
+                            foreach($comprasPorFecha as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idCompra'} ?>">
+                                    <td><?php echo $fila->{'idCompra'} ?></td>
+                                    <td><?php echo $fila->{'fecha'} ?></td>
+                                    <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
+                                    <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
+                                    <td><?php echo $fila->{'observaciones'} ?></td>
+                                    <td><a class="btn btn-xs btn-primary" href="consultaDetalleCompra/<?php echo $fila->{'idCompra'} ?>">Ver Detalle</a>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>idCompra</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Usuario</th>
+                            <th>Observaciones</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br><br><br><br>
+            </div> <!-- Fin Div consulta Compras por Fechas -->
+            
+            
             <div id="contenido8" style="display:none;">
                 Contenido 8
             </div>

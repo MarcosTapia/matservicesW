@@ -311,8 +311,11 @@ class Inventarios_controller extends CI_Controller {
     }
 
     function eliminarInventario($idArticulo,$fotoProducto) {
-          //borro imagen del articulo
-        unlink("./fotos/inventario"."/".$fotoProducto);
+        //echo "-->".$fotoProducto."-->".$idArticulo;
+        if ($fotoProducto!="producto0.png") {
+            //borro imagen del articulo
+          unlink("./fotos/inventario"."/".$fotoProducto);
+        }
         $data = array("idArticulo" => $idArticulo);
         $data_string = json_encode($data);
         $ch = curl_init(RUTAWS.'inventarios/borrar_inventario.php');
@@ -327,11 +330,14 @@ class Inventarios_controller extends CI_Controller {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         //execute post
         $result = curl_exec($ch);
+        $resultado = json_decode($result, true);
+        if ($resultado['estado']==1) {
+            $this->session->set_flashdata('correcto', "Eliminación Exitosa <br>");
+        } else {
+            $this->session->set_flashdata('correcto', "No se eliminó el registro, hay información relacionada con él<br>");
+        }        
         //close connection
         curl_close($ch);
-        //echo $result;
-
-        //Fin llamado WS
         redirect('/inventarios_controller/mostrarInventarios');
     }
     
@@ -858,7 +864,230 @@ class Inventarios_controller extends CI_Controller {
         }         
         redirect('/inventarios_controller/mostrarInventarios');
     }
+    
+    function muestraMovIndividual($idArticulo) {
+        //obtiene articulo
+        $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $articulo = $datos->{'inventario'}->{'descripcion'};
+        //fin obtiene articulo
+        
+        //Obtiene movimiento por id
+        # An HTTP GET request example
+        $url = RUTAWS.'movimientos/obtener_movimiento_por_idArticulo.php?idArticulo='.$idArticulo;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        //printf("%s",$data);
+        curl_close($ch);
+        
+        if ($datos->{'estado'}==1) {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); //'articulo'=>$datos->{'inventarios'},
+            $data = array('articulo' => $articulo,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'movimientos'=>$datos->{'movimientos'},
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '1'
+                    );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('inventarios/movimientosArticulo_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            echo "error";
+        }
+    }
+    
+    function inventarioManual($idArticulo) {
+        //Obtiene producto por id
+        # An HTTP GET request example
+        $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        if ($datos->{'estado'}==1) {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            $data = array('inventario'=>$datos->{'inventario'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'proveedores' => $this->proveedoresGlobal,
+                'categorias' => $this->categoriasGlobal,
+                'sucursales' => $this->sucursalesGlobal,
+                'ivaEmpresa' => $this->ivaEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '1'
+                    );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('inventarios/inventarioManual_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            echo "error";
+        }
+    }
+    
+    function actualizarInventarioManualFromFormulario()
+    {
+        $idUsuario = $this->session->userdata('idUsuario');
+        $idArticulo = $this->input->post("idArticulo");
+        $operacion = $this->input->post("modoOperacion");
+        $cantidad = $this->input->post("existencia");
+        $tipoOperacionTexto = "Manual Aumento";
+        if ($operacion==2) {
+            $cantidad = $cantidad * -1;
+            $tipoOperacionTexto = "Manual Disminución";
+        }
+//        echo "-->".$idArticulo."-->".$operacion."-->".$cantidad;
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaMovimiento = $dt->format("Y-m-d H:i:s"); 
+        // Alteracion en el inventario segun el tipo de operacion
+            //Obtiene producto por id
+        # An HTTP GET request example
+        $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datosProd = json_decode($data);
+        curl_close($ch);
+        if ($datosProd->{'estado'}==1) {
+            $existencuaInventario = $datosProd->{'inventario'}->{'existencia'};
+        } else {
+            echo "Ajusta el inventario manualmente, error al consultar producto";
+        }
+        // se realiza ajuste de inventario
+        $existencuaInventario = $existencuaInventario + $cantidad;
+        //$datosProd->{'inventario'}->{'existencia'} = $existencuaInventario;
+        $data = array("idArticulo" => $idArticulo,
+            "existencia" => $existencuaInventario
+                );
+        $data_string = json_encode($data);
+        $ch = curl_init(RUTAWS.'inventarios/ajusta_inventario.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+            // fin se realiza ajuste de inventario
+        // Fin Alteracion en el inventario segun el tipo de operacion
 
+        //Llamado de WS de registro de movimientos tabla movimientos
+        $dataMovimiento = array(
+            "idArticulo" => $idArticulo, 
+            "idUsuario" => $idUsuario, 
+            "tipoOperacion" => $tipoOperacionTexto,
+            "cantidad" => $cantidad, 
+            "fechaOperacion" => $fechaMovimiento
+                );
+        $data_string = json_encode($dataMovimiento);  
+        unset($dataDetalleVenta);
+        //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+        //LLamado de WS de registro de movimientos tabla movimientos
+        $ch = curl_init(RUTAWS.'movimientos/insertar_movimiento.php');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $resultM = curl_exec($ch);
+        //close connection
+        //printf("%s",$result);
+        curl_close($ch);
+        //Fin Llamado de WS de registro de movimientos tabla movimientos
+        
+        $resultado = json_decode($resultM, true);
+        if ($resultado['estado']==1) {
+            $this->session->set_flashdata('correcto', "Actualización Exitosa <br>");
+        } else {
+            $this->session->set_flashdata('correcto', "Error. No se actualizó el registro <br>");
+        }        
+
+        //Fin llamado WS
+        redirect('/inventarios_controller/mostrarInventarios');
+    }
+
+    function detalleArticulo($idArticulo) {
+        //Obtiene producto por id
+        # An HTTP GET request example
+        $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        if ($datos->{'estado'}==1) {
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            $data = array('inventario'=>$datos->{'inventario'},
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'proveedores' => $this->proveedoresGlobal,
+                'categorias' => $this->categoriasGlobal,
+                'sucursales' => $this->sucursalesGlobal,
+                'ivaEmpresa' => $this->ivaEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '1'
+                    );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('inventarios/detalleArticulo_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            echo "error";
+        }
+    }
+
+    function generaCodigoBarras($codigo,$descripcion)
+    {
+        $result = array();
+        $result[] = array('name' =>$descripcion, 'id'=> $codigo);
+        $data['items'] = $result;
+        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+        $data = array('items'=>$result,
+            'usuarioDatos' => $this->session->userdata('nombre'),
+            'fecha' => $fechaIngreso,
+            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'permisos' => $this->session->userdata('permisos'),
+            'opcionClickeada' => '1'
+                );
+        $this->load->view('layouts/header_view',$data);
+        $this->load->view('inventarios/barcode_sheet',$data);
+        $this->load->view('layouts/pie_view',$data);
+    }
+    
     // Manejo de sesiones
     function cerrarSesion() {            
             if ($this->sistema_model->logout()) {

@@ -52,41 +52,57 @@
             }    
             document.getElementById('ligaSeleccionMultiple').href = "edicionMultipleInventario/" + arrayIds; 
         }
+        
+        function preguntar() {
+            var conf = confirm("¿Seguro que quieres eliminar?");
+            if (conf == false) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        
+        function mensaje() {
+            if (document.getElementById('registroCorrecto').innerHTML != "") {
+                setTimeout(function(){ location.reload(); }, 1000);
+            }
+        }        
     </script>
 </head>
-<body>
+<body onload="mensaje()">
 <div class="container">
 <div class="row">
 <div class="col-md-12">
-    <!--
-    <script>document.getElementById('ids').value</script>
-    -->
+    <?php 
+        $correcto = $this->session->flashdata('correcto');
+        if ($correcto) { ?>
+    <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span><br>
+    <?php } ?>
+
     <p>
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
     <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarInventarioExcel">Exportar a Excel</a>
     <a class="btn btn-xs btn-success" id="ligaSeleccionMultiple" href="" onclick="seleccionMuliple();">Edici&oacute;n M&uacute;ltiple</a>
-    <a class="btn btn-xs btn-success" href="exportarExcel">Inventario</a>
-    <a class="btn btn-xs btn-success" href="exportarExcel">Movimientos</a></p>
     <div class="table-responsive">     
         <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
             <thead>
                 <tr>
-                    <th>Edici&oacute;n</th>
+                    <th><img src="<?php echo base_url(); ?>/images/sistemaicons/marcar.ico" alt="" /></th>
                     <th>Surtir</th>
                     <th>Sucursal</th>
                     <th>C&oacute;digo</th>
                     <th>Descripci&oacute;n</th>
-                    <th>Precio Costo</th>
-                    <th>precio Unit.</th>
-                    <th>IVA</th>
+                    <th>$ Costo</th>
+                    <th>$ Unit.</th>
+<!--                    <th>IVA</th>-->
                     <th>Exist.</th>
-                    <th>Exist. M&iacute;nima</th>
-                    <th>Ubicaci&oacute;n</th>
+                    <th>Exist. M&iacute;n</th>
+<!--                    <th>Ubicaci&oacute;n</th>
                     <th>Observ.</th>
                     <th>F.Ingreso</th>
                     <th>Proveed.</th>
-                    <th>Categor&iacute;a</th>
+                    <th>Categor&iacute;a</th>-->
                     <th></th>
                 </tr>
             </thead>
@@ -115,17 +131,28 @@
                             <td><?php echo $fila->{'descripcion'} ?></td>
                             <td><?php echo $fila->{'precioCosto'} ?></td>
                             <td><?php echo $fila->{'precioUnitario'} ?></td>
-                            <td><?php echo $fila->{'porcentajeImpuesto'} ?></td>
+<!--                            <td><?php echo $fila->{'porcentajeImpuesto'} ?></td>-->
                             <td><?php echo $fila->{'existencia'} ?></td>
                             <td><?php echo $fila->{'existenciaMinima'} ?></td>
-                            <td><?php echo $fila->{'ubicacion'} ?></td>
+<!--                            <td><?php echo $fila->{'ubicacion'} ?></td>
                             <td><?php echo $fila->{'observaciones'} ?></td>
                             <td><?php echo $fila->{'fechaIngreso'} ?></td>
                             <td><?php echo $fila->{'empresa'} ?></td>
-                            <td><?php echo $fila->{'descripcionCategoria'} ?></td>
+                            <td><?php echo $fila->{'descripcionCategoria'} ?></td>-->
 
-                            <td><a class="btn btn-xs btn-primary" href="actualizarInventario/<?php echo $fila->{'idArticulo'} ?>">Editar</a>
-                            <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>/<?php echo $fila->{'fotoProducto'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                            <td>
+                            <a href="actualizarInventario/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/modificar.ico" alt="Editar" title="Editar" /></a>
+                            &nbsp;
+                            <a href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>/<?php echo $fila->{'fotoProducto'} ?>"  onclick="javascript: return preguntar()"><img src="<?php echo base_url(); ?>/images/sistemaicons/borrar2.ico" alt="Borrar" title="Borrar" /></a>
+                            &nbsp;
+                            <a href="muestraMovIndividual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/movimientos.ico" alt="Movimientos" title="Movimientos" /></a>
+                            &nbsp;
+                            <a href="inventarioManual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/empresa.ico" alt="Inventario" title="Inventario" /></a>
+                            &nbsp;
+                            <a href="detalleArticulo/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/lista.ico" alt="Detalles" title="Detalles" /></a>
+                            &nbsp;
+                            <a href="generaCodigoBarras/<?php echo $fila->{'codigo'} ?>/<?php echo $fila->{'descripcion'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/cbarras.ico" alt="Generar Código de Barras" title="Generar Código de Barras" /></a>
+                            </td>
                         </tr>
                         <?php $i++; 
                     }   
@@ -134,21 +161,21 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>Edici&oacute;n</th>
+                    <th><img src="<?php echo base_url(); ?>/images/sistemaicons/marcar.ico" alt="" /></th>
                     <th>Surtir</th>
                     <th>Sucursal</th>
                     <th>C&oacute;digo</th>
                     <th>Descripci&oacute;n</th>
                     <th>Precio Costo</th>
-                    <th>precio Unit.</th>
-                    <th>IVA</th>
+                    <th>Precio Unit.</th>
+<!--                    <th>IVA</th>-->
                     <th>Exist.</th>
-                    <th>Exist. M&iacute;nima</th>
-                    <th>Ubicaci&oacute;n</th>
+                    <th>Exist. M&iacute;n</th>
+<!--                    <th>Ubicaci&oacute;n</th>
                     <th>Observ.</th>
                     <th>F.Ingreso</th>
                     <th>Proveed.</th>
-                    <th>Categor&iacute;a</th>
+                    <th>Categor&iacute;a</th>-->
                     <th></th>
                 </tr>
             </tfoot>
