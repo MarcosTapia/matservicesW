@@ -20,9 +20,10 @@
                         </div>  
 
                         <div class="form-group">
-                          <label class="control-label col-sm-2" for="clave">Clave:</label>
+                          <input type="hidden" name="claveAnt" value="<?php echo $usuario->{'clave'}?>" />  
+                          <label class="control-label col-sm-2" for="clave">Nueva Clave:</label>
                           <div class="col-sm-10">
-                                <input type="text" class="form-control" id="clave" name="clave" value="<?php echo $usuario->{'clave'}; ?>" placeholder="C&oacute;digo">
+                              <input type="text" class="form-control" id="clave" name="clave" placeholder="Nueva Clave">
                           </div>					  
                         </div> 
 

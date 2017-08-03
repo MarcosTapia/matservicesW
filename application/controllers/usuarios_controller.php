@@ -2,6 +2,7 @@
 class Usuarios_controller extends CI_Controller {
     private $datosEmpresaGlobal;
     private $nombreEmpresaGlobal;
+    private $sucursalesGlobal;
     
     function __construct(){
         parent::__construct();
@@ -15,9 +16,27 @@ class Usuarios_controller extends CI_Controller {
         $this->load->library('upload');
         $this->load->model('mupload_model');    
         
+        $this->sucursalesGlobal = $this->cargaDatosSucursales();
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
         $this->sistemaGlobal = $this->cargaDatosSistema();
         $this->nombreEmpresaGlobal = $this->datosEmpresaGlobal[0]->{'nombreEmpresa'};
+    }
+    
+    function cargaDatosSucursales() {
+        //muestra valores de categorias
+        # An HTTP GET request example
+        $url = RUTAWS.'sucursales/obtener_sucursales.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        $sucursales;
+        $i=0;
+        //Fin muestra valores de categorias
+        return $datos->{'sucursales'};
     }
     
     function cargaDatosEmpresa() {
@@ -255,7 +274,13 @@ class Usuarios_controller extends CI_Controller {
             //LLamadfo de WS
             $idUsuario = $this->input->post("idUsuario");
             $usuario = $this->input->post("usuario");
-            $clave = md5($this->input->post("clave"));
+            $clave = $this->input->post("clave");
+            $claveAnt = $this->input->post("claveAnt");
+            if ($clave=="") {
+                $clave = $claveAnt;
+            } else {
+                $clave = md5($this->input->post("clave"));
+            }
             $permisos = $permisosUsuarioLocal;
             $nombre = $this->input->post("nombre");
             $apellido_paterno = $this->input->post("apellido_paterno");
@@ -324,6 +349,7 @@ class Usuarios_controller extends CI_Controller {
         $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
         $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
         $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'sucursales' => $this->sucursalesGlobal,
             'usuarioDatos' => $this->session->userdata('nombre'),
             'fecha' => $fechaIngreso,
             'permisos' => $this->session->userdata('permisos'),

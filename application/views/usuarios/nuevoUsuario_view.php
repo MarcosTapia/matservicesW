@@ -76,6 +76,20 @@
                             </div>
                         </fieldset>	 
                     </div> 
+                    
+                    <div class="form-group">
+                      <label class="control-label col-sm-2" for="sucursal">Sucursal:</label>
+                      <div class="col-sm-10">
+                        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select class="form-control" name="sucursal" id="sucursal">
+                                <option value=""></option>
+                                <?php foreach($sucursales as $fila) {
+                                 echo "<option value=".$fila->{'idSucursal'}.">".$fila->{'descripcionSucursal'}."</option>";
+                                } ?>
+                            </select>
+                        </div>					  
+                      </div>					  
+                    </div>
 
                     <table>
                         <tr>
