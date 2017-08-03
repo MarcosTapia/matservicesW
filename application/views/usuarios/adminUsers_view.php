@@ -69,6 +69,7 @@
                     <th>Apellido Materno</th>
                     <th>Tel. Casa</th>
                     <th>Celular</th>
+                    <th>Sucursal</th>
                     <th></th>
                 </tr>
             </thead>
@@ -86,6 +87,7 @@
                             <td><?php echo $fila->{'apellido_materno'} ?></td>
                             <td><?php echo $fila->{'telefono_casa'} ?></td>
                             <td><?php echo $fila->{'telefono_celular'} ?></td>
+                            <td><?php echo $fila->{'descripcionSucursal'} ?></td>
 
                             <td><a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idUsuario'} ?>">Editar</a>
                             <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idUsuario'} ?>" onclick="javascript:return DeleteUser('<?php echo $fila->{'idUsuario'} ?>')">Borrar</a></td>
@@ -104,6 +106,7 @@
                     <th>Apellido Materno</th>
                     <th>Tel. Casa</th>
                     <th>Celular</th>
+                    <th>Sucursal</th>
                     <th></th>
                 </tr>
             </tfoot>

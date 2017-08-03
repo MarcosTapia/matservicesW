@@ -14,6 +14,12 @@
                             <br>
                             <h4 style="text-align: center">Importar Empleados</h4>
                             <br>
+                            <p style="font-weight: bold">*** Nota: Asegurate que tu archivo excel tengan las siguientes columnas y en el orden indicado </p>
+                            <p>
+                                usuario,clave,permisos,nombre,apellido_paterno,apellido_materno,telefono_casa,telefono_celular,idSucursal
+                            </p>
+                            
+                            <br>
                             <form method='post' action='importarExcel' enctype='multipart/form-data'>
                                     <input type='file' name='excel' />    
                                     <input type='submit' name='enviar'  value='Importar'  />

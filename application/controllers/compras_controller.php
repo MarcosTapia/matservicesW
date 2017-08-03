@@ -117,7 +117,11 @@ class Compras_controller extends CI_Controller {
     
     function cargaDatosInventarios() {
         # An HTTP GET request example
-        $url = RUTAWS.'inventarios/obtener_inventarios.php';
+        //este era para inventarios general
+//        $url = RUTAWS.'inventarios/obtener_inventarios.php';
+        $idSucursal = $this->session->userdata('idSucursal');
+        //este es para inventarios por sucursal
+        $url = RUTAWS.'inventarios/obtener_inventarios_por_idSucursal.php?idSucursal='.$idSucursal;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);

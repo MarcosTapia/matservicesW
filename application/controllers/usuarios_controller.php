@@ -102,6 +102,16 @@ class Usuarios_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         if ($datos->{'estado'}==1) {
+            $idUsuario;
+            $usuario;
+            $clave;
+            $permisos;
+            $nombre;
+            $apellido_paterno;
+            $apellido_materno;
+            $telefono_casa;
+            $telefono_celular;
+            $idSucursal;
             //separa campos
             $i=1;
             foreach($datos->{'usuario'} as $fila) {
@@ -115,6 +125,7 @@ class Usuarios_controller extends CI_Controller {
                     case 7: $apellido_materno = $fila; break;
                     case 8: $telefono_casa = $fila; break;
                     case 9: $telefono_celular = $fila; break;
+                    case 10: $idSucursal = $fila; break;
                 }
                 $i++;
             }
@@ -126,6 +137,7 @@ class Usuarios_controller extends CI_Controller {
             $this->session->set_userdata('usuario', $usuario);					
             $this->session->set_userdata('clave', $clave);					
             $this->session->set_userdata('idUsuario', $idUsuario);
+            $this->session->set_userdata('idSucursal', $idSucursal);
             
             $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
             $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
@@ -203,6 +215,7 @@ class Usuarios_controller extends CI_Controller {
         curl_close($ch);
         if ($datos->{'estado'}==1) {
             $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'sucursales' => $this->sucursalesGlobal,
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'),
@@ -287,6 +300,7 @@ class Usuarios_controller extends CI_Controller {
             $apellido_materno = $this->input->post("apellido_materno");
             $telefono_casa = $this->input->post("telefono_casa");
             $telefono_celular = $this->input->post("telefono_celular");
+            $idSucursal = $this->input->post("sucursal");
             
             $data = array("idUsuario" => $idUsuario, 
                 "usuario" => $usuario, 
@@ -296,7 +310,8 @@ class Usuarios_controller extends CI_Controller {
                 "apellido_paterno" => $apellido_paterno, 
                 "apellido_materno" => $apellido_materno, 
                 "telefono_casa" => $telefono_casa, 
-                "telefono_celular" => $telefono_celular
+                "telefono_celular" => $telefono_celular,
+                "idSucursal" => $idSucursal
                     );
             $data_string = json_encode($data);
             $ch = curl_init(RUTAWS.'usuarios/actualizar_usuario.php');
@@ -313,10 +328,12 @@ class Usuarios_controller extends CI_Controller {
             $result = curl_exec($ch);
             //close connection
             curl_close($ch);
-            echo $result;
-            
-            //Fin llamado WS
-            $this->session->set_flashdata('correcto', 'Empleado modificado correctamente!');
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Registro actualizado correctamente <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se actualizó el registro <br>");
+            }        
             redirect('/usuarios_controller/mostrarUsuarios');
         }
     }
@@ -338,10 +355,12 @@ class Usuarios_controller extends CI_Controller {
         $result = curl_exec($ch);
         //close connection
         curl_close($ch);
-        //echo $result;
-
-        //Fin llamado WS
-        $this->session->set_flashdata('correcto', 'Empleado eliminado correctamente!');
+        $resultado = json_decode($result, true);
+        if ($resultado['estado']==1) {
+            $this->session->set_flashdata('correcto', "Registro eliminado correctamente <br>");
+        } else {
+            $this->session->set_flashdata('correcto', "Error. No se eliminó el registro <br>");
+        }        
         redirect('/usuarios_controller/mostrarUsuarios');
     }
     
@@ -425,6 +444,7 @@ class Usuarios_controller extends CI_Controller {
             $apellido_materno = $this->input->post("apellido_materno");
             $telefono_casa = $this->input->post("telefono_casa");
             $telefono_celular = $this->input->post("telefono_celular");
+            $idSucursal = $this->input->post("sucursal");
             
             $data = array("idUsuario" => $idUsuario, 
                 "usuario" => $usuario, 
@@ -434,7 +454,8 @@ class Usuarios_controller extends CI_Controller {
                 "apellido_paterno" => $apellido_paterno, 
                 "apellido_materno" => $apellido_materno, 
                 "telefono_casa" => $telefono_casa, 
-                "telefono_celular" => $telefono_celular
+                "telefono_celular" => $telefono_celular,
+                "idSucursal" => $idSucursal
                     );
             $data_string = json_encode($data);
             $ch = curl_init(RUTAWS.'usuarios/insertar_usuario.php');
@@ -451,10 +472,12 @@ class Usuarios_controller extends CI_Controller {
             $result = curl_exec($ch);
             //close connection
             curl_close($ch);
-            echo $result;
-            
-            //Fin llamado WS
-            $this->session->set_flashdata('correcto', 'Empleado registrado correctamente!');
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Registro guardado <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se guardó el registro <br>");
+            }        
             redirect('/usuarios_controller/mostrarUsuarios');
         }
     }
@@ -484,6 +507,7 @@ class Usuarios_controller extends CI_Controller {
         $obj_excel = PHPExcel_IOFactory::load($tname);       
         $sheetData = $obj_excel->getActiveSheet()->toArray(null,true,true,true);
         $arr_datos = array();
+        $result;
         foreach ($sheetData as $index => $value) {            
             if ( $index != 1 ){
                 $arr_datos = array(
@@ -494,7 +518,8 @@ class Usuarios_controller extends CI_Controller {
                         'apellido_paterno' => $value['E'],
                         'apellido_materno' => $value['F'],
                         'telefono_casa' => $value['G'],
-                        'telefono_celular' => $value['H']
+                        'telefono_celular' => $value['H'],
+                        'idSucursal' => $value['I']
                 ); 
                 foreach ($arr_datos as $llave => $valor) {
                     $arr_datos[$llave] = $valor;
@@ -520,7 +545,12 @@ class Usuarios_controller extends CI_Controller {
                 //echo $result;
             } 
         }
-        $this->session->set_flashdata('correcto', 'Importación realizada exitosamente!');
+        $resultado = json_decode($result, true);
+        if ($resultado['estado']==1) {
+            $this->session->set_flashdata('correcto', "Registro guardado <br>");
+        } else {
+            $this->session->set_flashdata('correcto', "Error. No se guardó el registro <br>");
+        }        
         redirect('/usuarios_controller/mostrarUsuarios');
     }        
     //Fin Importar desde Excel con libreria de PHPExcel
@@ -538,19 +568,13 @@ class Usuarios_controller extends CI_Controller {
         $datos = json_decode($data);
         curl_close($ch);
         //fin llamado de ws
-        $id=$this->uri->segment(3);
-//        $nilai=$this->login_model->obtieneUsuarios();
+        //$id=$this->uri->segment(3);
         $nilai=$datos->{'usuarios'};
-//        if (isset($datos->{'usuarios'})) {
-//            foreach($nilai as $h){
-//                echo "azul";
-//            }
-//        }
         $totn = 0;
         foreach($nilai as $h){
             $totn = $totn + 1;
         }
-        $heading=array('USUARIO','CLAVE','PERMISOS','NOMBRE','AP.PATERNO','AP.MATERNO','TEL.CASA','CELULAR');
+        $heading=array('USUARIO','CLAVE','PERMISOS','NOMBRE','AP.PATERNO','AP.MATERNO','TEL.CASA','CELULAR','SUCURSAL');
         $this->load->library('excel');
         //Create a new Object
         $objPHPExcel = new PHPExcel();
@@ -571,11 +595,12 @@ class Usuarios_controller extends CI_Controller {
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'usuario'});
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,"1");
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$n->{'permisos'});
-        $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'nombre'});
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'nombre'});
             $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$n->{'apellido_paterno'});
-        $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'apellido_materno'});
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'apellido_materno'});
             $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$n->{'telefono_casa'});
             $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,$n->{'telefono_celular'});
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$n->{'descripcionSucursal'});
             $row++;
             $no++;
         }
@@ -589,7 +614,7 @@ class Usuarios_controller extends CI_Controller {
                         )
                 )
         );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:H'.$maxrow)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('A1:I'.$maxrow)->applyFromArray($styleArray);
         //Save as an Excel BIFF (xls) file
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
         header('Content-Type: application/vnd.ms-excel');
