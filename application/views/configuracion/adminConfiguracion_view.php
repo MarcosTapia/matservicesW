@@ -15,36 +15,46 @@
     <link href='http://fonts.googleapis.com/css?family=Economica' rel='stylesheet' type='text/css'>
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
-  
-                <style type="text/css" title="currentStyle">
-			@import "<?php echo base_url();?>media/css/demo_page.css";
-			@import "<?php echo base_url();?>media/css/demo_table.css";
-		</style>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
-		<script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				$('#example').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-			$(document).ready(function() {
-				$('#example2').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-			$(document).ready(function() {
-				$('#tblSucursal').dataTable( {
-					"sPaginationType": "full_numbers"
-				} );
-			} );
-		</script>
+    <style type="text/css" title="currentStyle">
+            @import "<?php echo base_url();?>media/css/demo_page.css";
+            @import "<?php echo base_url();?>media/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+                $('#example').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+        $(document).ready(function() {
+                $('#example2').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+        $(document).ready(function() {
+                $('#tblSucursal').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );
+
+        function mensaje() {
+            if (document.getElementById('registroCorrecto').innerHTML != "") {
+                setTimeout(function(){ location.reload(); }, 1000);
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="mensaje()">
 <div class="container">
     <div class="row">
         <div class="col-md-12" style="border: 1px solid #FFF;border-color: red">
             <h3 style="text-align: center">Configuraci&oacute;n General del Sistema</h3>
+            <?php 
+                $correcto = $this->session->flashdata('correcto');
+                if ($correcto) { ?>
+            <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span>
+            <?php } ?>
         </div>
     </div>
     <div class="row">
@@ -188,16 +198,18 @@
                     <thead>
                         <tr>
                             <th>IVA</th>
+                                    <!-- Pendiente manejo de historico de proveedores
                             <th>Historial Proveedores</th>
                             <th>Elecci&oacute;n Precio</th>
-                            <th>Inventario</th>
+                                    Fin Pendiente manejo de historico de proveedores -->
+<!--                            <th>Inventario</th>
                             <th>Ventas</th>
                             <th>Compras</th>
                             <th>Consultas</th>
                             <th>Proveedores</th>
                             <th>Clientes</th>
                             <th>Empleados</th>
-                            <th>Empresa</th>
+                            <th>Empresa</th>-->
                             <th></th>
                         </tr>
                     </thead>
@@ -209,17 +221,19 @@
                             ?>
                                 <tr id="fila-<?php echo $fila->{'idSistema'} ?>">
                                     <td><?php echo $fila->{'ivaEmpresa'} ?></td>
-                                    
+                                    <!-- Pendiente manejo de historico de proveedores
                                     <td><?php echo $fila->{'historicoProveedores'} ?></td>
                                     <td><?php echo $fila->{'criterioHistoricoProveedores'} ?></td>
-                                    <td><?php echo $fila->{'camposInventario'} ?></td>
+                                    -->
+                                    
+<!--                                    <td><?php echo $fila->{'camposInventario'} ?></td>
                                     <td><?php echo $fila->{'camposVentas'} ?></td>
                                     <td><?php echo $fila->{'camposCompras'} ?></td>
                                     <td><?php echo $fila->{'camposConsultas'} ?></td>
                                     <td><?php echo $fila->{'camposProveedores'} ?></td>
                                     <td><?php echo $fila->{'camposClientes'} ?></td>
                                     <td><?php echo $fila->{'camposEmpleados'} ?></td>
-                                    <td><?php echo $fila->{'camposEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'camposEmpresa'} ?></td>-->
                                     
                                     <td>
                                         <a class="btn btn-xs btn-primary" href="actualizarSistema/<?php echo $fila->{'idSistema'} ?>">Editar</a>

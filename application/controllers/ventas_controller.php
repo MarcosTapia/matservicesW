@@ -129,8 +129,6 @@ class Ventas_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
-        $inventarios;
-        $i=0;
         return $datos->{'inventarios'};
     }
     

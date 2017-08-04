@@ -78,7 +78,6 @@
         if ($correcto) { ?>
     <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span><br>
     <?php } ?>
-
     <p>
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
     <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
@@ -141,7 +140,12 @@
                             <td><?php echo $fila->{'descripcionCategoria'} ?></td>-->
 
                             <td>
-                            <a href="actualizarInventario/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/modificar.ico" alt="Editar" title="Editar" /></a>
+                            <?php 
+                            if (($idSucursal==$fila->{'idSucursal'}) || ($usuario == "w4mpd")){ ?>
+                                <a href="actualizarInventario/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/modificar.ico" alt="Editar" title="Editar" /></a>
+                            <?php } else { ?>
+                                <a href="#"><img src="<?php echo base_url(); ?>/images/sistemaicons/nook.ico" alt="Editar" title="Editar" /></a>
+                            <?php } ?>
                             &nbsp;
                             <a href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>/<?php echo $fila->{'fotoProducto'} ?>"  onclick="javascript: return preguntar()"><img src="<?php echo base_url(); ?>/images/sistemaicons/borrar2.ico" alt="Borrar" title="Borrar" /></a>
                             &nbsp;

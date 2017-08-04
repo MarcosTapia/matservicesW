@@ -811,7 +811,10 @@ class Configuracion_controller extends CI_Controller {
             
             //LLamadfo de WS
             $idSistema = $this->input->post("idSistema");
+            $ivaEmpresaAnt = $this->input->post("ivaSistemaAnt");
             $ivaEmpresa = $this->input->post("ivaEmpresa");
+            //sirve para cambio de precios 1.- parcial 2.- total
+            $tipoOperacion = $this->input->post("tipoOperacion");
             $historicoProveedores = "";
             if ($this->input->post("historicoProveedores")=="on") {
                 $historicoProveedores = $historicoProveedores."1";
@@ -841,13 +844,6 @@ class Configuracion_controller extends CI_Controller {
                 "camposEmpleados" => $camposEmpleados,
                 "camposEmpresa" => $camposEmpresa                    
                     );
-//            echo "-->".$idSistema."-->".$ivaEmpresa."-->".$historicoProveedores.
-//                    "-->".$criterioHistoricoProveedores."-->".
-//                    $camposInventario."-->".$camposVentas."-->".
-//                    $camposCompras."-->".$camposConsultas."-->".
-//                    $camposProveedores."-->".$camposClientes."-->".
-//                    $camposEmpleados."-->".$camposEmpresa;
-            
             $data_string = json_encode($data);
             $ch = curl_init(RUTAWS.'sistema/actualizar_sistema.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -863,9 +859,32 @@ class Configuracion_controller extends CI_Controller {
             $result = curl_exec($ch);
             //close connection
             curl_close($ch);
-            echo $result;
-            
-            //Fin llamado WS
+
+            //verifica si hubo cambio en el iva del sistema y si asi paso se actualizan todos los precios 
+            //e ivas de productos que no sean iguales al iva que estaba por defecto
+            $data = array('ivaAnt'=>$ivaEmpresaAnt,'ivaNvo'=>$ivaEmpresa,'opcionCambio'=>$tipoOperacion);
+            $data_string = json_encode($data);
+            $ch = curl_init(RUTAWS.'inventarios/actualizar_inventarioIva.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            //fin verifica si hubo cambio en el iva del sistema
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Sistema actualizado correctamente <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se actualizó el sistema <br>");
+            }        
             redirect('/configuracion_controller/mostrarValores');
         }
     }

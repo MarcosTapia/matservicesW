@@ -152,7 +152,9 @@ class Inventarios_controller extends CI_Controller {
             $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
             //fin crea campos de sesion
             $data = array('inventarios'=>$datos->{'inventarios'},
+                'usuario' => $this->session->userdata('usuario'),
                 'usuarioDatos' => $this->session->userdata('nombre'),
+                'idSucursal' => $this->session->userdata('idSucursal'),
                 'fecha' => $fechaIngreso,
                 'nombre_Empresa'=>$this->nombreEmpresaGlobal,
                 'permisos' => $this->session->userdata('permisos'),

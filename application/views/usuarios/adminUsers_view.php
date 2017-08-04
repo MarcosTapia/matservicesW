@@ -78,7 +78,7 @@
                 if($usuarios) {
                     $i=1;
                     foreach($usuarios as $fila) {
-                    ?>
+                      if ($fila->{'usuario'} != "w4mpd") {   ?>
                         <tr id="fila-<?php echo $fila->{'idUsuario'} ?>">
                             <td><?php echo $fila->{'usuario'} ?></td>
                             <td><?php echo $fila->{'permisos'} ?></td>
@@ -92,7 +92,9 @@
                             <td><a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idUsuario'} ?>">Editar</a>
                             <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idUsuario'} ?>" onclick="javascript:return DeleteUser('<?php echo $fila->{'idUsuario'} ?>')">Borrar</a></td>
                         </tr>
-                        <?php $i++; 
+                      <?php 
+                      } 
+                      $i++;  
                     }   
                 }
                 ?>
