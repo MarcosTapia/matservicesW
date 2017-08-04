@@ -233,6 +233,8 @@ class Ventas_controller extends CI_Controller {
             'fecha' => $fechaIngreso,
             'iva' => $this->ivaEmpresaGlobal,
             'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+            'dirEmpresa' => $this->datosEmpresaGlobal[0]->{'direccionEmpresa'},
+            'rfcEmpresa' => $this->datosEmpresaGlobal[0]->{'rfcEmpresa'},
             'permisos' => $this->session->userdata('permisos'),
             'opcionClickeada' => '2',
             'temporalVtaCompras' => $this->temporalVtaCompras
