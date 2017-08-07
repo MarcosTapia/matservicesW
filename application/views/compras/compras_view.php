@@ -105,6 +105,53 @@
                 
             // Fin Armado final del json
             
+                //Pregunta si se quiere imprimir la venta
+            var r = confirm("¿Deseas imprimir la compra?");
+            if (r) {
+                var subtotalG = 0;
+                var ivaSistema = '<?php echo $sistema[0]->{'ivaGral'}; ?>';
+                var ivaG = 0;
+                var totalG = 0;
+                
+                $.each(compraJson.detalleTemporal, function(i, v) {
+                    <?php 
+                       //ciclo para comparar el codigo y sacar la descripcion del producto 
+                       foreach ($inventarios as $filaInv) { ?>
+                            // Verifica si existe coincidencia emtre codigo con algun producto
+                            if (v.codigo == <?php echo $filaInv->{'codigo'}; ?>) { 
+                                var table = document.getElementById("tblPrint");
+                                var noRenglones = table.rows.length;
+                                //alert(noRenglones);
+                                var row = table.insertRow(noRenglones);
+                                var cell0 = row.insertCell(0);
+                                var cell1 = row.insertCell(1);
+                                var cell2 = row.insertCell(2);
+                                var cell3 = row.insertCell(3);
+                                var cell4 = row.insertCell(4);
+                                row.id = ""+(noRenglones);
+
+                                cell0.innerHTML = v.cantidad; 
+                                cell1.innerHTML = "<?php echo $filaInv->{'descripcion'};?>";
+                                cell2.innerHTML = v.precio;
+                                cell3.innerHTML = v.descuento;
+                                cell4.innerHTML = v.total;
+                            } // Fin Verifica si existe coincidencia emtre codigo con algun producto
+                    <?php
+                       } // Fin ciclo para comparar el codigo y sacar la descripcion del producto 
+                    ?>
+                    subtotalG = subtotalG + parseFloat(v.total);
+                });
+                //fin funcion para recuperar venta temporal
+                document.getElementById('subTotalPrint').innerHTML = "&nbsp;&nbsp;Subtotal.- " + subtotalG.toFixed(2);
+                ivaG = (parseFloat(ivaSistema)/100) * subtotalG;
+                document.getElementById('ivaPrint').innerHTML = "&nbsp;&nbsp;Iva.- " + ivaG.toFixed(2);
+                document.getElementById('totalPrint').innerHTML = "&nbsp;&nbsp;Total.- " + (subtotalG + ivaG).toFixed(2);
+                document.getElementById('pagoPrint').innerHTML = "&nbsp;&nbsp;Pago.- " + document.getElementById('txtPago').value;
+                document.getElementById('cambioPrint').innerHTML = "&nbsp;&nbsp;Cambio.- " + document.getElementById('txtCambio').value;
+                printDiv("ticketPrint");
+            }
+                //Fin Pregunta si se quiere imprimir la venta
+            
             var dataString = JSON.stringify(compraJson);
             $.ajax({
                url: '<?php echo base_url();?>index.php/compras_controller/nuevoCompraFromFormulario',
@@ -270,7 +317,7 @@
         function totalesGenerales() {
             //obtiene totales generales
             var subtotalG = 0;
-            var ivaSistema = '<?php echo $iva; ?>';
+            var ivaSistema = '<?php echo $sistema[0]->{'ivaGral'}; ?>';
 //            alert('ivaSistema->'+ivaSistema);
             var ivaG = 0;
             var totalG = 0;
@@ -368,7 +415,7 @@
                         cell3.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='10' name='precio<?php echo $fila->{'idArticulo'};?>' id='precio<?php echo $fila->{'idArticulo'};?>' value='<?php echo $fila->{'precioCosto'};?>' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,1)' /></div></div>";
                         precio = <?php echo $fila->{'precioCosto'};?>;
                         cell4.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='cantidad<?php echo $fila->{'idArticulo'};?>' id='cantidad<?php echo $fila->{'idArticulo'};?>' value='1' onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,2)' /></div></div>";
-                        cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='<?php echo $iva;?>'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
+                        cell5.innerHTML = "<div class='form-group'><div class='input-group col-sm-4'><input type='text' size='5' name='descuento<?php echo $fila->{'idArticulo'};?>' id='descuento<?php echo $fila->{'idArticulo'};?>' value='0'  onkeypress='return validaDecimal(event,<?php echo $fila->{'idArticulo'};?>,3)' /></div></div>";
                         var total = parseFloat(precio) * parseFloat(document.getElementById('cantidad<?php echo $fila->{'idArticulo'};?>').value);
                         var descuento = total * (parseFloat(document.getElementById('descuento<?php echo $fila->{'idArticulo'};?>').value) / 100);
                         var totalArtP = total - descuento;
@@ -496,7 +543,15 @@
                }
             });	
         }
-        
+
+        function printDiv(nombreDiv) {
+             var contenido= document.getElementById(nombreDiv).innerHTML;
+             var contenidoOriginal= document.body.innerHTML;
+             document.body.innerHTML = contenido;
+             window.print();
+             document.body.innerHTML = contenidoOriginal;
+        }
+
     </script>
 </head>
 <body onload="recuperaCompraTemporal()">
@@ -504,6 +559,58 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
+                <div id="ticketPrint" name="ticketPrint" style="display:none">
+                    <br>
+                    <table>
+                        <tr>
+                            <td>
+                                <p id="nomEmpresa">&nbsp;&nbsp;<?php echo $nombre_Empresa; ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p id="dirEmpresa">&nbsp;&nbsp;<?php echo $dirEmpresa; ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p id="rfcEmpresa">&nbsp;&nbsp;<?php echo $rfcEmpresa; ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>&nbsp;&nbsp;No. Ticket de Compra: <?php echo $maxId; ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>&nbsp;&nbsp;Fecha: <?php 
+                                    $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+                                    $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+                                    echo $fechaIngreso; ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table id='tblPrint' name='tblPrint' style="font-style: italic;text-align: center;">
+                        <thead>
+                        <th style="text-align: center">&nbsp;&nbsp;Cantidad&nbsp;&nbsp;</th>
+                        <th style="text-align: center">&nbsp;&nbsp;Descripcion&nbsp;&nbsp;</th>
+                        <th style="text-align: center">&nbsp;&nbsp;Precio Unitario&nbsp;&nbsp;</th>
+                        <th style="text-align: center">&nbsp;&nbsp;% Descuento&nbsp;&nbsp;</th>
+                        <th style="text-align: center;border-bottom: #000;border-width: medium;">&nbsp;&nbsp;Total&nbsp;&nbsp;</th>
+                        </thead>
+                    </table>
+                    <br>
+                    <p id="subTotalPrint"></p>
+                    <p id="ivaPrint"></p>
+                    <p id="totalPrint"></p>
+                    <p id="pagoPrint"></p>
+                    <p id="cambioPrint"></p>
+                    <br>
+                    <p>&nbsp;&nbsp;Gracias. Fu&eacute; un placer atenderle</p>
+                </div>
+                
                 <table id="tblVenta" class="table table-striped" style="border: 1px solid #FFF;border-color: red">
                     <thead>
                         <tr style="background: #ffcccc">

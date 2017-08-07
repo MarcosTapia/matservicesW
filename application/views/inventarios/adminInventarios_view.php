@@ -102,7 +102,7 @@
                     <th>F.Ingreso</th>
                     <th>Proveed.</th>
                     <th>Categor&iacute;a</th>-->
-                    <th></th>
+                    <th></th><th></th><th></th><th></th><th></th><th></th>
                 </tr>
             </thead>
             <tbody>
@@ -146,15 +146,20 @@
                             <?php } else { ?>
                                 <a href="#"><img src="<?php echo base_url(); ?>/images/sistemaicons/nook.ico" alt="Editar" title="Editar" /></a>
                             <?php } ?>
-                            &nbsp;
+                            </td>
+                            <td>
                             <a href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>/<?php echo $fila->{'fotoProducto'} ?>"  onclick="javascript: return preguntar()"><img src="<?php echo base_url(); ?>/images/sistemaicons/borrar2.ico" alt="Borrar" title="Borrar" /></a>
-                            &nbsp;
+                            </td>
+                            <td>
                             <a href="muestraMovIndividual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/movimientos.ico" alt="Movimientos" title="Movimientos" /></a>
-                            &nbsp;
+                            </td>
+                            <td>
                             <a href="inventarioManual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/empresa.ico" alt="Inventario" title="Inventario" /></a>
-                            &nbsp;
+                            </td>
+                            <td>
                             <a href="detalleArticulo/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/lista.ico" alt="Detalles" title="Detalles" /></a>
-                            &nbsp;
+                            </td>
+                            <td>
                             <a href="generaCodigoBarras/<?php echo $fila->{'codigo'} ?>/<?php echo $fila->{'descripcion'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/cbarras.ico" alt="Generar Código de Barras" title="Generar Código de Barras" /></a>
                             </td>
                         </tr>
@@ -180,7 +185,7 @@
                     <th>F.Ingreso</th>
                     <th>Proveed.</th>
                     <th>Categor&iacute;a</th>-->
-                    <th></th>
+                    <th></th><th></th><th></th><th></th><th></th><th></th>
                 </tr>
             </tfoot>
         </table>

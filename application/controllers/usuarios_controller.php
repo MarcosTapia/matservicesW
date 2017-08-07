@@ -14,7 +14,7 @@ class Usuarios_controller extends CI_Controller {
         //para subir imagenes
         $this->load->helper("URL", "DATE", "URI", "FORM");
         $this->load->library('upload');
-        $this->load->model('mupload_model');    
+        //$this->load->model('mupload_model');    
         
         $this->sucursalesGlobal = $this->cargaDatosSucursales();
         $this->datosEmpresaGlobal = $this->cargaDatosEmpresa();
@@ -76,18 +76,22 @@ class Usuarios_controller extends CI_Controller {
     }
     
     function inicio() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        $data = array(
-                'permisos'=>$this->session->userdata('permisos'),
-                'usuarioDatos' => $this->session->userdata('nombre'),
-                'fecha' => $fechaIngreso,
-                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'opcionClickeada' => '0'
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('principal_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            $data = array(
+                    'permisos'=>$this->session->userdata('permisos'),
+                    'usuarioDatos' => $this->session->userdata('nombre'),
+                    'fecha' => $fechaIngreso,
+                    'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                    'opcionClickeada' => '0'
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('principal_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
     
     function verificaUsuario() {
@@ -138,9 +142,12 @@ class Usuarios_controller extends CI_Controller {
             $this->session->set_userdata('clave', $clave);					
             $this->session->set_userdata('idUsuario', $idUsuario);
             $this->session->set_userdata('idSucursal', $idSucursal);
+            $this->session->set_userdata('logueado', TRUE);
             
             $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
             $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            //$this->session->set_userdata('last_activity', $fechaIngreso);
+            //$this->session->set_userdata('fechaIngreso', $fechaIngreso);
             
             //fin crea campos de sesion
             $data = array('idUsuario'=>$idUsuario,
@@ -159,306 +166,201 @@ class Usuarios_controller extends CI_Controller {
             $this->load->view('principal_view',$data);
             $this->load->view('layouts/pie_view',$data);
         } else {
-            $data = array('error'=>'1');
-            //$this->load->view('login_view',$data);
-            redirect($this->index(),$data);
+            $this->session->set_flashdata('correcto', "Error. Vuelva a intentarlo.");
+            redirect($this->index());
         }
     }
     
     function mostrarUsuarios() {
-        # An HTTP GET request example
-        $url = RUTAWS.'usuarios/obtener_usuarios.php';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $datos = json_decode($data);
-        curl_close($ch);
-        $usuarios;
-        $i=0;
-        $data;
-        $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        if ($datos->{'estado'}==1) {
-            $data = array('usuarios'=>$datos->{'usuarios'},
-                'usuarioDatos' => $this->session->userdata('nombre'),
-                'fecha' => $fechaIngreso,
-                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'permisos' => $this->session->userdata('permisos'),
-                'opcionClickeada' => '7'
-                    );
-            $this->load->view('layouts/header_view',$data);
-            $this->load->view('usuarios/adminUsers_view',$data);
-            $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            # An HTTP GET request example
+            $url = RUTAWS.'usuarios/obtener_usuarios.php';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            $datos = json_decode($data);
+            curl_close($ch);
+            $usuarios;
+            $i=0;
+            $data;
+            $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal);
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            if ($datos->{'estado'}==1) {
+                $data = array('usuarios'=>$datos->{'usuarios'},
+                    'usuarioDatos' => $this->session->userdata('nombre'),
+                    'fecha' => $fechaIngreso,
+                    'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                    'permisos' => $this->session->userdata('permisos'),
+                    'opcionClickeada' => '7'
+                        );
+                $this->load->view('layouts/header_view',$data);
+                $this->load->view('usuarios/adminUsers_view',$data);
+                $this->load->view('layouts/pie_view',$data);
+            } else {
+                $this->load->view('layouts/header_view',$data);
+                $this->load->view('principal_view',$data);
+                $this->load->view('layouts/pie_view',$data);
+            }
         } else {
-            $this->load->view('layouts/header_view',$data);
-            $this->load->view('principal_view',$data);
-            $this->load->view('layouts/pie_view',$data);
+            redirect($this->cerrarSesion());
         }
     }
     
     function actualizarUsuario($idUsuario) {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        //Obtiene usuario por id
-        # An HTTP GET request example
-        $url = RUTAWS.'usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $datos = json_decode($data);
-        curl_close($ch);
-        if ($datos->{'estado'}==1) {
-            $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'sucursales' => $this->sucursalesGlobal,
-                'usuarioDatos' => $this->session->userdata('nombre'),
-                'fecha' => $fechaIngreso,
-                'permisos' => $this->session->userdata('permisos'),
-                'opcionClickeada' => '7'
-                    );
-            $this->load->view('layouts/header_view',$data);
-            $this->load->view('usuarios/actualizaUsuario_view',$data);
-            $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            //Obtiene usuario por id
+            # An HTTP GET request example
+            $url = RUTAWS.'usuarios/obtener_usuario_por_id.php?idUsuario='.$idUsuario;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            $datos = json_decode($data);
+            curl_close($ch);
+            if ($datos->{'estado'}==1) {
+                $data = array('usuario'=>$datos->{'usuario'},'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                    'sucursales' => $this->sucursalesGlobal,
+                    'usuarioDatos' => $this->session->userdata('nombre'),
+                    'fecha' => $fechaIngreso,
+                    'permisos' => $this->session->userdata('permisos'),
+                    'opcionClickeada' => '7'
+                        );
+                $this->load->view('layouts/header_view',$data);
+                $this->load->view('usuarios/actualizaUsuario_view',$data);
+                $this->load->view('layouts/pie_view',$data);
+            } else {
+                echo "error";
+            }
         } else {
-            echo "error";
+            redirect($this->cerrarSesion());
         }
     }
 
     function actualizarUsuarioFromFormulario()
     {
-        if ($this->input->post('submit')){
-            //procesado de permisos de usuario
-            $permisosUsuarioLocal = "";
-            //inventario
-            if ($this->input->post('chkInventario')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+        if ($this->is_logged_in()){
+            if ($this->input->post('submit')){
+                //procesado de permisos de usuario
+                $permisosUsuarioLocal = "";
+                //inventario
+                if ($this->input->post('chkInventario')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //ventas
+                if ($this->input->post('chkVentas')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Compras
+                if ($this->input->post('chkCompras')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Consultas
+                if ($this->input->post('chkConsultas')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Proveedores
+                if ($this->input->post('chkProveedores')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Clientes
+                if ($this->input->post('chkClientes')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Empleados
+                if ($this->input->post('chkEmpleados')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Configuracion
+                if ($this->input->post('chkConfiguracion')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //fin procesado de permisos de usuario
+
+                //LLamadfo de WS
+                $idUsuario = $this->input->post("idUsuario");
+                $usuario = $this->input->post("usuario");
+                $clave = $this->input->post("clave");
+                $claveAnt = $this->input->post("claveAnt");
+                if ($clave=="") {
+                    $clave = $claveAnt;
+                } else {
+                    $clave = md5($this->input->post("clave"));
+                }
+                $permisos = $permisosUsuarioLocal;
+                $nombre = $this->input->post("nombre");
+                $apellido_paterno = $this->input->post("apellido_paterno");
+                $apellido_materno = $this->input->post("apellido_materno");
+                $telefono_casa = $this->input->post("telefono_casa");
+                $telefono_celular = $this->input->post("telefono_celular");
+                $idSucursal = $this->input->post("sucursal");
+
+                $data = array("idUsuario" => $idUsuario, 
+                    "usuario" => $usuario, 
+                    "clave" => $clave, 
+                    "permisos" => $permisos, 
+                    "nombre" => $nombre, 
+                    "apellido_paterno" => $apellido_paterno, 
+                    "apellido_materno" => $apellido_materno, 
+                    "telefono_casa" => $telefono_casa, 
+                    "telefono_celular" => $telefono_celular,
+                    "idSucursal" => $idSucursal
+                        );
+                $data_string = json_encode($data);
+                $ch = curl_init(RUTAWS.'usuarios/actualizar_usuario.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                curl_close($ch);
+                $resultado = json_decode($result, true);
+                if ($resultado['estado']==1) {
+                    $this->session->set_flashdata('correcto', "Registro actualizado correctamente <br>");
+                } else {
+                    $this->session->set_flashdata('correcto', "Error. No se actualizó el registro <br>");
+                }        
+                redirect('/usuarios_controller/mostrarUsuarios');
             }
-            //ventas
-            if ($this->input->post('chkVentas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Compras
-            if ($this->input->post('chkCompras')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Consultas
-            if ($this->input->post('chkConsultas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Proveedores
-            if ($this->input->post('chkProveedores')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Clientes
-            if ($this->input->post('chkClientes')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Empleados
-            if ($this->input->post('chkEmpleados')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Configuracion
-            if ($this->input->post('chkConfiguracion')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //fin procesado de permisos de usuario
-            
-            //LLamadfo de WS
-            $idUsuario = $this->input->post("idUsuario");
-            $usuario = $this->input->post("usuario");
-            $clave = $this->input->post("clave");
-            $claveAnt = $this->input->post("claveAnt");
-            if ($clave=="") {
-                $clave = $claveAnt;
-            } else {
-                $clave = md5($this->input->post("clave"));
-            }
-            $permisos = $permisosUsuarioLocal;
-            $nombre = $this->input->post("nombre");
-            $apellido_paterno = $this->input->post("apellido_paterno");
-            $apellido_materno = $this->input->post("apellido_materno");
-            $telefono_casa = $this->input->post("telefono_casa");
-            $telefono_celular = $this->input->post("telefono_celular");
-            $idSucursal = $this->input->post("sucursal");
-            
-            $data = array("idUsuario" => $idUsuario, 
-                "usuario" => $usuario, 
-                "clave" => $clave, 
-                "permisos" => $permisos, 
-                "nombre" => $nombre, 
-                "apellido_paterno" => $apellido_paterno, 
-                "apellido_materno" => $apellido_materno, 
-                "telefono_casa" => $telefono_casa, 
-                "telefono_celular" => $telefono_celular,
-                "idSucursal" => $idSucursal
-                    );
-            $data_string = json_encode($data);
-            $ch = curl_init(RUTAWS.'usuarios/actualizar_usuario.php');
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_string))
-            );
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            //execute post
-            $result = curl_exec($ch);
-            //close connection
-            curl_close($ch);
-            $resultado = json_decode($result, true);
-            if ($resultado['estado']==1) {
-                $this->session->set_flashdata('correcto', "Registro actualizado correctamente <br>");
-            } else {
-                $this->session->set_flashdata('correcto', "Error. No se actualizó el registro <br>");
-            }        
-            redirect('/usuarios_controller/mostrarUsuarios');
+        } else {
+            redirect($this->cerrarSesion());
         }
     }
 
     function eliminarUsuario($idUsuario) {
-        $data = array("idUsuario" => $idUsuario);
-        $data_string = json_encode($data);
-        $ch = curl_init(RUTAWS.'usuarios/borrar_usuario.php');
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
-        );
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        //execute post
-        $result = curl_exec($ch);
-        //close connection
-        curl_close($ch);
-        $resultado = json_decode($result, true);
-        if ($resultado['estado']==1) {
-            $this->session->set_flashdata('correcto', "Registro eliminado correctamente <br>");
-        } else {
-            $this->session->set_flashdata('correcto', "Error. No se eliminó el registro <br>");
-        }        
-        redirect('/usuarios_controller/mostrarUsuarios');
-    }
-    
-    function nuevoUsuario() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'sucursales' => $this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '7'
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('usuarios/nuevoUsuario_view',$data);
-        $this->load->view('layouts/pie_view',$data);
-    }
-
-    function nuevoUsuarioFromFormulario()
-    {
-        if ($this->input->post('submit')){
-            //procesado de permisos de usuario
-            $permisosUsuarioLocal = "";
-            //inventario
-            if ($this->input->post('chkInventario')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //ventas
-            if ($this->input->post('chkVentas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Compras
-            if ($this->input->post('chkCompras')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Consultas
-            if ($this->input->post('chkConsultas')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Proveedores
-            if ($this->input->post('chkProveedores')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Clientes
-            if ($this->input->post('chkClientes')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Empleados
-            if ($this->input->post('chkEmpleados')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //Configuracion
-            if ($this->input->post('chkConfiguracion')=="on") {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."1";
-            } else {
-                $permisosUsuarioLocal = $permisosUsuarioLocal."0";
-            }
-            //fin procesado de permisos de usuario
-            
-            //LLamadfo de WS
-            $idUsuario = $this->input->post("idUsuario");
-            $usuario = $this->input->post("usuario");
-            $clave = md5($this->input->post("clave"));
-            $permisos = $permisosUsuarioLocal;
-            $nombre = $this->input->post("nombre");
-            $apellido_paterno = $this->input->post("apellido_paterno");
-            $apellido_materno = $this->input->post("apellido_materno");
-            $telefono_casa = $this->input->post("telefono_casa");
-            $telefono_celular = $this->input->post("telefono_celular");
-            $idSucursal = $this->input->post("sucursal");
-            
-            $data = array("idUsuario" => $idUsuario, 
-                "usuario" => $usuario, 
-                "clave" => $clave, 
-                "permisos" => $permisos, 
-                "nombre" => $nombre, 
-                "apellido_paterno" => $apellido_paterno, 
-                "apellido_materno" => $apellido_materno, 
-                "telefono_casa" => $telefono_casa, 
-                "telefono_celular" => $telefono_celular,
-                "idSucursal" => $idSucursal
-                    );
+        if ($this->is_logged_in()){
+            $data = array("idUsuario" => $idUsuario);
             $data_string = json_encode($data);
-            $ch = curl_init(RUTAWS.'usuarios/insertar_usuario.php');
+            $ch = curl_init(RUTAWS.'usuarios/borrar_usuario.php');
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -474,60 +376,115 @@ class Usuarios_controller extends CI_Controller {
             curl_close($ch);
             $resultado = json_decode($result, true);
             if ($resultado['estado']==1) {
-                $this->session->set_flashdata('correcto', "Registro guardado <br>");
+                $this->session->set_flashdata('correcto', "Registro eliminado correctamente <br>");
             } else {
-                $this->session->set_flashdata('correcto', "Error. No se guardó el registro <br>");
+                $this->session->set_flashdata('correcto', "Error. No se eliminó el registro <br>");
             }        
             redirect('/usuarios_controller/mostrarUsuarios');
+        } else {
+            redirect($this->cerrarSesion());
         }
     }
-    //Fin llamada a webservices de usuarios
     
-    //Importar desde Excel con libreria de PHPExcel
-    public function importarUsersExcel(){
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '7'
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('usuarios/importarUsersFromExcel_view',$data);
-        $this->load->view('layouts/pie_view',$data);
-    }        
+    function nuevoUsuario() {
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'sucursales' => $this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '7'
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('usuarios/nuevoUsuario_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
 
-    //Importar desde Excel con libreria de PHPExcel
-    public function importarExcel(){
-        //Cargar PHPExcel library
-        $this->load->library('excel');
-        $name   = $_FILES['excel']['name'];
-        $tname  = $_FILES['excel']['tmp_name'];
-        $obj_excel = PHPExcel_IOFactory::load($tname);       
-        $sheetData = $obj_excel->getActiveSheet()->toArray(null,true,true,true);
-        $arr_datos = array();
-        $result;
-        foreach ($sheetData as $index => $value) {            
-            if ( $index != 1 ){
-                $arr_datos = array(
-                        'usuario' => $value['A'],
-                        'clave' => $value['B'],
-                        'permisos' => $value['C'],
-                        'nombre' => $value['D'],
-                        'apellido_paterno' => $value['E'],
-                        'apellido_materno' => $value['F'],
-                        'telefono_casa' => $value['G'],
-                        'telefono_celular' => $value['H'],
-                        'idSucursal' => $value['I']
-                ); 
-                foreach ($arr_datos as $llave => $valor) {
-                    $arr_datos[$llave] = $valor;
+    function nuevoUsuarioFromFormulario()
+    {
+        if ($this->is_logged_in()){
+            if ($this->input->post('submit')){
+                //procesado de permisos de usuario
+                $permisosUsuarioLocal = "";
+                //inventario
+                if ($this->input->post('chkInventario')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
                 }
-                //$this->db->insert('usuarios',$arr_datos);
-                
-                //Llamada de ws para insertar
-                $data_string = json_encode($arr_datos);
+                //ventas
+                if ($this->input->post('chkVentas')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Compras
+                if ($this->input->post('chkCompras')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Consultas
+                if ($this->input->post('chkConsultas')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Proveedores
+                if ($this->input->post('chkProveedores')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Clientes
+                if ($this->input->post('chkClientes')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Empleados
+                if ($this->input->post('chkEmpleados')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //Configuracion
+                if ($this->input->post('chkConfiguracion')=="on") {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."1";
+                } else {
+                    $permisosUsuarioLocal = $permisosUsuarioLocal."0";
+                }
+                //fin procesado de permisos de usuario
+
+                //LLamadfo de WS
+                $idUsuario = $this->input->post("idUsuario");
+                $usuario = $this->input->post("usuario");
+                $clave = md5($this->input->post("clave"));
+                $permisos = $permisosUsuarioLocal;
+                $nombre = $this->input->post("nombre");
+                $apellido_paterno = $this->input->post("apellido_paterno");
+                $apellido_materno = $this->input->post("apellido_materno");
+                $telefono_casa = $this->input->post("telefono_casa");
+                $telefono_celular = $this->input->post("telefono_celular");
+                $idSucursal = $this->input->post("sucursal");
+
+                $data = array("idUsuario" => $idUsuario, 
+                    "usuario" => $usuario, 
+                    "clave" => $clave, 
+                    "permisos" => $permisos, 
+                    "nombre" => $nombre, 
+                    "apellido_paterno" => $apellido_paterno, 
+                    "apellido_materno" => $apellido_materno, 
+                    "telefono_casa" => $telefono_casa, 
+                    "telefono_celular" => $telefono_celular,
+                    "idSucursal" => $idSucursal
+                        );
+                $data_string = json_encode($data);
                 $ch = curl_init(RUTAWS.'usuarios/insertar_usuario.php');
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
@@ -542,98 +499,185 @@ class Usuarios_controller extends CI_Controller {
                 $result = curl_exec($ch);
                 //close connection
                 curl_close($ch);
-                //echo $result;
-            } 
-        }
-        $resultado = json_decode($result, true);
-        if ($resultado['estado']==1) {
-            $this->session->set_flashdata('correcto', "Registro guardado <br>");
+                $resultado = json_decode($result, true);
+                if ($resultado['estado']==1) {
+                    $this->session->set_flashdata('correcto', "Registro guardado <br>");
+                } else {
+                    $this->session->set_flashdata('correcto', "Error. No se guardó el registro <br>");
+                }        
+                redirect('/usuarios_controller/mostrarUsuarios');
+            }
         } else {
-            $this->session->set_flashdata('correcto', "Error. No se guardó el registro <br>");
-        }        
-        redirect('/usuarios_controller/mostrarUsuarios');
+            redirect($this->cerrarSesion());
+        }
+    }
+    //Fin llamada a webservices de usuarios
+    
+    //Importar desde Excel con libreria de PHPExcel
+    public function importarUsersExcel(){
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '7'
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('usuarios/importarUsersFromExcel_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }        
+
+    //Importar desde Excel con libreria de PHPExcel
+    public function importarExcel(){
+        if ($this->is_logged_in()){
+            //Cargar PHPExcel library
+            $this->load->library('excel');
+            $name   = $_FILES['excel']['name'];
+            $tname  = $_FILES['excel']['tmp_name'];
+            $obj_excel = PHPExcel_IOFactory::load($tname);       
+            $sheetData = $obj_excel->getActiveSheet()->toArray(null,true,true,true);
+            $arr_datos = array();
+            $result;
+            foreach ($sheetData as $index => $value) {            
+                if ( $index != 1 ){
+                    $arr_datos = array(
+                            'usuario' => $value['A'],
+                            'clave' => $value['B'],
+                            'permisos' => $value['C'],
+                            'nombre' => $value['D'],
+                            'apellido_paterno' => $value['E'],
+                            'apellido_materno' => $value['F'],
+                            'telefono_casa' => $value['G'],
+                            'telefono_celular' => $value['H'],
+                            'idSucursal' => $value['I']
+                    ); 
+                    foreach ($arr_datos as $llave => $valor) {
+                        $arr_datos[$llave] = $valor;
+                    }
+                    //$this->db->insert('usuarios',$arr_datos);
+
+                    //Llamada de ws para insertar
+                    $data_string = json_encode($arr_datos);
+                    $ch = curl_init(RUTAWS.'usuarios/insertar_usuario.php');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    //execute post
+                    $result = curl_exec($ch);
+                    //close connection
+                    curl_close($ch);
+                    //echo $result;
+                } 
+            }
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Registro guardado <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se guardó el registro <br>");
+            }        
+            redirect('/usuarios_controller/mostrarUsuarios');
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }        
     //Fin Importar desde Excel con libreria de PHPExcel
     
     //Exportar datos a Excel
     public function exportarExcel(){
-        //llamadod de ws
-        # An HTTP GET request example
-        $url = RUTAWS.'usuarios/obtener_usuarios.php';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $datos = json_decode($data);
-        curl_close($ch);
-        //fin llamado de ws
-        //$id=$this->uri->segment(3);
-        $nilai=$datos->{'usuarios'};
-        $totn = 0;
-        foreach($nilai as $h){
-            $totn = $totn + 1;
+        if ($this->is_logged_in()){
+            //llamadod de ws
+            # An HTTP GET request example
+            $url = RUTAWS.'usuarios/obtener_usuarios.php';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            $datos = json_decode($data);
+            curl_close($ch);
+            //fin llamado de ws
+            //$id=$this->uri->segment(3);
+            $nilai=$datos->{'usuarios'};
+            $totn = 0;
+            foreach($nilai as $h){
+                $totn = $totn + 1;
+            }
+            $heading=array('USUARIO','CLAVE','PERMISOS','NOMBRE','AP.PATERNO','AP.MATERNO','TEL.CASA','CELULAR','SUCURSAL');
+            $this->load->library('excel');
+            //Create a new Object
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getActiveSheet()->setTitle("Empleados");
+            //Loop Heading
+            $rowNumberH = 1;
+            $colH = 'A';
+            foreach($heading as $h){
+                $objPHPExcel->getActiveSheet()->setCellValue($colH.$rowNumberH,$h);
+                $colH++;    
+            }
+            //Loop Result
+            //$totn=$nilai->num_rows();
+            $maxrow=$totn+1;
+            $row = 2;
+            $no = 1;
+            foreach($nilai as $n){
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'usuario'});
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,"1");
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$n->{'permisos'});
+                $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'nombre'});
+                $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$n->{'apellido_paterno'});
+                $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'apellido_materno'});
+                $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$n->{'telefono_casa'});
+                $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,$n->{'telefono_celular'});
+                $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$n->{'descripcionSucursal'});
+                $row++;
+                $no++;
+            }
+            //Freeze pane
+            $objPHPExcel->getActiveSheet()->freezePane('A2');
+            //Cell Style
+            $styleArray = array(
+                    'borders' => array(
+                            'allborders' => array(
+                                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                            )
+                    )
+            );
+            $objPHPExcel->getActiveSheet()->getStyle('A1:I'.$maxrow)->applyFromArray($styleArray);
+            //Save as an Excel BIFF (xls) file
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="Empleados.xls"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit();
+        } else {
+            redirect($this->cerrarSesion());
         }
-        $heading=array('USUARIO','CLAVE','PERMISOS','NOMBRE','AP.PATERNO','AP.MATERNO','TEL.CASA','CELULAR','SUCURSAL');
-        $this->load->library('excel');
-        //Create a new Object
-        $objPHPExcel = new PHPExcel();
-        $objPHPExcel->getActiveSheet()->setTitle("Empleados");
-        //Loop Heading
-        $rowNumberH = 1;
-        $colH = 'A';
-        foreach($heading as $h){
-            $objPHPExcel->getActiveSheet()->setCellValue($colH.$rowNumberH,$h);
-            $colH++;    
-        }
-        //Loop Result
-        //$totn=$nilai->num_rows();
-        $maxrow=$totn+1;
-        $row = 2;
-        $no = 1;
-        foreach($nilai as $n){
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$n->{'usuario'});
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,"1");
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$n->{'permisos'});
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$n->{'nombre'});
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$n->{'apellido_paterno'});
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$n->{'apellido_materno'});
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$n->{'telefono_casa'});
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,$n->{'telefono_celular'});
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$n->{'descripcionSucursal'});
-            $row++;
-            $no++;
-        }
-        //Freeze pane
-        $objPHPExcel->getActiveSheet()->freezePane('A2');
-        //Cell Style
-        $styleArray = array(
-                'borders' => array(
-                        'allborders' => array(
-                                'style' => PHPExcel_Style_Border::BORDER_THIN
-                        )
-                )
-        );
-        $objPHPExcel->getActiveSheet()->getStyle('A1:I'.$maxrow)->applyFromArray($styleArray);
-        //Save as an Excel BIFF (xls) file
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel5');
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Empleados.xls"');
-        header('Cache-Control: max-age=0');
-        $objWriter->save('php://output');
-        exit();
     }	
     //fin exportar a excel
     
-    // Manejo de sesiones
-    function cerrarSesion() {            
-            if ($this->sistema_model->logout()) {
-                $data = array('error'=>'1');
-                redirect($this->index(),$data);
-            }
+    //**  Manejo de Sesiones
+    function cerrarSesion() {
+        $this->session->set_userdata('logueado',FALSE);
+        $this->session->sess_destroy();
+        $this->load->view('login_view');
     }
-    
-    //Fin Manejo de sesiones
+
+    function is_logged_in() {
+        return $this->session->userdata('logueado');
+    }
+    //**  Fin Manejo de Sesiones
     
     
 }

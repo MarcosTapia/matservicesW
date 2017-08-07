@@ -19,8 +19,16 @@
       <script src="js/html5shiv.js"></script>
       <script src="js/respond.min.js"></script>
     <![endif]-->
+    
+    <script>
+        function mensaje() {
+            if (document.getElementById('registroCorrecto').innerHTML != "") {
+                setTimeout(function(){ location.reload(); }, 1000);
+            }
+        }        
+    </script>        
 </head>
-<body>
+<body onload="mensaje()">
     <!-- start Login box -->
     <div class="container" id="login-block">
         <div class="row">
@@ -30,16 +38,20 @@
                         <h3 style="font-weight:bold;">INGRESO AL SISTEMA</h3>
                         <br />
                         <a href="#"><img src="<?php echo base_url(); ?>/images/login_logo.png" alt="Logo de la Empresa" /></a>
+<!--                        <a href="#"><img src="<?php echo base_url(); ?>/images/pos.jpg" alt="Logo de la Empresa" /></a>-->
                     </div> 
                     <hr />
                     <div class="login-form">
-                        <div class="alert alert-error hide">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <h4>Error!</h4>
-                             Your Error Message goes here
+                        <div>
+                            <?php 
+                                $correcto = $this->session->flashdata('correcto');
+                                if ($correcto) { ?>
+                            <span id="registroCorrecto" style="text-align: center;color:#ff6666;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $correcto ?></span><br><br>
+                            <?php 
+                            } ?>
                         </div>
                         <form action="<?php echo site_url();?>index.php/usuarios_controller/verificaUsuario" method="post"  >
-                            <input type="text" name="usuario" placeholder="Nombre de Usuario" required/> 
+                            <input type="text" name="usuario" placeholder="Nombre de Usuario" required autofocus/> 
                             <input type="password" name="clave" placeholder="Contraseña" required/> 
                             <button type="submit" class="btn btn-red">Ingresar</button> 
                         </form>	

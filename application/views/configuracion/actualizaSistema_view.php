@@ -40,12 +40,7 @@
         function confirmarCambio(e2) { 
             var tecla2 = (document.all) ? e2.keyCode : e2.which;
             if (tecla2 == 13){  
-                var r = confirm("¿Realmente deseas actualizar el sistema?");
-                if (r) {
-                    return true;
-                } else {
-                    return false;
-                }
+                document.getElementById('ivaGral').focus();
             }
             var patron2 = /^[0-9]*\.?[0-9]*$/;
             var tecla_final2 = String.fromCharCode(tecla2);
@@ -58,7 +53,29 @@
             }
             return patron2.test(tecla_final2);
        }
-       
+
+        function confirmarCambio2(e2) { 
+            var tecla2 = (document.all) ? e2.keyCode : e2.which;
+            if (tecla2 == 13){  
+                var r = confirm("¿Realmente deseas actualizar el sistema?");
+                if (r) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            var patron2 = /^[0-9]*\.?[0-9]*$/;
+            var tecla_final2 = String.fromCharCode(tecla2);
+            //alert(tecla_final2);
+            var cadena2 = "" + document.getElementById('ivaGral').value;
+            if (tecla_final2==".") {              
+                if (cadena2.indexOf(tecla_final2)!=-1) {
+                    return false;
+                }
+            }
+            return patron2.test(tecla_final2);
+       }
+
        function confirmarCambioSubmit(){
             var r = confirm("¿Realmente deseas actualizar el sistema?");
             if (r) {
@@ -117,7 +134,7 @@
             <br>
         </div>	
         <div class="col-md-6" style="border: 1px solid #FFF;border-color: red">
-            <form onsubmit="javascript: return confirmarCambioSubmit();" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/configuracion_controller/actualizarSistemaFromFormulario" method="post">
+            <form onsubmit="javascript: return confirmarCambioSubmit2();" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/configuracion_controller/actualizarSistemaFromFormulario" method="post">
                 <h4>Modificar Datos del Sistema</h4>
                 <input type="hidden" name="idSistema" id="idSistema" value="<?php echo $sistema->{'idSistema'}; ?>" />
                 <input type="hidden" name="ivaSistemaAnt" id="ivaSistemaAnt" value="<?php echo $sistema->{'ivaEmpresa'}; ?>" />
@@ -125,7 +142,7 @@
                 <div class="form-group">
                   <label class="control-label col-sm-2" for="ivaEmpresa">% Ganancia:</label>
                   <div class="col-sm-10">
-                      <input onkeypress="javascript: return confirmarCambio(event);" type="text" class="form-control" id="ivaEmpresa" name="ivaEmpresa" value="<?php echo $sistema->{'ivaEmpresa'}; ?>" placeholder="IVA">
+                      <input onkeypress="javascript: return confirmarCambio(event);" type="text" class="form-control" id="ivaEmpresa" name="ivaEmpresa" value="<?php echo $sistema->{'ivaEmpresa'}; ?>" placeholder="% Ganancia">
                   </div>					  
                 </div>
                 
@@ -139,6 +156,13 @@
                   </div>       
                 </div>       
 
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="ivaGral">Iva:</label>
+                  <div class="col-sm-10">
+                      <input onkeypress="javascript: return confirmarCambio2(event);" type="text" class="form-control" id="ivaGral" name="ivaGral" value="<?php echo $sistema->{'ivaGral'}; ?>" placeholder="Iva">
+                  </div>					  
+                </div>
+                
                 <!-- Para historico de proveedores... queda pendiente -->
                 <div class="form-group" style="display: none;">
                     <fieldset border="3">

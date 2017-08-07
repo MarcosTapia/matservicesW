@@ -97,7 +97,7 @@
             var r = confirm("¿Deseas imprimir la venta?");
             if (r) {
                 var subtotalG = 0;
-                var ivaSistema = 16;
+                var ivaSistema = '<?php echo $sistema[0]->{'ivaGral'}; ?>';
                 var ivaG = 0;
                 var totalG = 0;
                 
@@ -235,7 +235,7 @@
         function totalesGenerales() {
             //obtiene totales generales
             var subtotalG = 0;
-            var ivaSistema = 16;
+            var ivaSistema = '<?php echo $sistema[0]->{'ivaGral'}; ?>';
 //            alert('ivaSistema->'+ivaSistema);
             var ivaG = 0;
             var totalG = 0;
@@ -482,7 +482,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <p>&nbsp;&nbsp;No. Ticket: <?php echo $maxId; ?></p>
+                                <p>&nbsp;&nbsp;No. Ticket de Venta: <?php echo $maxId; ?></p>
                             </td>
                         </tr>
                         <tr>

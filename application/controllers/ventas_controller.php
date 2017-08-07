@@ -213,88 +213,97 @@ class Ventas_controller extends CI_Controller {
     }
     
     function ventaEnBlanco() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        //Obtiene el no de venta que le corresponde a la venta actual
-        $maxIdReg = $this->obtieneMaxIdVentas();
-        $maxId = 0;
-        $maxId = $maxIdReg[0]->{'idVenta'};        
-        $maxId++;        
-        //Fin Obtiene el no de venta que le corresponde a la venta actual
-        
-        $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'idSucursal' => $this->session->userdata('idSucursal'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'dirEmpresa' => $this->datosEmpresaGlobal[0]->{'direccionEmpresa'},
-            'rfcEmpresa' => $this->datosEmpresaGlobal[0]->{'rfcEmpresa'},
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '2',
-            'temporalVtaCompras' => $this->temporalVtaCompras
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('ventas/ventas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            //Obtiene el no de venta que le corresponde a la venta actual
+            $maxIdReg = $this->obtieneMaxIdVentas();
+            $maxId = 0;
+            $maxId = $maxIdReg[0]->{'idVenta'};        
+            $maxId++;        
+            //Fin Obtiene el no de venta que le corresponde a la venta actual
+
+            $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'idSucursal' => $this->session->userdata('idSucursal'),
+                'sistema'=>$this->sistemaGlobal,
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'dirEmpresa' => $this->datosEmpresaGlobal[0]->{'direccionEmpresa'},
+                'rfcEmpresa' => $this->datosEmpresaGlobal[0]->{'rfcEmpresa'},
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '2',
+                'temporalVtaCompras' => $this->temporalVtaCompras
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('ventas/ventas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
     
     function nuevoClienteFromFormulario(){
-        //LLamadfo de WS
-        $empresa = $this->input->post("empresa");
-        $nombre = $this->input->post("nombre");
-        $apellidos = $this->input->post("apellidos");
-        $telefono_casa = $this->input->post("telefono_casa");
-        $telefono_celular = $this->input->post("telefono_celular");
-        $direccion1 = $this->input->post("direccion1");
-        $direccion2 = $this->input->post("direccion2");
-        $rfc = $this->input->post("rfc");
-        $email = $this->input->post("email");
-        $ciudad = $this->input->post("ciudad");
-        $estado = $this->input->post("estado");
-        $cp = $this->input->post("cp");
-        $pais = $this->input->post("pais");
-        $comentarios = $this->input->post("comentarios");
-        $noCuenta = $this->input->post("noCuenta");
+        if ($this->is_logged_in()){
+            //LLamadfo de WS
+            $empresa = $this->input->post("empresa");
+            $nombre = $this->input->post("nombre");
+            $apellidos = $this->input->post("apellidos");
+            $telefono_casa = $this->input->post("telefono_casa");
+            $telefono_celular = $this->input->post("telefono_celular");
+            $direccion1 = $this->input->post("direccion1");
+            $direccion2 = $this->input->post("direccion2");
+            $rfc = $this->input->post("rfc");
+            $email = $this->input->post("email");
+            $ciudad = $this->input->post("ciudad");
+            $estado = $this->input->post("estado");
+            $cp = $this->input->post("cp");
+            $pais = $this->input->post("pais");
+            $comentarios = $this->input->post("comentarios");
+            $noCuenta = $this->input->post("noCuenta");
 
-        $data = array("empresa" => $empresa, 
-            "nombre" => $nombre,
-            "apellidos" => $apellidos,
-            "telefono_casa" => $telefono_casa,
-            "telefono_celular" => $telefono_celular,
-            "direccion1" => $direccion1,
-            "direccion2" => $direccion2,
-            "rfc" => $rfc,
-            "email" => $email,
-            "ciudad" => $ciudad,
-            "estado" => $estado,
-            "cp" => $cp,
-            "pais" => $pais,
-            "comentarios" => $comentarios,
-            "noCuenta" => $noCuenta
-                );
-        $data_string = json_encode($data);
-        $ch = curl_init(RUTAWS.'clientes/insertar_cliente.php');
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
-        );
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        //execute post
-        $result = curl_exec($ch);
-        //close connection
-        curl_close($ch);
-        //respuesta web service
-        echo json_encode(array('okdfds'=>'ok'));
+            $data = array("empresa" => $empresa, 
+                "nombre" => $nombre,
+                "apellidos" => $apellidos,
+                "telefono_casa" => $telefono_casa,
+                "telefono_celular" => $telefono_celular,
+                "direccion1" => $direccion1,
+                "direccion2" => $direccion2,
+                "rfc" => $rfc,
+                "email" => $email,
+                "ciudad" => $ciudad,
+                "estado" => $estado,
+                "cp" => $cp,
+                "pais" => $pais,
+                "comentarios" => $comentarios,
+                "noCuenta" => $noCuenta
+                    );
+            $data_string = json_encode($data);
+            $ch = curl_init(RUTAWS.'clientes/insertar_cliente.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            //respuesta web service
+            echo json_encode(array('okdfds'=>'ok'));
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
 
     function borraVentaTemporal() {
@@ -319,8 +328,7 @@ class Ventas_controller extends CI_Controller {
         //Fin borra datos anteriores de temporalVtaCompra
     }
 
-    function guardaVentaTemporal()
-    {
+    function guardaVentaTemporal(){
         $this->borraVentaTemporal();
         // Recibe Json
         $obj = json_decode($_POST["myData"]);
@@ -394,180 +402,183 @@ class Ventas_controller extends CI_Controller {
         return $datos->{'temporalVtaCompras'};
     }
     
-    function nuevoVentaFromFormulario()
-    {
-        //echo "<script language='javascript'>alert('Estas en controler de guardao de ventas');</script>";
-        // Recibe Json
-        $obj = json_decode($_POST["myData"]);
-        // Fin Recibe Json
-        
-        //LLamado de WS de registro de venta tabla ventas
-        $data_string = json_encode($obj);
-        $ch = curl_init(RUTAWS.'ventas/insertar_venta.php');
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
-        );
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        //execute post
-        $result = curl_exec($ch);
-        //close connection
-        curl_close($ch);
-        //printf("%s",$result);
-        //Fin LLamado de WS de registro de venta tabla ventas
-        
-        
-        //Registro de detalle de venta
-        
-        //descuenta cantidad vendida desde inventario
-        $idVenta = $obj->{'ticketVenta'}; // id de enlace con ventas
-        $idUsuario = $obj->{'idUsuario'}; // id de enlace con usuarios
-        $tipoOperacion = $obj->{'tipoOperacion'}; // tipo de operacion 1.-venta 2.- Regreso
-        $tipoOperacionTexto = "";
-        $factor = -1; //si es venta 1 si es regreso
-        if ($tipoOperacion==1) {
-            $tipoOperacionTexto = "Venta";
-        } else {
-            $tipoOperacionTexto = "Regreso";
-            $factor = 1;
-        }
-        $bandInicio = TRUE;
-        $cantidad = 0;
-        $fechaOperacion = $obj->{'fecha'}; // fecha de operacion
-        $existencuaInventario = 0;
-            // Ciclo que barre todo el json de detalle venta
-        foreach ($obj->detalleTemporal as $fila) {
-            //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
-            if ($bandInicio) {
-                $bandInicio = FALSE;
+    function nuevoVentaFromFormulario() {
+        if ($this->is_logged_in()){
+            //echo "<script language='javascript'>alert('Estas en controler de guardao de ventas');</script>";
+            // Recibe Json
+            $obj = json_decode($_POST["myData"]);
+            // Fin Recibe Json
+
+            //LLamado de WS de registro de venta tabla ventas
+            $data_string = json_encode($obj);
+            $ch = curl_init(RUTAWS.'ventas/insertar_venta.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            //printf("%s",$result);
+            //Fin LLamado de WS de registro de venta tabla ventas
+
+
+            //Registro de detalle de venta
+
+            //descuenta cantidad vendida desde inventario
+            $idVenta = $obj->{'ticketVenta'}; // id de enlace con ventas
+            $idUsuario = $obj->{'idUsuario'}; // id de enlace con usuarios
+            $tipoOperacion = $obj->{'tipoOperacion'}; // tipo de operacion 1.-venta 2.- Regreso
+            $tipoOperacionTexto = "";
+            $factor = -1; //si es venta 1 si es regreso
+            if ($tipoOperacion==1) {
+                $tipoOperacionTexto = "Venta";
             } else {
-                $idArticulo = $fila->{'idArticulo'};
-                $precio = $fila->{'precio'};
-                $cantidad = $fila->{'cantidad'};
-                $descuento = $fila->{'descuento'};
-                //Arma nuevo json solo con el detalle actual y datos necesarios
-                $dataDetalleVenta = array("idVenta" => $idVenta, 
-                    "idArticulo" => $idArticulo, 
-                    "precio" => $precio, 
-                    "cantidad" => $cantidad, 
-                    "descuento" => $descuento
-                        );
-                $data_string = json_encode($dataDetalleVenta);  
-                unset($dataDetalleVenta);
-                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
-
-                //LLamado de WS de registro de detalle de venta tabla detalleventas
-                $ch = curl_init(RUTAWS.'detalleventas/insertar_detalleventa.php');
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data_string))
-                );
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-                //execute post
-                $result = curl_exec($ch);
-                //close connection
-                //printf("%s",$result);
-                curl_close($ch);
-                //Fin llaamado de WS de registro de detalle de venta tabla detalleventas
-                
-                //Arma nuevo json solo con el detalle actual y datos necesarios
-                $cantidad = $fila->{'cantidad'} * $factor;
-                $dataMovimiento = array(
-                    "idArticulo" => $idArticulo, 
-                    "idUsuario" => $idUsuario, 
-                    "tipoOperacion" => $tipoOperacionTexto,
-                    "cantidad" => $cantidad, 
-                    "fechaOperacion" => $fechaOperacion
-                        );
-                $data_string = json_encode($dataMovimiento);  
-                unset($dataDetalleVenta);
-                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
-                //LLamado de WS de registro de movimientos tabla movimientos
-                $ch = curl_init(RUTAWS.'movimientos/insertar_movimiento.php');
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data_string))
-                );
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-                //execute post
-                $result = curl_exec($ch);
-                //close connection
-                //printf("%s",$result);
-                curl_close($ch);
-                //LLamado de WS de registro de movimientos tabla movimientos
-
-                // Alteracion en el inventario segun el tipo de operacion
-                    //Obtiene producto por id
-                # An HTTP GET request example
-                $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $data = curl_exec($ch);
-                $datosProd = json_decode($data);
-                curl_close($ch);
-                if ($datosProd->{'estado'}==1) {
-                    $existencuaInventario = $datosProd->{'inventario'}->{'existencia'};
+                $tipoOperacionTexto = "Regreso";
+                $factor = 1;
+            }
+            $bandInicio = TRUE;
+            $cantidad = 0;
+            $fechaOperacion = $obj->{'fecha'}; // fecha de operacion
+            $existencuaInventario = 0;
+                // Ciclo que barre todo el json de detalle venta
+            foreach ($obj->detalleTemporal as $fila) {
+                //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
+                if ($bandInicio) {
+                    $bandInicio = FALSE;
                 } else {
-                    echo "Ajusta el inventario manualmente, error al consultar producto";
-                }
-                // se realiza ajuste de inventario
-                $existencuaInventario = $existencuaInventario + $cantidad;
-                $datosProd->{'inventario'}->{'existencia'} = $existencuaInventario;
-                $data = array("idArticulo" => $idArticulo,
-                    "existencia" => $existencuaInventario
-                        );
-                $data_string = json_encode($data);
-                $ch = curl_init(RUTAWS.'inventarios/ajusta_inventario.php');
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data_string))
-                );
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-                //execute post
-                $result = curl_exec($ch);
-                //close connection
-                curl_close($ch);
-                    // fin se realiza ajuste de inventario
-                // Fin Alteracion en el inventario segun el tipo de operacion
+                    $idArticulo = $fila->{'idArticulo'};
+                    $precio = $fila->{'precio'};
+                    $cantidad = $fila->{'cantidad'};
+                    $descuento = $fila->{'descuento'};
+                    //Arma nuevo json solo con el detalle actual y datos necesarios
+                    $dataDetalleVenta = array("idVenta" => $idVenta, 
+                        "idArticulo" => $idArticulo, 
+                        "precio" => $precio, 
+                        "cantidad" => $cantidad, 
+                        "descuento" => $descuento
+                            );
+                    $data_string = json_encode($dataDetalleVenta);  
+                    unset($dataDetalleVenta);
+                    //Fin Arma nuevo json solo con el detalle actual y datos necesarios
 
-                //Fin de Registro de detalle de venta
+                    //LLamado de WS de registro de detalle de venta tabla detalleventas
+                    $ch = curl_init(RUTAWS.'detalleventas/insertar_detalleventa.php');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    //execute post
+                    $result = curl_exec($ch);
+                    //close connection
+                    //printf("%s",$result);
+                    curl_close($ch);
+                    //Fin llaamado de WS de registro de detalle de venta tabla detalleventas
+
+                    //Arma nuevo json solo con el detalle actual y datos necesarios
+                    $cantidad = $fila->{'cantidad'} * $factor;
+                    $dataMovimiento = array(
+                        "idArticulo" => $idArticulo, 
+                        "idUsuario" => $idUsuario, 
+                        "tipoOperacion" => $tipoOperacionTexto,
+                        "cantidad" => $cantidad, 
+                        "fechaOperacion" => $fechaOperacion
+                            );
+                    $data_string = json_encode($dataMovimiento);  
+                    unset($dataDetalleVenta);
+                    //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+                    //LLamado de WS de registro de movimientos tabla movimientos
+                    $ch = curl_init(RUTAWS.'movimientos/insertar_movimiento.php');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    //execute post
+                    $result = curl_exec($ch);
+                    //close connection
+                    //printf("%s",$result);
+                    curl_close($ch);
+                    //LLamado de WS de registro de movimientos tabla movimientos
+
+                    // Alteracion en el inventario segun el tipo de operacion
+                        //Obtiene producto por id
+                    # An HTTP GET request example
+                    $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$idArticulo;
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $data = curl_exec($ch);
+                    $datosProd = json_decode($data);
+                    curl_close($ch);
+                    if ($datosProd->{'estado'}==1) {
+                        $existencuaInventario = $datosProd->{'inventario'}->{'existencia'};
+                    } else {
+                        echo "Ajusta el inventario manualmente, error al consultar producto";
+                    }
+                    // se realiza ajuste de inventario
+                    $existencuaInventario = $existencuaInventario + $cantidad;
+                    $datosProd->{'inventario'}->{'existencia'} = $existencuaInventario;
+                    $data = array("idArticulo" => $idArticulo,
+                        "existencia" => $existencuaInventario
+                            );
+                    $data_string = json_encode($data);
+                    $ch = curl_init(RUTAWS.'inventarios/ajusta_inventario.php');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    //execute post
+                    $result = curl_exec($ch);
+                    //close connection
+                    curl_close($ch);
+                        // fin se realiza ajuste de inventario
+                    // Fin Alteracion en el inventario segun el tipo de operacion
+
+                    //Fin de Registro de detalle de venta
+                }
             }
+                // Fin Ciclo que barre todo el json de detalle venta
+            echo "Venta Registrada";
+
+
+            //redirect('/ventas_controller/ventaEnBlanco');
+        } else {
+            redirect($this->cerrarSesion());
         }
-            // Fin Ciclo que barre todo el json de detalle venta
-        echo "Venta Registrada";
-             
-            
-        //redirect('/ventas_controller/ventaEnBlanco');
     }
     
-    // Manejo de sesiones
-    function cerrarSesion() {            
-            if ($this->sistema_model->logout()) {
-                $data = array('error'=>'1');
-                redirect($this->index(),$data);
-            }
+    //**  Manejo de Sesiones
+    function cerrarSesion() {
+        $this->session->set_userdata('logueado',FALSE);
+        $this->session->sess_destroy();
+        $this->load->view('login_view');
     }
-    
-    //Fin Manejo de sesiones
-    
-    
+
+    function is_logged_in() {
+        return $this->session->userdata('logueado');
+    }
+    //**  Fin Manejo de Sesiones
 }
 

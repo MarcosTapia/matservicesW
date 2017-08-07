@@ -197,7 +197,8 @@
                 <table class="table table-striped" style="border: 1px solid #FFF;border-color: red">
                     <thead>
                         <tr>
-                            <th>IVA</th>
+                            <th>% Ganancia Gral.</th>
+                            <th>Iva Gral.</th>
                                     <!-- Pendiente manejo de historico de proveedores
                             <th>Historial Proveedores</th>
                             <th>Elecci&oacute;n Precio</th>
@@ -220,7 +221,9 @@
                             foreach($sistemas as $fila) {
                             ?>
                                 <tr id="fila-<?php echo $fila->{'idSistema'} ?>">
+                                    <!-- ivaEmpresa=ganancia por articulo, ivaGral iva del gobierno -->
                                     <td><?php echo $fila->{'ivaEmpresa'} ?></td>
+                                    <td><?php echo $fila->{'ivaGral'} ?></td>
                                     <!-- Pendiente manejo de historico de proveedores
                                     <td><?php echo $fila->{'historicoProveedores'} ?></td>
                                     <td><?php echo $fila->{'criterioHistoricoProveedores'} ?></td>

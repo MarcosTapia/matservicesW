@@ -44,3 +44,4 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('CONSTPRUEBA', 'DIOS ES COMPASIVO');
 
 define('RUTAWS','http://localhost/matserviceswsok/matservsthread1/');
+//define('RUTAWS','http://www.prefecomiguelhidalgo.org.mx/ms/matserviceswsok/matservsthread1/');

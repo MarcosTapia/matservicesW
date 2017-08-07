@@ -245,297 +245,330 @@ class Consultas_controller extends CI_Controller {
     }
     
     function inicioConsultas() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 0
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 0
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
 
     function movInventario() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>$this->movimientosGlobal,
-            'vtasGral'=>NULL,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 1
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>$this->movimientosGlobal,
+                'vtasGral'=>NULL,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 1
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
 
     function vtasGral() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>NULL,
-            'vtasGral'=>$this->vtasGralGlobal,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 2
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'vtasGral'=>$this->vtasGralGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 2
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
     
     function consultaDetalle($idVenta) {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        # An HTTP GET request example
-        $url = RUTAWS.'detalleventas/obtener_detalleventa_por_id.php?idVenta='.$idVenta;
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $datos = json_decode($data);
-        curl_close($ch);
-        $ventas;
-        //Fin muestra valores de categorias
-        
-        $data = array('detalleVenta'=>$datos->{'detalleVentas'}, 
-            'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>NULL,
-            'vtasGral'=>$this->vtasGralGlobal,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 3
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            # An HTTP GET request example
+            $url = RUTAWS.'detalleventas/obtener_detalleventa_por_id.php?idVenta='.$idVenta;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            $datos = json_decode($data);
+            curl_close($ch);
+            $ventas;
+            //Fin muestra valores de categorias
+
+            $data = array('detalleVenta'=>$datos->{'detalleVentas'}, 
+                'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'vtasGral'=>$this->vtasGralGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 3
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
     
     function consultaVentasPorFechas() {
-        //echo "azul".$this->input->post('fIni')."azul".$this->input->post('fFin');
-        $fIni;
-        $fFin;
-        if (($this->input->post('fIni') == "") || ($this->input->post('fFin') == "")) {
-            $fIni = $this->input->post('fIni2');
-            $fFin = $this->input->post('fFin2');
+        if ($this->is_logged_in()){
+            //echo "azul".$this->input->post('fIni')."azul".$this->input->post('fFin');
+            $fIni;
+            $fFin;
+            if (($this->input->post('fIni') == "") || ($this->input->post('fFin') == "")) {
+                $fIni = $this->input->post('fIni2');
+                $fFin = $this->input->post('fFin2');
+            } else {
+                $fIni = $this->input->post('fIni');
+                $fFin = $this->input->post('fFin');
+            }
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            # An HTTP GET request example
+            $url = RUTAWS.'ventas/obtener_venta_por_fechas.php?fIni='.$fIni.'&fFin='.$fFin;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+    //        printf("%s",$data);
+            $datos = json_decode($data);
+            curl_close($ch);
+            $ventas;
+            $data = array('ventasPorFecha'=>$datos->{'ventas'}, 
+                'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'vtasGral'=>NULL,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 4
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
         } else {
-            $fIni = $this->input->post('fIni');
-            $fFin = $this->input->post('fFin');
+            redirect($this->cerrarSesion());
         }
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        # An HTTP GET request example
-        $url = RUTAWS.'ventas/obtener_venta_por_fechas.php?fIni='.$fIni.'&fFin='.$fFin;
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-//        printf("%s",$data);
-        $datos = json_decode($data);
-        curl_close($ch);
-        $ventas;
-        $data = array('ventasPorFecha'=>$datos->{'ventas'}, 
-            'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>NULL,
-            'vtasGral'=>NULL,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 4
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
     }
     
     function comprasGral() {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>NULL,
-            'comprasGral'=>$this->comprasGralGlobal,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 5
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'comprasGral'=>$this->comprasGralGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 5
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
 
     function consultaDetalleCompra($idCompra) {
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        # An HTTP GET request example
-        $url = RUTAWS.'detallecompras/obtener_detallecompra_por_id.php?idCompra='.$idCompra;
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $datos = json_decode($data);
-//        printf("%s",$data);
-        curl_close($ch);
-        $compras;
-        $data = array('detalleCompra'=>$datos->{'detalleCompras'}, 
-            'detalleVenta'=>NULL,
-            'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>NULL,
-            'vtasGral'=>$this->vtasGralGlobal,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 6
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            # An HTTP GET request example
+            $url = RUTAWS.'detallecompras/obtener_detallecompra_por_id.php?idCompra='.$idCompra;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            $datos = json_decode($data);
+    //        printf("%s",$data);
+            curl_close($ch);
+            $compras;
+            $data = array('detalleCompra'=>$datos->{'detalleCompras'}, 
+                'detalleVenta'=>NULL,
+                'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'vtasGral'=>$this->vtasGralGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 6
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
     }
     
     function consultaComprasPorFechas() {
-        $fIni;
-        $fFin;
-        if (($this->input->post('fIniC') == "") || ($this->input->post('fFinC') == "")) {
-            $fIni = $this->input->post('fIniC2');
-            $fFin = $this->input->post('fFinC2');
+        if ($this->is_logged_in()){
+            $fIni;
+            $fFin;
+            if (($this->input->post('fIniC') == "") || ($this->input->post('fFinC') == "")) {
+                $fIni = $this->input->post('fIniC2');
+                $fFin = $this->input->post('fFinC2');
+            } else {
+                $fIni = $this->input->post('fIniC');
+                $fFin = $this->input->post('fFinC');
+            }
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            # An HTTP GET request example
+            $url = RUTAWS.'compras/obtener_compra_por_fechas.php?fIni='.$fIni.'&fFin='.$fFin;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+    //        printf("%s",$data);
+            $datos = json_decode($data);
+            curl_close($ch);
+            $compras;
+            $data = array('comprasPorFecha'=>$datos->{'compras'}, 
+                'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'vtasGral'=>NULL,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 7
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
         } else {
-            $fIni = $this->input->post('fIniC');
-            $fFin = $this->input->post('fFinC');
-        }
-        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-        
-        // Obtiene el idUsuario sesionado
-        $idUsuarioActual = $this->session->userdata('idUsuario');
-        // Fin Obtiene el idUsuario sesionado
-        
-        # An HTTP GET request example
-        $url = RUTAWS.'compras/obtener_compra_por_fechas.php?fIni='.$fIni.'&fFin='.$fFin;
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-//        printf("%s",$data);
-        $datos = json_decode($data);
-        curl_close($ch);
-        $compras;
-        $data = array('comprasPorFecha'=>$datos->{'compras'}, 
-            'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
-            'proveedores'=>$this->proveedoresGlobal,
-            'movimientos'=>NULL,
-            'vtasGral'=>NULL,
-            'categorias'=>$this->categoriasGlobal,
-            'sucursales'=>$this->sucursalesGlobal,
-            'usuarioDatos' => $this->session->userdata('nombre'),
-            'fecha' => $fechaIngreso,
-            'iva' => $this->ivaEmpresaGlobal,
-            'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-            'permisos' => $this->session->userdata('permisos'),
-            'opcionClickeada' => '4',
-            'eleccion' => 7
-            );
-        $this->load->view('layouts/header_view',$data);
-        $this->load->view('consultas/adminConsultas_view',$data);
-        $this->load->view('layouts/pie_view',$data);
-    }
-    
-    // Manejo de sesiones
-    function cerrarSesion() {            
-        if ($this->sistema_model->logout()) {
-            $data = array('error'=>'1');
-            redirect($this->index(),$data);
+            redirect($this->cerrarSesion());
         }
     }
     
-    //Fin Manejo de sesiones
-    
+    //**  Manejo de Sesiones
+    function cerrarSesion() {
+        $this->session->set_userdata('logueado',FALSE);
+        $this->session->sess_destroy();
+        $this->load->view('login_view');
+    }
+
+    function is_logged_in() {
+        return $this->session->userdata('logueado');
+    }
+    //**  Fin Manejo de Sesiones
  }
 
