@@ -82,7 +82,9 @@
     <a class="btn btn-xs btn-success" href="nuevoInventario">Nuevo</a>
     <a class="btn btn-xs btn-success" href="importarInventariosExcel">Importar desde Excel</a>
     <a class="btn btn-xs btn-success" href="exportarInventarioExcel">Exportar a Excel</a>
+    <!-- Bloqueado hasta revision exaustiva
     <a class="btn btn-xs btn-success" id="ligaSeleccionMultiple" href="" onclick="seleccionMuliple();">Edici&oacute;n M&uacute;ltiple</a>
+    -- Fin Bloqueado hasta revision exaustiva --!>
     <div class="table-responsive">     
         <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
             <thead>
@@ -147,9 +149,16 @@
                                 <a href="#"><img src="<?php echo base_url(); ?>/images/sistemaicons/nook.ico" alt="Editar" title="Editar" /></a>
                             <?php } ?>
                             </td>
+                            
                             <td>
+                            <?php 
+                            if (($idSucursal==$fila->{'idSucursal'}) || ($usuario == "w4mpd")){ ?>
                             <a href="eliminarInventario/<?php echo $fila->{'idArticulo'} ?>/<?php echo $fila->{'fotoProducto'} ?>"  onclick="javascript: return preguntar()"><img src="<?php echo base_url(); ?>/images/sistemaicons/borrar2.ico" alt="Borrar" title="Borrar" /></a>
+                            <?php } else { ?>
+                            <a href="#"><img src="<?php echo base_url(); ?>/images/sistemaicons/nook.ico" alt="Borrar" title="Borrar" /></a>
+                            <?php } ?>
                             </td>
+                            
                             <td>
                             <a href="muestraMovIndividual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/movimientos.ico" alt="Movimientos" title="Movimientos" /></a>
                             </td>

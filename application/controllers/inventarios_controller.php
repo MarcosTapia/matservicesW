@@ -512,8 +512,10 @@ class Inventarios_controller extends CI_Controller {
     }        
 
     //Importar desde Excel con libreria de PHPExcel
+    private $regsNoImportados = array();    
     public function importarInventarioExcel(){
         if ($this->is_logged_in()){
+            //variable de registros no importados
             //Cargar PHPExcel library
             $this->load->library('excel');
             $name   = $_FILES['excel']['name'];
@@ -521,6 +523,8 @@ class Inventarios_controller extends CI_Controller {
             $obj_excel = PHPExcel_IOFactory::load($tname);       
             $sheetData = $obj_excel->getActiveSheet()->toArray(null,true,true,true);
             $arr_datos = array();
+            $i = 0;
+            $regsNoImportados = array();    
             foreach ($sheetData as $index => $value) {            
                 if ( $index != 1 ){
                     $arr_datos = array(
@@ -558,15 +562,66 @@ class Inventarios_controller extends CI_Controller {
                     $result = curl_exec($ch);
                     //close connection
                     curl_close($ch);
-    //                echo $result;
-    //                echo "<br>";
+                    
+            //para informe de registros no importados        
+            $resultado = json_decode($result, true);
+            if (($resultado['estado']=="") || ($resultado['estado']==2)) {
+                $this->regsNoImportados[$i]['codigo'] = $value['A'];
+                $this->regsNoImportados[$i]['descripcion'] = $value['B'];
+                $this->regsNoImportados[$i]['precioCosto'] = $value['C'];
+                $this->regsNoImportados[$i]['precioUnitario'] = $value['D'];
+                $this->regsNoImportados[$i]['porcentajeImpuesto'] = $value['E'];
+                $this->regsNoImportados[$i]['existencia'] = $value['F'];
+                $this->regsNoImportados[$i]['existenciaMinima'] = $value['G'];
+                $this->regsNoImportados[$i]['ubicacion'] = $value['H'];
+                $this->regsNoImportados[$i]['fechaIngreso'] = $value['I'];
+                $this->regsNoImportados[$i]['proveedor'] = $value['J'];
+                $this->regsNoImportados[$i]['categoria'] = $value['K'];
+                $this->regsNoImportados[$i]['sucursal'] = $value['L'];
+                $this->regsNoImportados[$i]['nombre_img'] = $value['M'];
+                $this->regsNoImportados[$i]['observaciones'] = $value['N'];
+            }    
+            $i++;
+//            echo $regsNoImportados[0]['descripcion'];
+            //Fin para informe de registros no importados        
+                    
                 } 
             }
-            redirect('/inventarios_controller/mostrarInventarios');
+            
+            //para informe de registros no importados
+            if ($this->regsNoImportados[0]['descripcion']!="") {
+                //redirect('/inventarios_controller/erroresImportacionF/'.$regsNoImportados);
+                redirect($this->erroresImportacionF());
+                //redirect($this->erroresImportacionF($regsNoImportados));
+            } else {
+                redirect('/inventarios_controller/mostrarInventarios');
+            }
+            //Fin para informe de registros no importados        
         } else {
             redirect($this->cerrarSesion());
         }
     }        
+    
+//    function erroresImportacionF($regsNoImportados) {
+    function erroresImportacionF() {
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+            $data = array('nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'sucursales' => $this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'permisos' => $this->session->userdata('permisos'),
+                'regsNoImportados' => $this->regsNoImportados,
+                'opcionClickeada' => '7'
+                    );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('inventarios/erroresImportacion_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
     //Fin Importar desde Excel con libreria de PHPExcel
     
     //Exportar datos a Excel

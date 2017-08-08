@@ -12,7 +12,7 @@
 			</div>		
 			<div class="col-sm-5">	
                             <br>
-                            <h4 style="text-align: center">Importar Empleados</h4>
+                            <h4 style="text-align: center">Importar Productos</h4>
                             <br>
                             <form method='post' action='importarInventarioExcel' enctype='multipart/form-data'>
                                     <input type='file' name='excel' />    
