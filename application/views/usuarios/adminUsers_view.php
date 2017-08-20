@@ -62,6 +62,7 @@
         <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
             <thead>
                 <tr>
+                    <th>Id Emp.</th>
                     <th>Usuario</th>
                     <th>Permisos</th>
                     <th>Nombre</th>
@@ -80,6 +81,7 @@
                     foreach($usuarios as $fila) {
                       if ($fila->{'usuario'} != "w4mpd") {   ?>
                         <tr id="fila-<?php echo $fila->{'idUsuario'} ?>">
+                            <td><?php echo $fila->{'idUsuario'} ?></td>
                             <td><?php echo $fila->{'usuario'} ?></td>
                             <td><?php echo $fila->{'permisos'} ?></td>
                             <td><?php echo $fila->{'nombre'} ?></td>
@@ -101,6 +103,7 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <th>Id Emp.</th>
                     <th>Usuario</th>
                     <th>Permisos</th>
                     <th>Nombre</th>

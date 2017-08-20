@@ -51,64 +51,78 @@
                                 <th>existenciaMinima</th>
                                 <th>ubicacion</th>
                                 <th>fechaIngreso</th>
-                                <th>proveedor</th>
-                                <th>categoria</th>
-                                <th>Sucursal</th>
-                                <th>nombre_img</th>
                                 <th>observaciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            if($regsNoImportados) {
-                                foreach($regsNoImportados as $fila) {
+                                $file = fopen("errores_importacion.txt", "r");
+                                $cont=0;
+                                $regArray = array('','','','','','','','','');
+                                while(!feof($file)) {
+                                    $registro = fgets($file);
+                                    $regArray = explode("|",$registro);
+                                    if ($cont<count($regArray)) {
+                                        echo "<tr>";
+                                        if ( ! isset($regArray[0])) {
+                                            $regArray[0] = null;
+                                        }
+                                        echo "<td>".$regArray{'0'}."</td>";
+
+                                        if ( ! isset($regArray[1])) {
+                                            $regArray[1] = null;
+                                        }
+                                        echo "<td>".$regArray{'1'}."</td>";
+
+                                        if ( ! isset($regArray[2])) {
+                                            $regArray[2] = null;
+                                        }
+                                        echo "<td>".$regArray[2]."</td>";
+
+                                        if ( ! isset($regArray[3])) {
+                                            $regArray[3] = null;
+                                        }
+                                        echo "<td>".$regArray[3]."</td>";
+
+                                        if ( ! isset($regArray[4])) {
+                                            $regArray[4] = null;
+                                        }
+                                        echo "<td>".$regArray[4]."</td>";
+
+                                        if ( ! isset($regArray[5])) {
+                                            $regArray[5] = null;
+                                        }
+                                        echo "<td>".$regArray[5]."</td>";
+
+                                        if ( ! isset($regArray[6])) {
+                                            $regArray[6] = null;
+                                        }
+                                        echo "<td>".$regArray[6]."</td>";
+
+                                        if ( ! isset($regArray[7])) {
+                                            $regArray[7] = null;
+                                        }
+                                        echo "<td>".$regArray[7]."</td>";
+
+                                        if ( ! isset($regArray[8])) {
+                                            $regArray[8] = null;
+                                        }
+                                        echo "<td>".$regArray[8]."</td>";
+
+                                        if ( ! isset($regArray[9])) {
+                                            $regArray[9 ] = null;
+                                        }
+                                        echo "<td>".$regArray[9]."</td>";
+                                        echo "</tr>";
+                                    }
+                                    $cont++;
+                                }
+                                fclose($file);
+                                $file = fopen("errores_importacion.txt", "w");
+                                fclose($file);
                                 ?>
-                                    <tr>
-                                        <td>
-                                            <?php echo $fila['codigo'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['descripcion'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['precioCosto'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['precioUnitario'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['porcentajeImpuesto'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['existencia'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['existenciaMinima'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['ubicacion'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['fechaIngreso'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['proveedor'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['categoria'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['sucursal'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['nombre_img'];?>
-                                        </td>
-                                        <td>
-                                            <?php echo $fila['observaciones'];?>
-                                        </td>
-                                    </tr>
-                          <?php } 
-                            } ?>   
+                          <?php 
+                            ?>   
                         </tbody>
                         <tfoot>
                             <tr>
@@ -121,10 +135,6 @@
                                 <th>existenciaMinima</th>
                                 <th>ubicacion</th>
                                 <th>fechaIngreso</th>
-                                <th>proveedor</th>
-                                <th>categoria</th>
-                                <th>Sucursal</th>
-                                <th>nombre_img</th>
                                 <th>observaciones</th>
                             </tr>
                         </tfoot>

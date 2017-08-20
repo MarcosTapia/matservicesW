@@ -75,6 +75,7 @@
                             noCuenta                 
                             -->
 
+                            <th>IdCliente</th>
                             <th>Empresa</th>
                             <th>Nom.Repres.</th>
                             <th>Apellidos</th>
@@ -100,6 +101,7 @@
                             foreach($clientes as $fila) {
                             ?>
                                 <tr id="fila-<?php echo $fila->{'idCliente'} ?>">
+                                    <td><?php echo $fila->{'idCliente'} ?></td>
                                     <td><?php echo $fila->{'empresa'} ?></td>
                                     <td><?php echo $fila->{'nombre'} ?></td>
                                     <td><?php echo $fila->{'apellidos'} ?></td>
@@ -126,6 +128,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>IdCliente</th>
                             <th>Empresa</th>
                             <th>Nom.Repres.</th>
                             <th>Apellidos</th>

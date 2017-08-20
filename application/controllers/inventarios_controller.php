@@ -512,19 +512,26 @@ class Inventarios_controller extends CI_Controller {
     }        
 
     //Importar desde Excel con libreria de PHPExcel
-    private $regsNoImportados = array();    
+//    private $regsNoImportados = array();    
     public function importarInventarioExcel(){
         if ($this->is_logged_in()){
             //variable de registros no importados
-            //Cargar PHPExcel library
-            $this->load->library('excel');
-            $name   = $_FILES['excel']['name'];
-            $tname  = $_FILES['excel']['tmp_name'];
-            $obj_excel = PHPExcel_IOFactory::load($tname);       
-            $sheetData = $obj_excel->getActiveSheet()->toArray(null,true,true,true);
-            $arr_datos = array();
-            $i = 0;
-            $regsNoImportados = array();    
+            //Cargar PHPExcel library con manejo de excepciones
+            try {
+                $this->load->library('excel');
+                $name   = $_FILES['excel']['name'];
+                $tname  = $_FILES['excel']['tmp_name'];
+                $obj_excel = PHPExcel_IOFactory::load($tname);       
+                $sheetData = $obj_excel->getActiveSheet()->toArray(null,true,true,true);
+                $arr_datos = array();
+                $i = 0;
+                $regsNoImportados = array();    
+            } catch (Exception $e) {
+                //echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+                $this->session->set_flashdata('correcto', 'Error al importar, '
+                        . 'ingresa a otra opcion y vuelve a intentarlo. <br>');
+            }
+            $erroresImportacion = 0;
             foreach ($sheetData as $index => $value) {            
                 if ( $index != 1 ){
                     $arr_datos = array(
@@ -563,36 +570,29 @@ class Inventarios_controller extends CI_Controller {
                     //close connection
                     curl_close($ch);
                     
-            //para informe de registros no importados        
-            $resultado = json_decode($result, true);
-            if (($resultado['estado']=="") || ($resultado['estado']==2)) {
-                $this->regsNoImportados[$i]['codigo'] = $value['A'];
-                $this->regsNoImportados[$i]['descripcion'] = $value['B'];
-                $this->regsNoImportados[$i]['precioCosto'] = $value['C'];
-                $this->regsNoImportados[$i]['precioUnitario'] = $value['D'];
-                $this->regsNoImportados[$i]['porcentajeImpuesto'] = $value['E'];
-                $this->regsNoImportados[$i]['existencia'] = $value['F'];
-                $this->regsNoImportados[$i]['existenciaMinima'] = $value['G'];
-                $this->regsNoImportados[$i]['ubicacion'] = $value['H'];
-                $this->regsNoImportados[$i]['fechaIngreso'] = $value['I'];
-                $this->regsNoImportados[$i]['proveedor'] = $value['J'];
-                $this->regsNoImportados[$i]['categoria'] = $value['K'];
-                $this->regsNoImportados[$i]['sucursal'] = $value['L'];
-                $this->regsNoImportados[$i]['nombre_img'] = $value['M'];
-                $this->regsNoImportados[$i]['observaciones'] = $value['N'];
-            }    
-            $i++;
-//            echo $regsNoImportados[0]['descripcion'];
-            //Fin para informe de registros no importados        
-                    
+                    //para informe de registros no importados        
+                    $resultado = json_decode($result, true);
+                    //echo "-->".$resultado['estado']."<br>";
+                    if (($resultado['estado']=="") || ($resultado['estado']==2)) {
+                        $erroresImportacion = 1;
+                        $this->regsNoImportados[$i]['descripcion'] = $value['B'];
+                        $file = fopen("errores_importacion.txt", "a");
+                        fwrite($file, $value['A']."|".$value['B']."|".$value['C'].
+                                "|".$value['D']."|".$value['E']."|".$value['F'].
+                                "|".$value['G']."|".$value['H']."|".$value['I'].
+                                "|".$value['J']."|".$value['K']."|".$value['L'].
+                                "|".$value['M']."|".$value['N']."|".PHP_EOL);
+                        fclose($file);                
+                    }    
+                    $i++;
+                    //Fin para informe de registros no importados        
                 } 
             }
-            
             //para informe de registros no importados
-            if ($this->regsNoImportados[0]['descripcion']!="") {
-                //redirect('/inventarios_controller/erroresImportacionF/'.$regsNoImportados);
+            if ($erroresImportacion == 1) {
+                redirect('/inventarios_controller/erroresImportacionF');
                 redirect($this->erroresImportacionF());
-                //redirect($this->erroresImportacionF($regsNoImportados));
+                redirect($this->erroresImportacionF($regsNoImportados));
             } else {
                 redirect('/inventarios_controller/mostrarInventarios');
             }
@@ -612,7 +612,7 @@ class Inventarios_controller extends CI_Controller {
                 'usuarioDatos' => $this->session->userdata('nombre'),
                 'fecha' => $fechaIngreso,
                 'permisos' => $this->session->userdata('permisos'),
-                'regsNoImportados' => $this->regsNoImportados,
+                //'regsNoImportados' => $regsNoImportados,
                 'opcionClickeada' => '7'
                     );
             $this->load->view('layouts/header_view',$data);
@@ -627,12 +627,6 @@ class Inventarios_controller extends CI_Controller {
     //Exportar datos a Excel
     public function exportarInventarioExcel(){
         if ($this->is_logged_in()){
-            //hash php para incluid proveedores
-    //        $fruits = array (
-    //            "fruits"  => array("a" => "Orange", "b" => "Banana", "c" => "Apple"),
-    //        );
-    //        echo $fruits["fruits"]["b"];        
-            //fin hash para incluir proveedores
             //llamadod de ws
             # An HTTP GET request example
             $url = RUTAWS.'inventarios/obtener_inventarios.php';

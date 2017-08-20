@@ -163,7 +163,12 @@
                             <a href="muestraMovIndividual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/movimientos.ico" alt="Movimientos" title="Movimientos" /></a>
                             </td>
                             <td>
+                            <?php 
+                            if (($idSucursal==$fila->{'idSucursal'}) || ($usuario == "w4mpd")){ ?>
                             <a href="inventarioManual/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/empresa.ico" alt="Inventario" title="Inventario" /></a>
+                            <?php } else { ?>
+                            <a href="#"><img src="<?php echo base_url(); ?>/images/sistemaicons/nook.ico" alt="Inventario" title="Inventario" /></a>
+                            <?php } ?>
                             </td>
                             <td>
                             <a href="detalleArticulo/<?php echo $fila->{'idArticulo'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/lista.ico" alt="Detalles" title="Detalles" /></a>

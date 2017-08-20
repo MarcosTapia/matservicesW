@@ -949,7 +949,12 @@ class Configuracion_controller extends CI_Controller {
             //echo $result;
 
             //Fin llamado WS
-    //            redirect('contenido4');
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Registro eliminado correctamente <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se eliminó el registro <br>");
+            }        
             redirect('/configuracion_controller/mostrarValores');
         } else {
             redirect($this->cerrarSesion());
@@ -977,7 +982,12 @@ class Configuracion_controller extends CI_Controller {
             //echo $result;
 
             //Fin llamado WS
-    //            redirect('contenido4');
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Registro eliminado correctamente <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se eliminó el registro <br>");
+            }        
             redirect('/configuracion_controller/mostrarValores');
         } else {
             redirect($this->cerrarSesion());

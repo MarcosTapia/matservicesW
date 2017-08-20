@@ -38,23 +38,33 @@
                 } );
         } );
 
+        function preguntar() {
+            var conf = confirm("¿Seguro que quieres eliminar?");
+            if (conf == false) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        
         function mensaje() {
             if (document.getElementById('registroCorrecto').innerHTML != "") {
                 setTimeout(function(){ location.reload(); }, 1000);
             }
         }
+        
     </script>
 </head>
 <body onload="mensaje()">
 <div class="container">
-    <div class="row">
-        <div class="col-md-12" style="border: 1px solid #FFF;border-color: red">
-            <h3 style="text-align: center">Configuraci&oacute;n General del Sistema</h3>
             <?php 
                 $correcto = $this->session->flashdata('correcto');
                 if ($correcto) { ?>
-            <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span>
+    <span id="registroCorrecto" style="color:blue;"><?= $correcto ?><br></span>
             <?php } ?>
+    <div class="row">
+        <div class="col-md-12" style="border: 1px solid #FFF;border-color: red">
+            <h3 style="text-align: center">Configuraci&oacute;n General del Sistema</h3>
         </div>
     </div>
     <div class="row">
@@ -81,9 +91,27 @@
                                 <tr id="fila-<?php echo $fila->{'idCategoria'} ?>">
                                     <td><?php echo $fila->{'idCategoria'} ?></td>
                                     <td><?php echo $fila->{'descripcionCategoria'} ?></td>
-
+                                    <?php
+                                        if ($fila->{'idCategoria'}!=1) { ?>
                                     <td><a class="btn btn-xs btn-primary" href="actualizarCategoria/<?php echo $fila->{'idCategoria'} ?>">Editar</a>
-                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarCategoria/<?php echo $fila->{'idCategoria'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                                    <?php
+                                        } else { 
+                                    ?>
+                                    <td><a class="btn btn-xs btn-primary" href="#">Editar</a>
+                                    <?php    
+                                       } 
+                                    ?>
+                                        
+                                    <?php
+                                        if ($fila->{'idCategoria'}!=1) { ?>
+                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarCategoria/<?php echo $fila->{'idCategoria'} ?>" onclick="javascript:return preguntar();">Borrar</a></td>
+                                    <?php
+                                        } else { 
+                                    ?>
+                                    <a class='btn btn-xs btn-danger' href="#" >Borrar</a></td>
+                                    <?php    
+                                       } 
+                                    ?>
                                 </tr>
                                 <?php $i++; 
                             }   
@@ -122,9 +150,27 @@
                                 <tr id="fila-<?php echo $fila->{'idSucursal'} ?>">
                                     <td><?php echo $fila->{'idSucursal'} ?></td>
                                     <td><?php echo $fila->{'descripcionSucursal'} ?></td>
-
+                                    <?php
+                                        if ($fila->{'idSucursal'}!=1) { ?>
                                     <td><a class="btn btn-xs btn-primary" href="actualizarSucursal/<?php echo $fila->{'idSucursal'} ?>">Editar</a>
-                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarSucursal/<?php echo $fila->{'idSucursal'} ?>" onclick="preguntar(<?php echo $i ?>)">Borrar</a></td>
+                                    <?php
+                                        } else { 
+                                    ?>
+                                    <td><a class="btn btn-xs btn-primary" href="#">Editar</a>
+                                    <?php    
+                                       } 
+                                    ?>
+                                        
+                                    <?php
+                                        if ($fila->{'idSucursal'}!=1) { ?>
+                                    <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarSucursal/<?php echo $fila->{'idSucursal'} ?>" onclick="javascript:return preguntar();">Borrar</a></td>
+                                    <?php
+                                        } else { 
+                                    ?>
+                                    <a class='btn btn-xs btn-danger' href="#" >Borrar</a></td>
+                                    <?php    
+                                       } 
+                                    ?>
                                 </tr>
                                 <?php $i++; 
                             }   

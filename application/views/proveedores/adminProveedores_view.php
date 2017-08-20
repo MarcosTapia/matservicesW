@@ -74,6 +74,7 @@
                             noCuenta                 
                             -->
 
+                            <th>IdProv.</th>
                             <th>Empresa</th>
                             <th>Nom.Repres.</th>
                             <th>Apellidos</th>
@@ -99,6 +100,7 @@
                             foreach($proveedores as $fila) {
                             ?>
                                 <tr id="fila-<?php echo $fila->{'idProveedor'} ?>">
+                                    <td><?php echo $fila->{'idProveedor'} ?></td>
                                     <td><?php echo $fila->{'empresa'} ?></td>
                                     <td><?php echo $fila->{'nombre'} ?></td>
                                     <td><?php echo $fila->{'apellidos'} ?></td>
@@ -125,6 +127,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>IdProv.</th>
                             <th>Empresa</th>
                             <th>Nom.Repres.</th>
                             <th>Apellidos</th>
