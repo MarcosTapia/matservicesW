@@ -64,6 +64,11 @@
                         "sPaginationType": "full_numbers"
                 } );
         } );            
+        $(document).ready(function() {
+                $('#example8').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );            
     </script>
     <script language="javascript">
         function verificaSeleccion() {
@@ -101,6 +106,10 @@
                 case '7' : $('#compras1').toggle(2);
                          document.getElementById("compras1_1").className = "seleccion";
                          document.getElementById("contenido7").style.display = "block";
+                         break;
+                case '8' : $('#vtas1').toggle(2);
+                         document.getElementById("vtas1_2").className = "seleccion";
+                         document.getElementById("contenido8").style.display = "block";
                          break;
             }
         }
@@ -143,6 +152,12 @@
 <body onload="verificaSeleccion()">
 <div class="container">
     <div class="row">
+        <?php 
+            $correcto = $this->session->flashdata('correcto');
+            if ($correcto) { ?>
+        <span id="registroCorrecto" style="color:blue;"><?= $correcto ?></span>
+        <?php } ?>
+                
         <div class="col-md-3"> <!-- Menu-->
             <div class="span3">
                 <div class="well">
@@ -157,6 +172,7 @@
                             <li><label class="tree-toggle nav-list">Ventas</label>
                                 <ul class="nav nav-list tree" id="vtas1">
                                     <li id="vtas1_1"><a href="<?php echo base_url(); ?>index.php/consultas_controller/vtasGral">General</a></li>
+                                    <li id="vtas1_2"><a href="<?php echo base_url(); ?>index.php/consultas_controller/consultaPedidos">Pedidos</a></li>
                                 </ul>
                             </li>
                             <li><label class="tree-toggle nav-list">Compras</label>
@@ -556,10 +572,61 @@
                 <br><br><br><br>
             </div> <!-- Fin Div consulta Compras por Fechas -->
             
+            <div id="contenido8" style="display:none;">  <!-- Div consulta Pedidos -->
+                <p><a class="btn btn-xs btn-success" href="nuevoUsuario">Nuevo Empleado</a>
+                <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
+                <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a></p>
+                <div class="table-responsive">     
+                    <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example8">
+                        <thead>
+                            <tr>
+                                <th>idPedido</th>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Usuario</th>
+                                <th>Observaciones</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if($pedidos) {
+                                $i=1;
+                                foreach($pedidos as $fila) {
+                                ?>
+                                    <tr id="fila-<?php echo $fila->{'idPedido'} ?>">
+                                        <td><?php echo $fila->{'idPedido'} ?></td>
+                                        <td><?php echo $fila->{'fecha'} ?></td>
+                                        <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
+                                        <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
+                                        <td><?php echo $fila->{'observaciones'} ?></td>
+                                        <td><a class="btn btn-xs btn-primary" href="consultaDetalle/<?php echo $fila->{'idPedido'} ?>">Ver Detalle</a>
+                                        <a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idPedido'} ?>">Editar</a>
+                                        <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idPedido'} ?>" onclick="javascript:return DeleteUser('<?php echo $fila->{'idPedido'} ?>')">Borrar</a></td>
+                                    </tr>
+                                    <?php $i++; 
+                                }   
+                            }
+                            ?>
+                                    
+                                    
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>idPedido</th>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Usuario</th>
+                                <th>Observaciones</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>  <!-- Div consulta Pedidos -->
             
-            <div id="contenido8" style="display:none;">
-                Contenido 8
-            </div>
+            
+            
             <div id="contenido9" style="display:none;">
                 Contenido 9
             </div>

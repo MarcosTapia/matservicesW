@@ -12,6 +12,7 @@ class Consultas_controller extends CI_Controller {
     private $movimientosGlobal;
     private $vtasGralGlobal;
     private $comprasGralGlobal;
+    private $pedidoGlobal;
     
     function __construct(){
         parent::__construct();
@@ -38,6 +39,25 @@ class Consultas_controller extends CI_Controller {
         $this->movimientosGlobal = $this->cargaDatosMovimientos();
         $this->vtasGralGlobal = $this->cargaDatosVtasGralGlobal();
         $this->comprasGralGlobal = $this->cargaDatosComprasGralGlobal();
+        $this->pedidoGlobal = $this->cargaDatosPedidosGralGlobal();
+    }
+    
+    function cargaDatosPedidosGralGlobal() {
+        //muestra valores de categorias
+        # An HTTP GET request example
+        $url = RUTAWS.'ventas/obtener_pedidos.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        //print_r($data);
+        curl_close($ch);
+        $pedidos;
+        $i=0;
+        //Fin muestra valores de categorias
+        return $datos->{'pedidos'};
     }
     
     function cargaDatosEmpresa() {
@@ -133,7 +153,7 @@ class Consultas_controller extends CI_Controller {
         $i=0;
         return $datos->{'inventarios'};
     }
-    
+
     function cargaDatosClientes() {
         # An HTTP GET request example
         $url = RUTAWS.'clientes/obtener_clientes.php';
@@ -550,6 +570,39 @@ class Consultas_controller extends CI_Controller {
                 'permisos' => $this->session->userdata('permisos'),
                 'opcionClickeada' => '4',
                 'eleccion' => 7
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
+    
+    function consultaPedidos() {
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            $data = array('idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'pedidos'=>$this->pedidoGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'ventasPorFecha'=>NULL,
+                'vtasGral'=>$this->vtasGralGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 8
                 );
             $this->load->view('layouts/header_view',$data);
             $this->load->view('consultas/adminConsultas_view',$data);
