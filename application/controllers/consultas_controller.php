@@ -612,6 +612,50 @@ class Consultas_controller extends CI_Controller {
         }
     }
     
+    function consultaDetallePedidos($idPedido) {
+        if ($this->is_logged_in()){
+            $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+            $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+
+            // Obtiene el idUsuario sesionado
+            $idUsuarioActual = $this->session->userdata('idUsuario');
+            // Fin Obtiene el idUsuario sesionado
+
+            # An HTTP GET request example
+            $url = RUTAWS.'ventas/obtener_detallepedido_por_id.php?idPedido='.$idPedido;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = curl_exec($ch);
+            $datos = json_decode($data);
+//            print_r($data);
+            curl_close($ch);
+            //Fin muestra valores de categorias
+
+            $data = array('detallePedido'=>$datos->{'detallePedidos'}, 
+                'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
+                'proveedores'=>$this->proveedoresGlobal,
+                'movimientos'=>NULL,
+                'vtasGral'=>$this->vtasGralGlobal,
+                'categorias'=>$this->categoriasGlobal,
+                'sucursales'=>$this->sucursalesGlobal,
+                'usuarioDatos' => $this->session->userdata('nombre'),
+                'fecha' => $fechaIngreso,
+                'iva' => $this->ivaEmpresaGlobal,
+                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                'permisos' => $this->session->userdata('permisos'),
+                'opcionClickeada' => '4',
+                'eleccion' => 9
+                );
+            $this->load->view('layouts/header_view',$data);
+            $this->load->view('consultas/adminConsultas_view',$data);
+            $this->load->view('layouts/pie_view',$data);
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
+    
     //**  Manejo de Sesiones
     function cerrarSesion() {
         $this->session->set_userdata('logueado',FALSE);

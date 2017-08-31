@@ -1,22 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title><?php if ($nombre_Empresa != "") { echo $nombre_Empresa; }?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="distributor" content="Global" />
-    <meta itemprop="contentRating" content="General" />
-    <meta name="robots" content="All" />
-    <meta name="revisit-after" content="7 days" />
-    <meta name="description" content="The source of truly unique and awesome jquery plugins." />
-    <meta name="keywords" content="slider, carousel, responsive, swipe, one to one movement, touch devices, jquery, plugin, bootstrap compatible, html5, css3" />
-    <meta name="author" content="w3widgets.com">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='http://fonts.googleapis.com/css?family=Economica' rel='stylesheet' type='text/css'>
-    <!-- Bootstrap -->
-    <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="<?php echo base_url(); ?>js/bootstrap3-typeahead.min.js" type="text/javascript"></script>		
+    <script src="<?php echo base_url(); ?>js/bootstrap3-typeahead.min.js" type="text/javascript"></script>
     <!-- Para ventana modal -->
     <script type="text/javascript" src="<?php echo base_url();?>bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>js/script.js"></script>
@@ -456,157 +439,183 @@
         }
         
     </script>
-</head>
 <body onload="recuperaVentaTemporal()" >
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <div id="ticketPrint" name="ticketPrint" style="display:none">
-                    <br>
-                    <table>
-                        <tr>
-                            <td>
-                                <p id="nomEmpresa">&nbsp;&nbsp;<?php echo $nombre_Empresa; ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p id="dirEmpresa">&nbsp;&nbsp;<?php echo $dirEmpresa; ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p id="rfcEmpresa">&nbsp;&nbsp;<?php echo $rfcEmpresa; ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>&nbsp;&nbsp;No. Ticket de Venta: <?php echo $maxId; ?></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>&nbsp;&nbsp;Fecha: <?php 
-                                    $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
-                                    $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
-                                    echo $fechaIngreso; ?></p>
-                            </td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table id='tblPrint' name='tblPrint' style="font-style: italic;text-align: center;">
+    <?php //para saber si es venta o pedido
+    if ($letrero==0) { ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12"> 
+                <div class="table-responsive">
+    <?php
+    }
+    ?>
+                    <div id="ticketPrint" name="ticketPrint" style="display:none">
+                        <br>
+                        <table>
+                            <tr>
+                                <td>
+                                    <p id="nomEmpresa">&nbsp;&nbsp;<?php echo $nombre_Empresa; ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p id="dirEmpresa">&nbsp;&nbsp;<?php echo $dirEmpresa; ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p id="rfcEmpresa">&nbsp;&nbsp;<?php echo $rfcEmpresa; ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>&nbsp;&nbsp;No. Ticket de Venta: <?php echo $maxId; ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>&nbsp;&nbsp;Fecha: <?php 
+                                        $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
+                                        $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
+                                        echo $fechaIngreso; ?></p>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table id='tblPrint' name='tblPrint' style="font-style: italic;text-align: center;">
+                            <thead>
+                            <th style="text-align: center">&nbsp;&nbsp;Cantidad&nbsp;&nbsp;</th>
+                            <th style="text-align: center">&nbsp;&nbsp;Descripcion&nbsp;&nbsp;</th>
+                            <th style="text-align: center">&nbsp;&nbsp;Precio Unitario&nbsp;&nbsp;</th>
+                            <th style="text-align: center">&nbsp;&nbsp;% Descuento&nbsp;&nbsp;</th>
+                            <th style="text-align: center;border-bottom: #000;border-width: medium;">&nbsp;&nbsp;Total&nbsp;&nbsp;</th>
+                            </thead>
+                        </table>
+                        <br>
+                        <p id="subTotalPrint"></p>
+                        <p id="ivaPrint"></p>
+                        <p id="totalPrint"></p>
+                        <p id="pagoPrint"></p>
+                        <p id="cambioPrint"></p>
+                        <br>
+                        <p>&nbsp;&nbsp;Gracias por su compra. Fu&eacute; un placer atenderle</p>
+                    </div>
+                    <table id="tblVenta" class="table table-striped" style="border: 1px solid #FFF;border-color: red">
                         <thead>
-                        <th style="text-align: center">&nbsp;&nbsp;Cantidad&nbsp;&nbsp;</th>
-                        <th style="text-align: center">&nbsp;&nbsp;Descripcion&nbsp;&nbsp;</th>
-                        <th style="text-align: center">&nbsp;&nbsp;Precio Unitario&nbsp;&nbsp;</th>
-                        <th style="text-align: center">&nbsp;&nbsp;% Descuento&nbsp;&nbsp;</th>
-                        <th style="text-align: center;border-bottom: #000;border-width: medium;">&nbsp;&nbsp;Total&nbsp;&nbsp;</th>
-                        </thead>
-                    </table>
-                    <br>
-                    <p id="subTotalPrint"></p>
-                    <p id="ivaPrint"></p>
-                    <p id="totalPrint"></p>
-                    <p id="pagoPrint"></p>
-                    <p id="cambioPrint"></p>
-                    <br>
-                    <p>&nbsp;&nbsp;Gracias por su compra. Fu&eacute; un placer atenderle</p>
-                </div>
-                <table id="tblVenta" class="table table-striped" style="border: 1px solid #FFF;border-color: red">
-                    <thead>
-                        <tr style="background: #00ccff">
-                            <td colspan="5">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-12" for="clienteB">Cliente (Opcional):</label>
-                                    <br>
-                                    <div class="input-group col-sm-12">
-                                        <input type="hidden" class="form-control" name="cliente" id="cliente" />
-                                        <input type="text" class="form-control col-sm-2" name="clienteB" id="clienteB" placeholder="Cliente (Opcional)" autocomplete="off"  onkeypress="verificaEnter(event)" />
-                                    </div>					  
-                                    <br>
-                                    <div class="input-group col-sm-12">
-                                        <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item"  onclick="guardaVentaTemporal();"/>
-                                    </div>					  
-                                </div>       
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <div class="input-group col-sm-12">
-                                        <p>Tipo de Registro:
-                                            <select class="form-control col-sm-5" name="modoOperacion" id="modoOperacion" onchange="javascript: return muestraAdvertencia()" >
-                                            <option value="1">Venta</option>
-                                            <option value="2">Regreso</option>
-                                        </select>
-                                        </p>
-                                        <p>Tipo de Venta:
-                                        <select class="form-control col-sm-5" name="tipoVenta" id="tipoVenta">
-                                            <option value="1">Menudeo</option>
-                                            <option value="2">Mayoreo</option>
-                                        </select>
-                                        </p>
-                                        <p>Ticket de Venta:
-                                            <input type="text" class="form-control" name="ticket" id="ticket" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
-                                        </p>
+                            <tr style="background: #00ccff">
+                                <td colspan="5">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-12" for="clienteB">Cliente (Opcional):</label>
+                                        <br>
+                                        <div class="input-group col-sm-12">
+                                            <input type="hidden" class="form-control" name="cliente" id="cliente" />
+                                            <input type="text" class="form-control col-sm-2" name="clienteB" id="clienteB" placeholder="Cliente (Opcional)" autocomplete="off"  onkeypress="verificaEnter(event)" />
+                                        </div>					  
+                                        <br>
+                                        <div class="input-group col-sm-12">
+                                            <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item"  onclick="guardaVentaTemporal();"/>
+                                        </div>					  
                                     </div>       
-                                </div>       
-                            </td>
-                            <td colspan="2">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4" for="subtotal">Subtotal:</label>
-                                    <div class="input-group col-sm-8">
-                                        <input type="text" class="form-control" name="subtotal" id="subtotal" placeholder="Subtotal" disabled="true" />
-                                    </div>					  
-                                </div>       
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4" for="iva">Iva:</label>
-                                    <div class="input-group col-sm-8">
-                                        <input type="text" class="form-control" name="iva" id="iva" placeholder="Iva" disabled="true" />
-                                    </div>					  
-                                </div>       
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4" for="total">Total:</label>
-                                    <div class="input-group col-sm-8">
-                                        <input type="text" class="form-control" name="total" id="total" placeholder="Total" disabled="true" />
-                                    </div>					  
-                                </div>       
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4" for="txtPago">Pago:</label>
-                                    <div class="input-group col-sm-8">
-                                        <input type="text" class="form-control" name="txtPago" id="txtPago" placeholder="Pago" onkeypress="return pagar(event)" />
-                                    </div>					  
-                                </div>       
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4" for="txtCambio">Cambio:</label>
-                                    <div class="input-group col-sm-8">
-                                        <input type="text" class="form-control" disabled="true" name="txtCambio" id="txtCambio" placeholder="Cambio" />
-                                    </div>					  
-                                </div>       
-                            </td>
-                        </tr>
-                        <tr style="background: #00ccff">
-                            <td colspan="6">
-                                <div class="form-group">
-                                    <label class="col-sm-2" for="codigoProducto">C&oacute;digo</label>
-                                    <div class="input-group col-sm-10">
-                                        <input type="hidden" class="form-control" name="country_id" id="country_id">
-                                        <input type="text" class="form-control" name="codigoProducto" id="codigoProducto" placeholder="C&oacute;digo &oacute; Descripci&oacute;n" autocomplete="off" onkeypress="agregaProducto(event)" />
-                                    </div>					  
-                                </div>       
-                            </td>
-                            <td colspan="2">
-                                <div class="form-group">
-                                    <div class="input-group col-sm-12">
-                                        <!-- <img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' -->
-                                        <!-- <i class="icon-user icon-white"></i> -->
-                                        <input type="button" class="btn btn-reset btn-md" value="Cancelar Venta" onclick="borraVentaTemporal()"/>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <input type="submit" class="btn btn-primary btn-md" value="Guardar Venta" id="btnVentaOk" name="btnVentaOk" onclick="enviarJson2()" />
-                                    </div>					  
-                                </div>       
-                            </td>
-                        </tr>
-                        <tr>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group col-sm-12">
+                                            <p>Tipo de Registro:
+                                                <select class="form-control col-sm-5" name="modoOperacion" id="modoOperacion" onchange="javascript: return muestraAdvertencia()" >
+                                                <option value="1">Venta</option>
+                                                <option value="2">Regreso</option>
+                                            </select>
+                                            </p>
+                                            <p>Tipo de Venta:
+                                            <select class="form-control col-sm-5" name="tipoVenta" id="tipoVenta">
+                                                <option value="1">Menudeo</option>
+                                                <option value="2">Mayoreo</option>
+                                            </select>
+                                            </p>
+                                            <p>Ticket de Venta:
+                                                <input type="text" class="form-control" name="ticket" id="ticket" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
+                                            </p>
+                                        </div>       
+                                    </div>       
+                                </td>
+                                <td colspan="2">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4" for="subtotal">Subtotal:</label>
+                                        <div class="input-group col-sm-8">
+                                            <input type="text" class="form-control" name="subtotal" id="subtotal" placeholder="Subtotal" disabled="true" />
+                                        </div>					  
+                                    </div>       
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4" for="iva">Iva:</label>
+                                        <div class="input-group col-sm-8">
+                                            <input type="text" class="form-control" name="iva" id="iva" placeholder="Iva" disabled="true" />
+                                        </div>					  
+                                    </div>       
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4" for="total">Total:</label>
+                                        <div class="input-group col-sm-8">
+                                            <input type="text" class="form-control" name="total" id="total" placeholder="Total" disabled="true" />
+                                        </div>					  
+                                    </div>       
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4" for="txtPago">Pago:</label>
+                                        <div class="input-group col-sm-8">
+                                            <input type="text" class="form-control" name="txtPago" id="txtPago" placeholder="Pago" onkeypress="return pagar(event)" />
+                                        </div>					  
+                                    </div>       
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4" for="txtCambio">Cambio:</label>
+                                        <div class="input-group col-sm-8">
+                                            <input type="text" class="form-control" disabled="true" name="txtCambio" id="txtCambio" placeholder="Cambio" />
+                                        </div>					  
+                                    </div>       
+                                </td>
+                            </tr>
+                            <tr style="background: #00ccff">
+                                <td colspan="6">
+                                    <div class="form-group">
+                                        <label class="col-sm-2" for="codigoProducto">C&oacute;digo</label>
+                                        <div class="input-group col-sm-10">
+                                            <input type="hidden" class="form-control" name="country_id" id="country_id">
+                                            <input type="text" class="form-control" name="codigoProducto" id="codigoProducto" placeholder="C&oacute;digo &oacute; Descripci&oacute;n" autocomplete="off" onkeypress="agregaProducto(event)" />
+                                        </div>					  
+                                    </div>       
+                                </td>
+                                <td colspan="2">
+                                    <div class="form-group">
+                                        <div class="input-group col-sm-12">
+                                            <!-- <img src='<?php echo base_url();?>images/sistemaicons/agregar.ico' -->
+                                            <!-- <i class="icon-user icon-white"></i> -->
+                                            <input type="button" class="btn btn-reset btn-md" value="Cancelar Venta" onclick="borraVentaTemporal()"/>
+                                            &nbsp;&nbsp;&nbsp;
+
+                                <?php //para saber si es venta o pedido
+                                if ($letrero==0) { ?>
+                                            <input type="submit" class="btn btn-primary btn-md" value="Guardar Venta" id="btnVentaOk" name="btnVentaOk" onclick="enviarJson2()" />
+                                <?php
+                                } else {  ?>
+                                            <input type="submit" class="btn btn-primary btn-md" value="Guardar Pedido" id="btnVentaOk" name="btnVentaOk" onclick="enviarJson2()" />
+                                <?php
+                                } 
+                                ?>
+                                        </div>					  
+                                    </div>       
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><img src='<?php echo base_url();?>images/sistemaicons/borrarok.ico' /></th>
+                                <th>C&oacute;digo</th>
+                                <th>Descripci&oacute;n</th>
+                                <th>Precio</th>
+                                <th>Cant.</th>
+                                <th>Desc %</th>
+                                <th>Total</th>
+                                <th>Editar Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
                             <th><img src='<?php echo base_url();?>images/sistemaicons/borrarok.ico' /></th>
                             <th>C&oacute;digo</th>
                             <th>Descripci&oacute;n</th>
@@ -615,25 +624,17 @@
                             <th>Desc %</th>
                             <th>Total</th>
                             <th>Editar Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    <tfoot>
-                        <th><img src='<?php echo base_url();?>images/sistemaicons/borrarok.ico' /></th>
-                        <th>C&oacute;digo</th>
-                        <th>Descripci&oacute;n</th>
-                        <th>Precio</th>
-                        <th>Cant.</th>
-                        <th>Desc %</th>
-                        <th>Total</th>
-                        <th>Editar Cantidad</th>
-                    </tfoot>
-                </table>
-            </div>
-        </div> <!-- /division renglon en 12-->
-    </div> <!-- / renglon-->
-</div> <!-- /container -->
+                        </tfoot>
+                    </table>
+    <?php //para saber si es venta o pedido
+    if ($letrero==0) { ?>                
+                </div><!-- /div tabla responsiva-->
+            </div> <!-- /division renglon en 12-->
+        </div> <!-- / renglon-->
+    </div> <!-- /container -->
+    <?php
+    }
+    ?>
 
 <!-- Modal cliente -->
 <div class="modal fade" id="create-item" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -658,7 +659,7 @@
                           <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre Representante">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="apellidos">Apellidos:</label>
                       <div class="col-sm-10">
@@ -672,77 +673,77 @@
                           <input type="text" class="form-control" id="telefono_casa" name="telefono_casa" placeholder="Tel&eacute;fono Empresa">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="telefono_celular">Celular:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="telefono_celular" name="telefono_celular" placeholder="Celular Representante">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="direccion1">Direcci&oacute;n 1:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="direccion1" name="direccion1" placeholder="Direcci&oacute;n 1">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="direccion2">Direcci&oacute;n 2:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="direccion2" name="direccion2" placeholder="Direcci&oacute;n 2">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="rfc">RFC:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="rfc" name="rfc" placeholder="RFC">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="email">Email:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="email" name="email" placeholder="Email">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="ciudad">Ciudad:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ciudad">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="estado">Estado:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="estado" name="estado" placeholder="Estado">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="cp">CP:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="cp" name="cp" placeholder="C&oacute;digo Postal">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="pais">Pa&iacute;s:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="pais" name="pais" placeholder="Pa&iacute;s">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="comentarios">Comentarios:</label>
                       <div class="col-sm-10">
                           <input type="text" class="form-control" id="comentarios" name="comentarios" placeholder="Comentarios">
                       </div>					  
                     </div>  
-                    
+
                     <div class="form-group">
                       <label class="control-label col-sm-2" for="noCuenta">No. Cuenta:</label>
                       <div class="col-sm-10">
@@ -797,7 +798,7 @@
                 verificaEnter(e);
         });
         //Fin Para busqueda de Clientes
-        
+
         //para guardar cliente sin salir ventas
         $(".crud-submit").click(function(e){
             e.preventDefault();
@@ -838,6 +839,4 @@
         //fin para guardar cliente sin salir ventas
 });
 </script>
-</body>	
-</html>
 

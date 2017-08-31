@@ -15,7 +15,6 @@
     <link href='http://fonts.googleapis.com/css?family=Economica' rel='stylesheet' type='text/css'>
     <!-- Bootstrap -->
     <link href="<?php echo base_url();?>css/bootstrap.css" rel="stylesheet">
-  
     <style type="text/css" title="currentStyle">
         @import "<?php echo base_url();?>media/css/demo_page.css";
         @import "<?php echo base_url();?>media/css/demo_table.css";
@@ -30,46 +29,52 @@
     <script type="text/javascript" language="javascript" src="<?php echo base_url();?>media/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
-                $('#example').dataTable( {
+                $('#examplePedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );
         $(document).ready(function() {
-                $('#example2').dataTable( {
+                $('#example2Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );
         $(document).ready(function() {
-                $('#example3').dataTable( {
+                $('#example3Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
         $(document).ready(function() {
-                $('#example4').dataTable( {
+                $('#example4Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
         $(document).ready(function() {
-                $('#example5').dataTable( {
+                $('#example5Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
         $(document).ready(function() {
-                $('#example6').dataTable( {
+                $('#example6Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
         $(document).ready(function() {
-                $('#example7').dataTable( {
+                $('#example7Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
         $(document).ready(function() {
-                $('#example8').dataTable( {
+                $('#example8Pedidos').dataTable( {
+                        "sPaginationType": "full_numbers"
+                } );
+        } );            
+        $(document).ready(function() {
+                $('#example9Pedidos').dataTable( {
                         "sPaginationType": "full_numbers"
                 } );
         } );            
     </script>
+  
     <script language="javascript">
         function verificaSeleccion() {
             var eleccion = "<?php echo $eleccion; ?>";
@@ -79,37 +84,45 @@
 //                         document.getElementById("movInv1_1_1").className = "seleccion";
                          document.getElementById("contenido0").style.display = "block";
                          break;
-                case '1' : $('#movInv1_1').toggle(2);
+                case '1' : $('#movInv1_1').toggle(0);
                          document.getElementById("movInv1_1_1").className = "seleccion";
                          document.getElementById("contenido1").style.display = "block";
                          break;
-                case '2' : $('#vtas1').toggle(2);
+                case '2' : $('#vtas1').toggle(0);
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido2").style.display = "block";
                          break;
-                case '3' : $('#vtas1').toggle(2);
+                case '3' : $('#vtas1').toggle(0);
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido3").style.display = "block";
                          break;
-                case '4' : $('#vtas1').toggle(2);
+                case '4' : $('#vtas1').toggle(0);
                          document.getElementById("vtas1_1").className = "seleccion";
                          document.getElementById("contenido4").style.display = "block";
                          break;
-                case '5' : $('#compras1').toggle(2);
+                case '5' : $('#compras1').toggle(0);
                          document.getElementById("compras1_1").className = "seleccion";
                          document.getElementById("contenido5").style.display = "block";
                          break;
-                case '6' : $('#compras1').toggle(2);
+                case '6' : $('#compras1').toggle(0);
                          document.getElementById("compras1_1").className = "seleccion";
                          document.getElementById("contenido6").style.display = "block";
                          break;
-                case '7' : $('#compras1').toggle(2);
+                case '7' : $('#compras1').toggle(0);
                          document.getElementById("compras1_1").className = "seleccion";
                          document.getElementById("contenido7").style.display = "block";
                          break;
-                case '8' : $('#vtas1').toggle(2);
+                case '8' : $('#vtas1').toggle(0);
                          document.getElementById("vtas1_2").className = "seleccion";
                          document.getElementById("contenido8").style.display = "block";
+                         break;
+                case '9' : $('#vtas1').toggle(0);
+                         document.getElementById("vtas1_2").className = "seleccion";
+                         document.getElementById("contenido9").style.display = "block";
+                         break;
+                case '10' : $('#vtas1').toggle(0);
+                         document.getElementById("vtas1_2").className = "seleccion";
+                         document.getElementById("contenido10").style.display = "block";
                          break;
             }
         }
@@ -198,7 +211,7 @@
                 <br>
                 <h4 style="text-align: center">Movimientos</h4>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="examplePedidos">
                     <thead>
                         <tr>
                             <th>idMovimiento</th>
@@ -258,7 +271,7 @@
                     </tr>
                 </table>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example2">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example2Pedidos">
                     <thead>
                         <tr>
                             <th>idVenta</th>
@@ -306,7 +319,7 @@
                 <br>
                 <h4 style="text-align: center">Detalle Venta</h4>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example3">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example3Pedidos">
                     <thead>
                         <tr>
                             <th>idVenta</th>
@@ -363,7 +376,7 @@
                     </tr>
                 </table>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example4">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example4Pedidos">
                     <thead>
                         <tr>
                             <th>idVenta</th>
@@ -423,7 +436,7 @@
                     </tr>
                 </table>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example5">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example5Pedidos">
                     <thead>
                         <tr>
                             <th>idCompra</th>
@@ -471,7 +484,7 @@
                 <br>
                 <h4 style="text-align: center">Detalle Compra</h4>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example6">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example6Pedidos">
                     <thead>
                         <tr>
                             <th>idCompra</th>
@@ -528,7 +541,7 @@
                     </tr>
                 </table>
                 <br>
-                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example7">
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example7Pedidos">
                     <thead>
                         <tr>
                             <th>idCompra</th>
@@ -573,11 +586,27 @@
             </div> <!-- Fin Div consulta Compras por Fechas -->
             
             <div id="contenido8" style="display:none;">  <!-- Div consulta Pedidos -->
-                <p><a class="btn btn-xs btn-success" href="nuevoUsuario">Nuevo Empleado</a>
+                <br>
+                <table>
+                    <tr>
+                        <td><h4>Listado de Pedidos</h4></td>
+                        <td style="width: 150px;"></td>
+                        <td>
+                            <form onsubmit="javascript: return verificaFechas()" class="form-horizontal" role="form" action="<?php echo base_url();?>index.php/consultas_controller/consultaVentasPorFechas" method="post">
+                                F.Inicial: <input type="date" name="fIni" id="fIni" style="height: 25px;width: 100px;">
+                                F.Final: <input type="date" name="fFin" id="fFin" style="height: 25px;width: 100px;">
+                                <input type="submit" id="submit" name="submit" class="btn btn-xs btn-success" value="Buscar" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <p><a class="btn btn-xs btn-success" href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/1">Nuevo Pedido</a>
                 <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
                 <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a></p>
+                <br>
                 <div class="table-responsive">     
-                    <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example8">
+                    <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example8Pedidos">
                         <thead>
                             <tr>
                                 <th>idPedido</th>
@@ -600,7 +629,8 @@
                                         <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
                                         <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
                                         <td><?php echo $fila->{'observaciones'} ?></td>
-                                        <td><a class="btn btn-xs btn-primary" href="consultaDetalle/<?php echo $fila->{'idPedido'} ?>">Ver Detalle</a>
+                                        <td><a class="btn btn-xs btn-primary" href="consultaDetallePedidos/<?php echo $fila->{'idPedido'} ?>">Detalle</a>
+                                            
                                         <a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idPedido'} ?>">Editar</a>
                                         <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idPedido'} ?>" onclick="javascript:return DeleteUser('<?php echo $fila->{'idPedido'} ?>')">Borrar</a></td>
                                     </tr>
@@ -608,8 +638,6 @@
                                 }   
                             }
                             ?>
-                                    
-                                    
                         </tbody>
                         <tfoot>
                             <tr>
@@ -625,11 +653,59 @@
                 </div>
             </div>  <!-- Div consulta Pedidos -->
             
+            <div id="contenido9" style="display:none;">  <!-- Div DetallePedido -->
+                <h4 style="text-align: center">Detalle Pedido</h4>
+                <br>
+                <table class="table" cellpadding="0" cellspacing="0" border="0" class="display" id="example9Pedidos">
+                    <thead>
+                        <tr>
+                            <th>idPedido</th>
+                            <th>Articulo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if($detallePedido) {
+                            $i=1;
+                            foreach($detallePedido as $fila) {
+                            ?>
+                                <tr id="fila-<?php echo $fila->{'idDetallePedido'} ?>">
+                                    <td><?php echo $fila->{'idPedido'} ?></td>
+                                    <td><?php echo $fila->{'descripcion'} ?></td>
+                                    <td><?php echo $fila->{'precio'} ?></td>
+                                    <td><?php echo $fila->{'cantidad'} ?></td>
+                                    <td><?php echo $fila->{'descuento'} ?></a>
+                                </tr>
+                                <?php $i++; 
+                            }   
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>idPedido</th>
+                            <th>Articulo</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br><br><br><br>            
+            </div>  <!-- Fin Div DetallePedido -->
+
+            <div id="contenido10" style="display:none;">  <!-- Div Nuevo Pedido -->
+                <?php
+                    //$this->load->view('ventas/ventas_view');
+                    //require_once(APPPATH."views/common/ventas/ventas_view.php");
+                    //require_once(APPPATH."views/common/ventas/ventas_view.php");
+                    //require_once(APPPATH."views/ventas/ventas_view.php");
+                ?>
+            </div>  <!-- Fin Div Nuevo Pedido -->
             
-            
-            <div id="contenido9" style="display:none;">
-                Contenido 9
-            </div>
         </div>
     </div> <!-- / renglon-->
 </div> <!-- /container -->
@@ -639,7 +715,7 @@
         $(this).parent().children('ul.tree').toggle(2);
     });
     $(function(){
-        $('.tree-toggle').parent().children('ul.tree').toggle(2);
+        $('.tree-toggle').parent().children('ul.tree').toggle(0);
     })            
 </script>
 

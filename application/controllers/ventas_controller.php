@@ -212,7 +212,7 @@ class Ventas_controller extends CI_Controller {
         echo json_encode($data2);
     }
     
-    function ventaEnBlanco() {
+    function ventaEnBlanco($operacion) {
         if ($this->is_logged_in()){
             $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
             $fechaIngreso = $dt->format("Y-m-d H:i:s"); 
@@ -227,23 +227,48 @@ class Ventas_controller extends CI_Controller {
             $maxId = $maxIdReg[0]->{'idVenta'};        
             $maxId++;        
             //Fin Obtiene el no de venta que le corresponde a la venta actual
-
-            $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
-                'usuarioDatos' => $this->session->userdata('nombre'),
-                'idSucursal' => $this->session->userdata('idSucursal'),
-                'sistema'=>$this->sistemaGlobal,
-                'fecha' => $fechaIngreso,
-                'iva' => $this->ivaEmpresaGlobal,
-                'nombre_Empresa'=>$this->nombreEmpresaGlobal,
-                'dirEmpresa' => $this->datosEmpresaGlobal[0]->{'direccionEmpresa'},
-                'rfcEmpresa' => $this->datosEmpresaGlobal[0]->{'rfcEmpresa'},
-                'permisos' => $this->session->userdata('permisos'),
-                'opcionClickeada' => '2',
-                'temporalVtaCompras' => $this->temporalVtaCompras
-                );
-            $this->load->view('layouts/header_view',$data);
-            $this->load->view('ventas/ventas_view',$data);
-            $this->load->view('layouts/pie_view',$data);
+            if ($operacion==0) {
+                $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
+                    'usuarioDatos' => $this->session->userdata('nombre'),
+                    'idSucursal' => $this->session->userdata('idSucursal'),
+                    'sistema'=>$this->sistemaGlobal,
+                    'fecha' => $fechaIngreso,
+                    'iva' => $this->ivaEmpresaGlobal,
+                    'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                    'dirEmpresa' => $this->datosEmpresaGlobal[0]->{'direccionEmpresa'},
+                    'rfcEmpresa' => $this->datosEmpresaGlobal[0]->{'rfcEmpresa'},
+                    'permisos' => $this->session->userdata('permisos'),
+                    'opcionClickeada' => '2',
+                    'temporalVtaCompras' => $this->temporalVtaCompras,
+                    'letrero' => '0',
+                    'eleccion' => 9
+                    );
+                $this->load->view('layouts/header_view',$data);
+                $this->load->view('ventas/ventas_view',$data);
+                $this->load->view('layouts/pie_view',$data);
+            } else {
+                $data = array('idUsuario'=>$idUsuarioActual,'maxId'=>$maxId,'inventarios'=>$this->inventarioGlobal,
+                    'usuarioDatos' => $this->session->userdata('nombre'),
+                    'idSucursal' => $this->session->userdata('idSucursal'),
+                    'sistema'=>$this->sistemaGlobal,
+                    'fecha' => $fechaIngreso,
+                    'iva' => $this->ivaEmpresaGlobal,
+                    'nombre_Empresa'=>$this->nombreEmpresaGlobal,
+                    'dirEmpresa' => $this->datosEmpresaGlobal[0]->{'direccionEmpresa'},
+                    'rfcEmpresa' => $this->datosEmpresaGlobal[0]->{'rfcEmpresa'},
+                    'permisos' => $this->session->userdata('permisos'),
+                    'opcionClickeada' => '2',
+                    'temporalVtaCompras' => $this->temporalVtaCompras,
+                    'letrero' => '1',
+                    'opcionClickeada' => '2',
+                    'eleccion' => 10,
+                    'detallePedido' => NULL
+                    );
+                $this->load->view('layouts/header_view',$data);
+//                $this->load->view('consultas/adminConsultas_view',$data);
+                $this->load->view('ventas/ventas_view',$data);
+                $this->load->view('layouts/pie_view',$data);
+            }
         } else {
             redirect($this->cerrarSesion());
         }

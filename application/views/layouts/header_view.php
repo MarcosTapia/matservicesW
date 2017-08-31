@@ -78,9 +78,9 @@
                     <!-- Verifica permiso y si opcion ventas esta seleccionada -->
                     <?php } } if ($permisos[1] == "1") { 
                         if ($opcionClickeada=="2") { ?>
-                  <li class="active"><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco">Ventas</a></li>
+                  <li class="active"><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0">Ventas</a></li>
                         <?php } else { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco">Ventas</a></li>
+                  <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0">Ventas</a></li>
                     <!-- Fin Verifica permiso y si opcion ventas esta seleccionada -->
 
                     <!-- Verifica permiso y si opcion compras esta seleccionada -->
