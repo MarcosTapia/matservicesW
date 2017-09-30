@@ -193,8 +193,9 @@ class Consultas_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
-        $movimientos;
-        $i=0;
+        if ($datos->{'estado'}==2) {
+            $datos->{'movimientos'}=NULL;
+        }
         //Fin muestra valores de categorias
         return $datos->{'movimientos'};
     }
@@ -210,8 +211,9 @@ class Consultas_controller extends CI_Controller {
         $data = curl_exec($ch);
         $datos = json_decode($data);
         curl_close($ch);
-        $ventas;
-        $i=0;
+        if ($datos->{'estado'}==2){
+            $datos->{'ventas'}=NULL;
+        }
         //Fin muestra valores de categorias
         return $datos->{'ventas'};
     }
@@ -612,6 +614,22 @@ class Consultas_controller extends CI_Controller {
         }
     }
     
+    function consultaDetallePedidoGral($idPedido) {
+        # An HTTP GET request example
+        $url = RUTAWS.'ventas/obtener_detallepedido_por_id.php?idPedido='.$idPedido;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        //si no hay resultados lo lleno con nulo
+        if (!(isset($datos->{'detallePedidos'}))) {
+            $datos->{'detallePedidos'} = NULL;
+        }
+        return $datos->{'detallePedidos'};
+    }
+    
     function consultaDetallePedidos($idPedido) {
         if ($this->is_logged_in()){
             $dt = new DateTime("now", new DateTimeZone('America/Mexico_City'));
@@ -621,19 +639,24 @@ class Consultas_controller extends CI_Controller {
             $idUsuarioActual = $this->session->userdata('idUsuario');
             // Fin Obtiene el idUsuario sesionado
 
-            # An HTTP GET request example
-            $url = RUTAWS.'ventas/obtener_detallepedido_por_id.php?idPedido='.$idPedido;
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $data = curl_exec($ch);
-            $datos = json_decode($data);
-//            print_r($data);
-            curl_close($ch);
+//            # An HTTP GET request example
+//            $url = RUTAWS.'ventas/obtener_detallepedido_por_id.php?idPedido='.$idPedido;
+//            $ch = curl_init($url);
+//            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+//            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//            $data = curl_exec($ch);
+//            $datos = json_decode($data);
+//            //si no hay resultados lo lleno con nulo
+//            if (!(isset($datos->{'detallePedidos'}))) {
+//                $datos->{'detallePedidos'} = NULL;
+//            }
+//            curl_close($ch);
             //Fin muestra valores de categorias
+//            $datos->{'detallePedidos'} = NULL;
+//            $datos->{'detallePedidos'} = $this->consultaDetallePedidoGral($idPedido);            
 
-            $data = array('detallePedido'=>$datos->{'detallePedidos'}, 
+            $data = array('detallePedido'=>$this->consultaDetallePedidoGral($idPedido), 
                 'idUsuario'=>$idUsuarioActual,'inventarios'=>$this->inventarioGlobal,
                 'proveedores'=>$this->proveedoresGlobal,
                 'movimientos'=>NULL,
@@ -654,6 +677,52 @@ class Consultas_controller extends CI_Controller {
         } else {
             redirect($this->cerrarSesion());
         }
+    }
+    
+    function eliminaPedido($idPedido) {
+        if ($this->is_logged_in()){
+            //echo "estoy en pedidos ->".$idPedido;
+            $data = array("idPedido" => $idPedido);
+            $data_string = json_encode($data);
+            $ch = curl_init(RUTAWS.'ventas/borrar_pedido.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            $resultado = json_decode($result, true);
+            if ($resultado['estado']==1) {
+                $this->session->set_flashdata('correcto', "Registro eliminado correctamente <br>");
+            } else {
+                $this->session->set_flashdata('correcto', "Error. No se eliminó el registro <br>");
+            }        
+            redirect('/consultas_controller/consultaPedidos');
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
+    
+    function obtienePedidoPorId($idPedido) {
+        //Obtiene usuario por id
+        # An HTTP GET request example
+        $url = RUTAWS.'ventas/obtener_pedido_por_id.php?idPedido='.$idPedido;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        //print_r($data);
+        curl_close($ch);
+        return $datos->{'pedido'};
     }
     
     //**  Manejo de Sesiones

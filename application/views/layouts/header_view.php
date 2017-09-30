@@ -76,12 +76,20 @@
                     <!-- Fin Verifica permiso y si opcion inventario esta seleccionada -->
                     
                     <!-- Verifica permiso y si opcion ventas esta seleccionada -->
-                    <?php } } if ($permisos[1] == "1") { 
-                        if ($opcionClickeada=="2") { ?>
-                  <li class="active"><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0">Ventas</a></li>
-                        <?php } else { ?>
-                  <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0">Ventas</a></li>
-                    <!-- Fin Verifica permiso y si opcion ventas esta seleccionada -->
+        <?php } }
+            $letrero = "Ventas";
+            if (isset($eleccion)) {
+                if ($eleccion==10) {
+                    $letrero = "Pedidos";
+                }
+            }
+            
+            if ($permisos[1] == "1") { 
+                if ($opcionClickeada=="2") { ?>
+          <li class="active"><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0"><?php echo $letrero;?></a></li>
+                <?php } else { ?>
+          <li><a href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0"><?php echo $letrero;?></a></li>
+            <!-- Fin Verifica permiso y si opcion ventas esta seleccionada -->
 
                     <!-- Verifica permiso y si opcion compras esta seleccionada -->
                     <?php } } if ($permisos[2] == "1") { 

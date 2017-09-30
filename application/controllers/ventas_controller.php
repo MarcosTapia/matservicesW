@@ -169,8 +169,24 @@ class Ventas_controller extends CI_Controller {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $data = curl_exec($ch);
         $datos = json_decode($data);
+        if ($datos->{'estado'}==2) {
+            $datos->{'ventas'} = NULL;
+        }
         curl_close($ch);
         return $datos->{'ventas'};
+    }
+    
+    function obtieneMaxIdPedidos() {
+        # An HTTP GET request example
+        $url = RUTAWS.'ventas/obtener_maxidpedidos.php';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        $datos = json_decode($data);
+        curl_close($ch);
+        return $datos->{'pedidos'};
     }
     
     function busquedaProductoInventario() {
@@ -223,8 +239,13 @@ class Ventas_controller extends CI_Controller {
 
             //Obtiene el no de venta que le corresponde a la venta actual
             $maxIdReg = $this->obtieneMaxIdVentas();
+            $maxIdRegPedido = $this->obtieneMaxIdPedidos();
             $maxId = 0;
-            $maxId = $maxIdReg[0]->{'idVenta'};        
+            if (isset($maxIdRegPedido)) {
+                $maxId = 0;
+            } else {
+                $maxId = $maxIdReg[0]->{'idVenta'};        
+            }
             $maxId++;        
             //Fin Obtiene el no de venta que le corresponde a la venta actual
             if ($operacion==0) {
@@ -427,6 +448,92 @@ class Ventas_controller extends CI_Controller {
         return $datos->{'temporalVtaCompras'};
     }
     
+    function nuevoPedidoFromFormulario() {
+        if ($this->is_logged_in()){
+            $idPedido = $this->obtieneMaxIdPedidos();
+            $maxIdPedido = $idPedido[0]->{'idPedido'};        
+            $maxIdPedido++;            
+            //echo "<script language='javascript'>alert('Estas en controler de guardao de ventas');</script>";
+            // Recibe Json
+            $obj = json_decode($_POST["myData"]);
+            // Fin Recibe Json
+
+            //LLamado de WS de registro de pedido tabla pedidos
+            $data_string = json_encode($obj);
+            $ch = curl_init(RUTAWS.'ventas/insertar_pedido.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //close connection
+            curl_close($ch);
+            //printf("%s",$result);
+            //Fin LLamado de WS de registro de venta tabla ventas
+
+
+            //Registro de detalle de pedido
+            $bandInicio = TRUE;
+            $cantidad = 0;
+            $fechaOperacion = $obj->{'fecha'}; // fecha de operacion
+//            $existencuaInventario = 0;
+                // Ciclo que barre todo el json de detalle venta
+            foreach ($obj->detalleTemporal as $fila) {
+                //esto lo hago porque el primer articulo viene en ceros con idarticulo -1
+                if ($bandInicio) {
+                    $bandInicio = FALSE;
+                } else {
+                    $idArticulo = $fila->{'idArticulo'};
+                    $precio = $fila->{'precio'};
+                    $cantidad = $fila->{'cantidad'};
+                    $descuento = $fila->{'descuento'};
+                    //Arma nuevo json solo con el detalle actual y datos necesarios
+                    $dataDetallePedido = array("idPedido"=>$maxIdPedido,
+                        "idArticulo" => $idArticulo, 
+                        "precio" => $precio, 
+                        "cantidad" => $cantidad, 
+                        "descuento" => $descuento
+                            );
+                    $data_string = json_encode($dataDetallePedido);  
+                    unset($dataDetallePedido);
+                    //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+
+                    //LLamado de WS de registro de detalle de venta tabla detalleventas
+                    $ch = curl_init(RUTAWS.'detalleventas/insertar_detallepedido.php');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    //execute post
+                    $result = curl_exec($ch);
+                    //close connection
+                    //printf("%s",$result);
+                    curl_close($ch);
+                    //Fin llaamado de WS de registro de detalle de venta tabla detalleventas
+
+                }
+            }
+                // Fin Ciclo que barre todo el json de detalle venta
+            echo "Pedido Registrado".$maxIdPedido;
+
+
+            //redirect('/ventas_controller/ventaEnBlanco');
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
+    
     function nuevoVentaFromFormulario() {
         if ($this->is_logged_in()){
             //echo "<script language='javascript'>alert('Estas en controler de guardao de ventas');</script>";
@@ -589,6 +696,161 @@ class Ventas_controller extends CI_Controller {
 
 
             //redirect('/ventas_controller/ventaEnBlanco');
+        } else {
+            redirect($this->cerrarSesion());
+        }
+    }
+    
+    function procesarPedido($idPedido) {
+        require('consultas_controller.php');
+        $consultas = new consultas_controller();
+        if ($this->is_logged_in()) {
+            //registro de pedido como venta
+            //obtiene pedido
+            $pedido = $consultas->obtienePedidoPorId($idPedido);
+            //echo $pedido->{'idCliente'};
+            $detallePedidos = $consultas->consultaDetallePedidoGral($idPedido);
+
+            // Convierte pedido a json para registrarlo como venta
+            $pedidoArray = array('fecha'=>$pedido->{'fecha'},
+            'codigoCliente'=>$pedido->{'idCliente'},
+            'observaciones'=>$pedido->{'observaciones'},
+            'idUsuario'=>$pedido->{'idUsuario'});
+            //LLamado de WS de registro de venta tabla ventas
+            $data_string = json_encode($pedidoArray);
+            $ch = curl_init(RUTAWS.'ventas/insertar_venta.php');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string))
+            );
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            //execute post
+            $result = curl_exec($ch);
+            //print_r($result);
+            //close connection
+            curl_close($ch);
+            //Fin LLamado de WS de registro de venta tabla ventas
+            
+            //Obtiene id de Venta
+            $maxIdReg = $this->obtieneMaxIdVentas();
+            $maxId = 0;
+            // $maxId es la variable que controla el nuevo id de la venta insertada
+            $maxId = $maxIdReg[0]->{'idVenta'};
+            //Fin Obtiene id de Venta
+                
+            //ciclo que recorre cada pedido
+            foreach ($detallePedidos as $filaDetalle) {
+//                echo "idVenta->".$maxId."->"."idArticulo->".$filaDetalle->{'idArticulo'}."->".$filaDetalle->{'precio'}."->".$filaDetalle->{'cantidad'}."->".$filaDetalle->{'descuento'}."<br>";
+                //Guarda detalle pedido como detalle venta
+                $dataDetalleVenta = array("idVenta" => $maxId, 
+                    "idArticulo" => $filaDetalle->{'idArticulo'}, 
+                    "precio" => $filaDetalle->{'precio'}, 
+                    "cantidad" => $filaDetalle->{'cantidad'}, 
+                    "descuento" => $filaDetalle->{'descuento'}
+                        );
+                $data_string = json_encode($dataDetalleVenta);  
+                unset($dataDetalleVenta);
+                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+
+                //LLamado de WS de registro de detalle de venta tabla detalleventas
+                $ch = curl_init(RUTAWS.'detalleventas/insertar_detalleventa.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                //printf("%s",$result);
+                curl_close($ch);
+                //Fin Guarda detalle pedido como detalle venta
+                
+                // Alteracion en el inventario segun el tipo de operacion
+                    //Obtiene producto por id
+                # An HTTP GET request example
+                $url = RUTAWS.'inventarios/obtener_inventario_por_id.php?idArticulo='.$filaDetalle->{'idArticulo'};
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $data = curl_exec($ch);
+                $datosProd = json_decode($data);
+                curl_close($ch);
+                    //Fin Obtiene producto por id
+                if ($datosProd->{'estado'}==1) {
+                    $existencuaInventario = $datosProd->{'inventario'}->{'existencia'};
+                } else {
+                    echo "Ajusta el inventario manualmente, error al consultar producto";
+                }
+                // se realiza ajuste de inventario
+                $existencuaInventario = $existencuaInventario - $filaDetalle->{'cantidad'};
+                $data = array("idArticulo" => $filaDetalle->{'idArticulo'},
+                    "existencia" => $existencuaInventario
+                        );
+                $data_string = json_encode($data);
+                $ch = curl_init(RUTAWS.'inventarios/ajusta_inventario.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                curl_close($ch);
+                    // fin se realiza ajuste de inventario
+                // Fin Alteracion en el inventario segun el tipo de operacion
+                
+                //Arma nuevo json solo con el detalle actual y datos necesarios
+                $cantidad = $fila->{'cantidad'} * $factor;
+                $dataMovimiento = array(
+                    "idArticulo" => $filaDetalle->{'idArticulo'}, 
+                    "idUsuario" => $pedido->{'idUsuario'}, 
+                    "tipoOperacion" => "Venta de Pedido",
+                    "cantidad" => $filaDetalle->{'idArticulo'}, 
+                    "fechaOperacion" => $pedido->{'fecha'}
+                        );
+                $data_string = json_encode($dataMovimiento);  
+                unset($dataDetalleVenta);
+                //Fin Arma nuevo json solo con el detalle actual y datos necesarios
+                //LLamado de WS de registro de movimientos tabla movimientos
+                $ch = curl_init(RUTAWS.'movimientos/insertar_movimiento.php');
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                //execute post
+                $result = curl_exec($ch);
+                //close connection
+                //printf("%s",$result);
+                curl_close($ch);
+                //LLamado de WS de registro de movimientos tabla movimientos
+                
+            }
+            //fin ciclo que recorre cada pedido
+            
+            //elimina pedido
+            $consultas->eliminaPedido($idPedido);
+            //Fin elimina pedido
+            $consultas->consultaPedidos();
         } else {
             redirect($this->cerrarSesion());
         }

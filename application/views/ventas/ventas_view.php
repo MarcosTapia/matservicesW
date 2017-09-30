@@ -125,8 +125,15 @@
             
             
             var dataString = JSON.stringify(ventaJson);
+
+            //para switchear entre guardado de venta o de pedido
+            var ruta = '<?php echo base_url();?>index.php/ventas_controller/nuevoVentaFromFormulario';
+            <?php //para saber si es venta o pedido
+            if ($letrero!=0) { ?>
+                ruta = '<?php echo base_url();?>index.php/ventas_controller/nuevoPedidoFromFormulario';
+            <?php } ?>
             $.ajax({
-               url: '<?php echo base_url();?>index.php/ventas_controller/nuevoVentaFromFormulario',
+               url: ruta,
                data: {myData: dataString},
                type: 'POST',
                success: function(response) {
@@ -514,12 +521,22 @@
                                         <br>
                                         <div class="input-group col-sm-12">
                                             <input type="button" class="btn btn-success" value="Nuevo Cliente" data-toggle="modal" data-target="#create-item"  onclick="guardaVentaTemporal();"/>
+                                    <?php
+                                        if ($letrero!=0) { ?>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <a class="btn btn-success" href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/0">Nueva Venta</a>
+                                        <?php } else { ?>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <a class="btn btn-success" href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/1">Nuevo Pedido</a>
+                                        <?php } ?>
                                         </div>					  
                                     </div>       
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <div class="input-group col-sm-12">
+                                    <?php
+                                        if ($letrero==0) { ?>
                                             <p>Tipo de Registro:
                                                 <select class="form-control col-sm-5" name="modoOperacion" id="modoOperacion" onchange="javascript: return muestraAdvertencia()" >
                                                 <option value="1">Venta</option>
@@ -535,6 +552,23 @@
                                             <p>Ticket de Venta:
                                                 <input type="text" class="form-control" name="ticket" id="ticket" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
                                             </p>
+                                    <?php } else { ?>
+                                            <p style="display: none">Tipo de Registro:
+                                                <select style="display: none" class="form-control col-sm-5" name="modoOperacion" id="modoOperacion" onchange="javascript: return muestraAdvertencia()" >
+                                                <option value="1">Venta</option>
+                                                <option value="2">Regreso</option>
+                                            </select>
+                                            </p>
+                                            <p style="display: none">Tipo de Venta:
+                                            <select style="display: none" class="form-control col-sm-5" name="tipoVenta" id="tipoVenta">
+                                                <option value="1">Menudeo</option>
+                                                <option value="2">Mayoreo</option>
+                                            </select>
+                                            </p>
+                                            <p style="display: none">Ticket de Venta:
+                                                <input type="text"  style="display: none" class="form-control" name="ticket" id="ticket" placeholder="Ticket Venta" value="<?php echo $maxId; ?>" disabled="true" />
+                                            </p>
+                                    <?php } ?>
                                         </div>       
                                     </div>       
                                 </td>

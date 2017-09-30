@@ -158,11 +158,26 @@
             } 
             return true;
         }    
+        
+        function preguntar() {
+            var conf = confirm("¿Seguro que quieres eliminar?");
+            if (conf == false) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        
+        function mensaje() {
+            if (document.getElementById('registroCorrecto').innerHTML != "") {
+                setTimeout(function(){ location.reload(); }, 1000);
+            }
+        }        
 
     </script>
     
 </head>
-<body onload="verificaSeleccion()">
+<body onload="verificaSeleccion();mensaje()">
 <div class="container">
     <div class="row">
         <?php 
@@ -602,7 +617,6 @@
                 </table>
                 <br>
                 <p><a class="btn btn-xs btn-success" href="<?php echo base_url(); ?>index.php/ventas_controller/ventaEnBlanco/1">Nuevo Pedido</a>
-                <a class="btn btn-xs btn-success" href="importarUsersExcel">Importar desde Excel</a>
                 <a class="btn btn-xs btn-success" href="exportarExcel">Exportar a Excel</a></p>
                 <br>
                 <div class="table-responsive">     
@@ -629,10 +643,18 @@
                                         <td><?php echo $fila->{'nom'}." ".$fila->{'apellidos'} ?></td>
                                         <td><?php echo $fila->{'nombre'}." ".$fila->{'apellido_paterno'}." ".$fila->{'apellido_materno'} ?></td>
                                         <td><?php echo $fila->{'observaciones'} ?></td>
-                                        <td><a class="btn btn-xs btn-primary" href="consultaDetallePedidos/<?php echo $fila->{'idPedido'} ?>">Detalle</a>
-                                            
-                                        <a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idPedido'} ?>">Editar</a>
+                                        
+                                        <td>
+                                        <a href="consultaDetallePedidos/<?php echo $fila->{'idPedido'} ?>"><img src="<?php echo base_url(); ?>/images/sistemaicons/lista.ico" alt="Detalles" title="Detalles" /></a>
+                                        &nbsp;
+                                        <a href="eliminaPedido/<?php echo $fila->{'idPedido'} ?>"  onclick="javascript: return preguntar()"><img src="<?php echo base_url(); ?>/images/sistemaicons/borrar2.ico" alt="Borrar" title="Borrar" /></a>
+                                        &nbsp;
+                                        <a href="<?php echo base_url();?>ventas_controller/procesarPedido/<?php echo $fila->{'idPedido'} ?>/" ><img src="<?php echo base_url(); ?>/images/sistemaicons/carrito.ico" alt="Procesar Pedido" title="Procesar Pedido" /></a>
+                                        </td>
+                                        <!--
                                         <a id="elimina<?php echo $i ?>" class='btn btn-xs btn-danger' href="eliminarUsuario/<?php echo $fila->{'idPedido'} ?>" onclick="javascript:return DeleteUser('<?php echo $fila->{'idPedido'} ?>')">Borrar</a></td>
+                                        <a class="btn btn-xs btn-primary" href="actualizarUsuario/<?php echo $fila->{'idPedido'} ?>">Editar</a>
+                                        -->
                                     </tr>
                                     <?php $i++; 
                                 }   
